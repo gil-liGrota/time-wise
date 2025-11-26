@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class log_in extends AppCompatActivity {
 
     private Button logIn, signIn;
+    private TextView user, pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +25,27 @@ public class log_in extends AppCompatActivity {
 
         logIn = findViewById(R.id.btnLogin);
         signIn = findViewById(R.id.btnSignIn);
+        user = findViewById(R.id.editTextEmail);
+        pass = findViewById(R.id.editTextPassword);
 
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(log_in.this, LogInUser.class);
-                startActivity(intent);
+                if(isEmpty()){
+                    if(user.getText().toString().isEmpty()){
+                        user.setError("enter username");
+                    }
+                    if(pass.getText().toString().isEmpty()){
+                        pass.setError("enter password");
+                    }
+                } else {
+                    String userName = user.getText().toString();
+                    String password = pass.getText().toString();
+                    Intent intent = new Intent(log_in.this, LogInUser.class);
+                    intent.putExtra("username", userName);
+                    intent.putExtra("password", password);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -39,5 +56,9 @@ public class log_in extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private  boolean isEmpty(){
+        return user.getText().toString().isEmpty() || pass.getText().toString().isEmpty();
     }
 }
