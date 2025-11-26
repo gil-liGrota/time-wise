@@ -13,6 +13,21 @@
         android:theme="@style/Theme.Timewise"
         tools:targetApi="31">
         <activity
+            android:name=".SignInUserSaturday"
+            android:exported="false" />
+        <activity
+            android:name=".SignInUserFriday"
+            android:exported="false" />
+        <activity
+            android:name=".SignInUserThursday"
+            android:exported="false" />
+        <activity
+            android:name=".SignInUserWednesday"
+            android:exported="false" />
+        <activity
+            android:name=".SignInUserTuesday"
+            android:exported="false" />
+        <activity
             android:name=".SignInUserMonday"
             android:exported="false" />
         <activity

@@ -16,8 +16,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class SignInUserMonday extends AppCompatActivity {
-
+public class SignInUserThursday extends AppCompatActivity {
     EditText EffStartH, EffStartM, EffEndH, EffEndM;
     EditText BadStartH, BadStartM, BadEndH, BadEndM;
     EditText SleepStartH, SleepStartM, SleepEndH, SleepEndM;
@@ -27,7 +26,7 @@ public class SignInUserMonday extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.sign_in_user_monday);
+        setContentView(R.layout.sign_in_user_thursday);
         Intent lastIntent = getIntent();
         EffStartH = findViewById(R.id.EffStartH);
         EffStartM = findViewById(R.id.EffStartM);
@@ -69,7 +68,7 @@ public class SignInUserMonday extends AppCompatActivity {
                     String user = lastIntent.getStringExtra("username");
                     String phone = lastIntent.getStringExtra("phoneNum");
                     String pass = lastIntent.getStringExtra("password");
-                    Intent intent = new Intent(SignInUserMonday.this, SignInUserTuesday.class);
+                    Intent intent = new Intent(SignInUserThursday.this, SignInUserFriday.class);
                     intent.putExtra("effciency", effciency);
                     intent.putExtra("uneffciency", uneffciency);
                     intent.putExtra("sleep", sleep);
@@ -77,17 +76,17 @@ public class SignInUserMonday extends AppCompatActivity {
                     intent.putExtra("phoneNum", phone);
                     intent.putExtra("password", pass);
                     startActivity(intent);
+
                 }
             }
         });
-
     }
 
     private EfficientTime getdayEfficientTime() {
         LocalTime start = buildLocalTime(EffStartH, EffStartM);
         LocalTime end = buildLocalTime(EffEndH, EffEndM);
 
-        return new EfficientTime(DayOfWeek.MONDAY, start, end);
+        return new EfficientTime(DayOfWeek.THURSDAY, start, end);
     }
 
     private boolean isdayEfficientTimeEmpty(){
@@ -112,7 +111,7 @@ public class SignInUserMonday extends AppCompatActivity {
         LocalTime start = buildLocalTime(BadStartH, BadStartM);
         LocalTime end = buildLocalTime(BadEndH, BadEndM);
 
-        return new EfficientTime(DayOfWeek.MONDAY, start, end);
+        return new EfficientTime(DayOfWeek.THURSDAY, start, end);
     }
 
     private boolean isdayBadTimeEmpty(){
@@ -137,7 +136,7 @@ public class SignInUserMonday extends AppCompatActivity {
         LocalTime start = buildLocalTime(SleepStartH, SleepStartM);
         LocalTime end = buildLocalTime(SleepEndH, SleepEndM);
 
-        return new EfficientTime(DayOfWeek.MONDAY, start, end);
+        return new EfficientTime(DayOfWeek.THURSDAY, start, end);
     }
 
     private boolean isdaySleepTimeEmpty(){

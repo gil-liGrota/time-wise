@@ -16,8 +16,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class SignInUserMonday extends AppCompatActivity {
-
+public class SignInUserSaturday extends AppCompatActivity {
     EditText EffStartH, EffStartM, EffEndH, EffEndM;
     EditText BadStartH, BadStartM, BadEndH, BadEndM;
     EditText SleepStartH, SleepStartM, SleepEndH, SleepEndM;
@@ -27,7 +26,7 @@ public class SignInUserMonday extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.sign_in_user_monday);
+        setContentView(R.layout.sign_in_user_saturday);
         Intent lastIntent = getIntent();
         EffStartH = findViewById(R.id.EffStartH);
         EffStartM = findViewById(R.id.EffStartM);
@@ -54,40 +53,49 @@ public class SignInUserMonday extends AppCompatActivity {
                     ArrayList<EfficientTime> effciency = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("effciency");
                     if (!isdayEfficientTimeEmpty()) {
                         effciency.add(getdayEfficientTime());
+                        for (EfficientTime t : effciency) {
+                            System.out.println(t);
+                        }
+
                     }
 
                     ArrayList<EfficientTime> uneffciency = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("uneffciency");
                     if (!isdayBadTimeEmpty()) {
                         uneffciency.add(getdayBadTime());
+                        for (EfficientTime t : uneffciency) {
+                            System.out.println(t);
+                        }
                     }
 
                     ArrayList<EfficientTime> sleep = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("sleep");
                     if (!isdaySleepTimeEmpty()) {
                         sleep.add(getdaySleepTime());
+                        for (EfficientTime t : sleep) {
+                            System.out.println(t);
+                        }
                     }
 
                     String user = lastIntent.getStringExtra("username");
                     String phone = lastIntent.getStringExtra("phoneNum");
                     String pass = lastIntent.getStringExtra("password");
-                    Intent intent = new Intent(SignInUserMonday.this, SignInUserTuesday.class);
+                    Intent intent = new Intent(SignInUserSaturday.this, SignInUserSaturday.class);
                     intent.putExtra("effciency", effciency);
                     intent.putExtra("uneffciency", uneffciency);
                     intent.putExtra("sleep", sleep);
                     intent.putExtra("username", user);
                     intent.putExtra("phoneNum", phone);
                     intent.putExtra("password", pass);
-                    startActivity(intent);
+//                    startActivity(intent);
                 }
             }
         });
-
     }
 
     private EfficientTime getdayEfficientTime() {
         LocalTime start = buildLocalTime(EffStartH, EffStartM);
         LocalTime end = buildLocalTime(EffEndH, EffEndM);
 
-        return new EfficientTime(DayOfWeek.MONDAY, start, end);
+        return new EfficientTime(DayOfWeek.SATURDAY, start, end);
     }
 
     private boolean isdayEfficientTimeEmpty(){
@@ -112,7 +120,7 @@ public class SignInUserMonday extends AppCompatActivity {
         LocalTime start = buildLocalTime(BadStartH, BadStartM);
         LocalTime end = buildLocalTime(BadEndH, BadEndM);
 
-        return new EfficientTime(DayOfWeek.MONDAY, start, end);
+        return new EfficientTime(DayOfWeek.SATURDAY, start, end);
     }
 
     private boolean isdayBadTimeEmpty(){
@@ -137,7 +145,7 @@ public class SignInUserMonday extends AppCompatActivity {
         LocalTime start = buildLocalTime(SleepStartH, SleepStartM);
         LocalTime end = buildLocalTime(SleepEndH, SleepEndM);
 
-        return new EfficientTime(DayOfWeek.MONDAY, start, end);
+        return new EfficientTime(DayOfWeek.SATURDAY, start, end);
     }
 
     private boolean isdaySleepTimeEmpty(){
