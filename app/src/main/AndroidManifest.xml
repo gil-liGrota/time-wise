@@ -12,12 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Timewise"
         tools:targetApi="31">
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/rounded_edittext" />
-
         <activity
-            android:name=".MainActivity"
+            android:name=".SignInUser"
+            android:exported="false" />
+        <activity
+            android:name=".LogInUser"
+            android:exported="false" />
+        <activity
+            android:name=".log_in"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

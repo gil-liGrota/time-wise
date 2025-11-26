@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".log_in"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:padding="32dp"
@@ -25,7 +25,7 @@
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="Email"
+        android:hint="Ueser name"
         android:background="@drawable/rounded_edittext"
         android:padding="12dp"
         android:inputType="textEmailAddress" />
@@ -48,7 +48,7 @@
         android:layout_height="50dp"
         android:text="Log In"
         android:textSize="18sp"
-        android:background="@drawable/rounded_button_primary"
+        android:backgroundTint="#FAB7D0"
         android:textColor="#FFFFFF"
         android:layout_marginTop="28dp" />
 
@@ -59,7 +59,7 @@
         android:layout_height="50dp"
         android:text="Sign In"
         android:textSize="18sp"
-        android:background="@drawable/rounded_button_secondary"
+        android:backgroundTint="#FAB7D0"
         android:textColor="#FFFFFF"
         android:layout_marginTop="12dp" />
 </LinearLayout>
