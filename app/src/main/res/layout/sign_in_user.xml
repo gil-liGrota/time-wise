@@ -36,9 +36,10 @@
         android:layout_marginBottom="24dp"/>
 
     <Button
-        android:id="@+id/btnSave"
+        android:id="@+id/btnNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="next page"
+        android:textSize="24dp"
         android:backgroundTint="#FAB7D0"/>
 </LinearLayout>
