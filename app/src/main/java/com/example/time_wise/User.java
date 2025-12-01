@@ -1,5 +1,7 @@
 package com.example.time_wise;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,4 +77,22 @@ public class User {
     public void setTasks(ArrayList<Task> tasks) { this.tasks = tasks; }
     public void setEfficiencyHistory(ArrayList<DayEfficiency> efficiencyHistory) { this.efficiencyHistory = efficiencyHistory; }
     public void setTodos(ArrayList<Todo> todos) { this.todos = todos; }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("User Name: ").append(userName).append("\n");
+        sb.append("Phone Number: ").append(phoneNumber).append("\n");
+        sb.append("Password: ").append(password).append("\n");
+
+        sb.append("Efficiency: ").append(efficiency != null ? efficiency.toString() : "[]").append("\n");
+        sb.append("Unefficiency: ").append(unefficiency != null ? unefficiency.toString() : "[]").append("\n");
+        sb.append("Sleep: ").append(sleep != null ? sleep.toString() : "[]").append("\n");
+
+        sb.append("Tasks: ").append(tasks != null ? tasks.toString() : "[]").append("\n");
+        sb.append("Efficiency History: ").append(efficiencyHistory != null ? efficiencyHistory.toString() : "[]").append("\n");
+        sb.append("Todos: ").append(todos != null ? todos.toString() : "[]").append("\n");
+
+        return sb.toString();
+    }
 }

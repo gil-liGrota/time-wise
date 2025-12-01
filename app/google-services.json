@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "271145831298",
+    "project_id": "time-wise-pro",
+    "storage_bucket": "time-wise-pro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271145831298:android:53a391d3b53cbf003d5d9b",
+        "android_client_info": {
+          "package_name": "com.example.time_wise"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6PimxV5JeGnk7CAhh63eHR9WBhGhBnwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
