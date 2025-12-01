@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -49,46 +52,74 @@ public class SignInUserSaturday extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (!isdaySleepTimeEmpty() || isdayBadTimeEmpty() || isdayEfficientTimeEmpty()) {
+                if (!isdaySleepTimeEmpty() || !isdayBadTimeEmpty() || !isdayEfficientTimeEmpty()) {
                     ArrayList<EfficientTime> effciency = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("effciency");
                     if (!isdayEfficientTimeEmpty()) {
                         effciency.add(getdayEfficientTime());
-                        for (EfficientTime t : effciency) {
-                            System.out.println(t);
-                        }
-
                     }
 
                     ArrayList<EfficientTime> uneffciency = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("uneffciency");
                     if (!isdayBadTimeEmpty()) {
                         uneffciency.add(getdayBadTime());
-                        for (EfficientTime t : uneffciency) {
-                            System.out.println(t);
-                        }
                     }
 
                     ArrayList<EfficientTime> sleep = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("sleep");
                     if (!isdaySleepTimeEmpty()) {
                         sleep.add(getdaySleepTime());
-                        for (EfficientTime t : sleep) {
-                            System.out.println(t);
-                        }
                     }
 
                     String user = lastIntent.getStringExtra("username");
                     String phone = lastIntent.getStringExtra("phoneNum");
                     String pass = lastIntent.getStringExtra("password");
-                    Intent intent = new Intent(SignInUserSaturday.this, SignInUserSaturday.class);
+                    Intent intent = new Intent(SignInUserSaturday.this, HomeScreen.class);
                     intent.putExtra("effciency", effciency);
                     intent.putExtra("uneffciency", uneffciency);
                     intent.putExtra("sleep", sleep);
                     intent.putExtra("username", user);
                     intent.putExtra("phoneNum", phone);
                     intent.putExtra("password", pass);
-//                    startActivity(intent);
+                    saveData();
+                    startActivity(intent);
                 }
             }
         });
+    }
+
+    private void saveData(){
+        Intent lastIntent = getIntent();
+        String username = lastIntent.getStringExtra("username");
+        String phone = lastIntent.getStringExtra("phoneNum");
+        String pass = lastIntent.getStringExtra("password");
+        ArrayList<EfficientTime> effciency = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("effciency");
+        if (!isdayEfficientTimeEmpty()) {
+            effciency.add(getdayEfficientTime());
+        }
+
+        ArrayList<EfficientTime> uneffciency = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("uneffciency");
+        if (!isdayBadTimeEmpty()) {
+            uneffciency.add(getdayBadTime());
+        }
+
+        ArrayList<EfficientTime> sleep = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("sleep");
+        if (!isdaySleepTimeEmpty()) {
+            sleep.add(getdaySleepTime());
+        }
+
+        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<DayEfficiency> efficiencyHistory = new ArrayList<>();
+        ArrayList<Todo> todos = new ArrayList<>();
+
+        User user = new User(phone, username, pass, effciency, uneffciency, sleep, tasks, efficiencyHistory, todos);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").
+                add(user)
+                .addOnSuccessListener(res -> {
+                    Toast.makeText(this, "welcome", Toast.LENGTH_LONG).show();
+                })
+                .addOnFailureListener(exc -> {
+                    Toast.makeText(this, "someting went worng, please try again", Toast.LENGTH_LONG).show();
+                });
     }
 
     private EfficientTime getdayEfficientTime() {
@@ -186,10 +217,12 @@ public class SignInUserSaturday extends AppCompatActivity {
             // בדיקת טווחים
             if (hour < 0 || hour > 23) {
                 hourET.setError("Hour must be 0-23");
+                hourET.setText("");
                 return null;
             }
             if (minute < 0 || minute > 59) {
                 minuteET.setError("Minutes must be 0-59");
+                minuteET.setText("");
                 return null;
             }
 

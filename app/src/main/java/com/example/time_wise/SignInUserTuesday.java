@@ -51,7 +51,7 @@ public class SignInUserTuesday extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (!isdaySleepTimeEmpty() || isdayBadTimeEmpty() || isdayEfficientTimeEmpty()) {
+                if (!isdaySleepTimeEmpty() || !isdayBadTimeEmpty() || !isdayEfficientTimeEmpty()) {
                     ArrayList<EfficientTime> effciency = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("effciency");
                     if (!isdayEfficientTimeEmpty()) {
                         effciency.add(getdayEfficientTime());
@@ -180,13 +180,14 @@ public class SignInUserTuesday extends AppCompatActivity {
             // בדיקת טווחים
             if (hour < 0 || hour > 23) {
                 hourET.setError("Hour must be 0-23");
+                hourET.setText("");
                 return null;
             }
             if (minute < 0 || minute > 59) {
                 minuteET.setError("Minutes must be 0-59");
+                minuteET.setText("");
                 return null;
             }
-
             return LocalTime.of(hour, minute);
 
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.example.time_wise;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -7,10 +8,10 @@ public class User {
     protected String phoneNumber;
     protected String userName;
     protected String password;
-    protected List<EfficientTime> efficiency, unefficiency, sleep;
-    protected List<Task> tasks;
-    protected List<DayEfficiency> efficiencyHistory;
-    protected List<Todo> todos;
+    protected ArrayList<EfficientTime> efficiency, unefficiency, sleep;
+    protected ArrayList<Task> tasks;
+    protected ArrayList<DayEfficiency> efficiencyHistory;
+    protected ArrayList<Todo> todos;
 
     public User(){
         this.phoneNumber = "";
@@ -38,12 +39,12 @@ public class User {
     public User(String phoneNumber,
                 String userName,
                 String password,
-                List<EfficientTime> efficiency,
-                List<EfficientTime> unefficiency,
-                List<EfficientTime> sleep,
-                List<Task> tasks,
-                List<DayEfficiency> efficiencyHistory,
-                List<Todo> todos){
+                ArrayList<EfficientTime> efficiency,
+                ArrayList<EfficientTime> unefficiency,
+                ArrayList<EfficientTime> sleep,
+                ArrayList<Task> tasks,
+                ArrayList<DayEfficiency> efficiencyHistory,
+                ArrayList<Todo> todos){
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.password = password;
@@ -58,20 +59,20 @@ public class User {
     public String getPhoneNumber() { return phoneNumber; }
     public String getUserName() { return userName; }
     public String getPassword() { return password; }
-    public List<EfficientTime> getEfficiency() { return efficiency; }
-    public List<EfficientTime> getUnefficiency() { return unefficiency; }
-    public List<EfficientTime> getSleep() { return sleep; }
-    public List<Task> getTasks() { return tasks; }
-    public List<DayEfficiency> getEfficiencyHistory() { return efficiencyHistory; }
-    public List<Todo> getTodos() { return todos; }
+    public ArrayList<EfficientTime> getEfficiency() { return efficiency; }
+    public ArrayList<EfficientTime> getUnefficiency() { return unefficiency; }
+    public ArrayList<EfficientTime> getSleep() { return sleep; }
+    public ArrayList<Task> getTasks() { return tasks; }
+    public ArrayList<DayEfficiency> getEfficiencyHistory() { return efficiencyHistory; }
+    public ArrayList<Todo> getTodos() { return todos; }
 
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public void setUserName(String userName) { this.userName = userName; }
     public void setPassword(String password) { this.password = password; }
-    public void setEfficiency(List<EfficientTime> efficiency) { this.efficiency = efficiency; }
-    public void setUnefficiency(List<EfficientTime> unefficiency) { this.unefficiency = unefficiency; }
-    public void setSleep(List<EfficientTime> sleep) { this.sleep = sleep; }
-    public void setTasks(List<Task> tasks) { this.tasks = tasks; }
-    public void setEfficiencyHistory(List<DayEfficiency> efficiencyHistory) { this.efficiencyHistory = efficiencyHistory; }
-    public void setTodos(List<Todo> todos) { this.todos = todos; }
+    public void setEfficiency(ArrayList<EfficientTime> efficiency) { this.efficiency = efficiency; }
+    public void setUnefficiency(ArrayList<EfficientTime> unefficiency) { this.unefficiency = unefficiency; }
+    public void setSleep(ArrayList<EfficientTime> sleep) { this.sleep = sleep; }
+    public void setTasks(ArrayList<Task> tasks) { this.tasks = tasks; }
+    public void setEfficiencyHistory(ArrayList<DayEfficiency> efficiencyHistory) { this.efficiencyHistory = efficiencyHistory; }
+    public void setTodos(ArrayList<Todo> todos) { this.todos = todos; }
 }

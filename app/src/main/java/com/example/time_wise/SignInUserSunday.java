@@ -55,7 +55,7 @@ public class SignInUserSunday extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (!isdaySleepTimeEmpty() || isdayBadTimeEmpty() || isdayEfficientTimeEmpty()) {
+                if (!isdaySleepTimeEmpty() || !isdayBadTimeEmpty() || !isdayEfficientTimeEmpty()) {
                     System.out.println("in");
                     ArrayList<EfficientTime> effciency = new ArrayList<>();
                     if (!isdayEfficientTimeEmpty()) {
@@ -184,10 +184,12 @@ public class SignInUserSunday extends AppCompatActivity {
             // בדיקת טווחים
             if (hour < 0 || hour > 23) {
                 hourET.setError("Hour must be 0-23");
+                hourET.setText("");
                 return null;
             }
             if (minute < 0 || minute > 59) {
                 minuteET.setError("Minutes must be 0-59");
+                minuteET.setText("");
                 return null;
             }
 
