@@ -1,38 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/etTaskName"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Task Name"
-        android:inputType="text" />
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/etTaskStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Start Time"
-        android:focusable="false"
-        android:clickable="true" />
+        <!-- שם משימה -->
+        <EditText
+            android:id="@+id/etTaskName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Task Name"
+            android:inputType="text" />
 
-    <EditText
-        android:id="@+id/etTaskEnd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="End Time"
-        android:focusable="false"
-        android:clickable="true" />
+        <!-- זמן התחלה -->
+        <EditText
+            android:id="@+id/etTaskStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Start Time"
+            android:focusable="false"
+            android:clickable="true" />
 
-    <Spinner
-        android:id="@+id/spinnerTopic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:prompt="@string/select_topic_prompt" />
+        <!-- זמן סיום -->
+        <EditText
+            android:id="@+id/etTaskEnd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="End Time"
+            android:focusable="false"
+            android:clickable="true" />
 
+        <!-- נושא -->
+        <Spinner
+            android:id="@+id/spinnerTopic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/select_topic_prompt" />
 
-</LinearLayout>
+        <!-- תאריך -->
+        <EditText
+            android:id="@+id/etTaskDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date (dd/MM/yyyy)"
+            android:focusable="false"
+            android:clickable="true" />
+
+        <!-- סוג חזרה -->
+        <Spinner
+            android:id="@+id/spinnerRepeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- חשיבות -->
+        <Spinner
+            android:id="@+id/spinnerImportance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- תיעדוף -->
+        <EditText
+            android:id="@+id/etPriority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Priority (1-5)"
+            android:inputType="number" />
+
+        <!-- סטריקט -->
+        <Spinner
+            android:id="@+id/spinnerStrict"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Switch
+            android:id="@+id/switchHasTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Include Time"
+            android:checked="true"/>
+
+    </LinearLayout>
+</ScrollView>

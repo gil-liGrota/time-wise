@@ -9,20 +9,30 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class HomeScreen extends AppCompatActivity {
     private Intent intent;
     private LinearLayout sideMenu;
     private TextView btnMenu;
-    private String userId;
+    private String userID;
+    private String userName, password;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_screen);
         Intent lastIntent = getIntent();
-        userId = lastIntent.getStringExtra("userId");
+        userID = lastIntent.getStringExtra("userId");
+        userName = lastIntent.getStringExtra("username");
+        password = lastIntent.getStringExtra("password");
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
+
+        if(userID == null){
+            getUserIdByUsername(userName);
+        }
 
         // לחיצה על כפתור המבורגר לפתיחה/סגירה
         btnMenu.setOnClickListener(v -> {
@@ -88,9 +98,33 @@ public class HomeScreen extends AppCompatActivity {
                     Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();
                     break;
             }
-            intent.putExtra("userId", userId);
+            intent.putExtra("userId", userID);
             startActivity(intent);
             sideMenu.setVisibility(View.GONE);
         });
     }
+
+    private void getUserIdByUsername(String username) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .whereEqualTo("userName", username)
+                .get()
+                .addOnSuccessListener(query -> {
+                    if (query.isEmpty()) {
+                        Toast.makeText(this, "Username not found", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // משתמש קיים → מקבלים את ה-ID
+                    userID = query.getDocuments().get(0).getId();
+
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error connecting to database: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
+
 }

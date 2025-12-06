@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +25,6 @@ import java.util.Map;
 
 public class TasksScreem extends AppCompatActivity {
 
-    private LinearLayout sideMenu;
     private TextView btnMenu;
     private ListView lvActivity;
     private ArrayList<Task> tasks;
@@ -38,13 +37,10 @@ public class TasksScreem extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.tasks_screem);
 
-        sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
         lvActivity = findViewById(R.id.activityList);
 
-        Intent lastIntent = getIntent();
-        userID = lastIntent.getStringExtra("userId");
-
+        userID = getIntent().getStringExtra("userId");
         tasks = new ArrayList<>();
 
         FloatingActionButton btnAddActivity = findViewById(R.id.btnAddActivity);
@@ -54,7 +50,6 @@ public class TasksScreem extends AppCompatActivity {
         btnAddTopic.setOnClickListener(v -> showAddTopicDirectDialog());
 
         loadTasks();
-        setupMenu();
     }
 
     private void loadTasks() {
@@ -77,46 +72,84 @@ public class TasksScreem extends AppCompatActivity {
                 });
     }
 
-    private void setupMenu() {
-        btnMenu.setOnClickListener(v -> sideMenu.setVisibility(sideMenu.getVisibility() == View.GONE ? View.VISIBLE : View.GONE));
+    private void updateListView() {
+        ArrayList<String> taskNames = new ArrayList<>();
+        for (Task t : tasks) taskNames.add(t.getName());
 
-        setMenuClickListener(R.id.nav_home, Constant.Menu.Home);
-        setMenuClickListener(R.id.nav_activity, Constant.Menu.ACTIVITY);
-        setMenuClickListener(R.id.nav_school_schedule, Constant.Menu.SCHOOL_SCHEDULE);
-        setMenuClickListener(R.id.nav_follow_efficiency, Constant.Menu.FOLLOW_EFFICIENCY);
-        setMenuClickListener(R.id.nav_todo, Constant.Menu.TODO);
-        setMenuClickListener(R.id.nav_calendar, Constant.Menu.CALENDER);
-        setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
-        setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
-        setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
-    }
-
-    private void setMenuClickListener(int id, Constant.Menu menu) {
-        TextView item = findViewById(id);
-        item.setOnClickListener(v -> {
-            switch (menu) {
-                case Home:
-                    startActivity(new Intent(TasksScreem.this, TasksScreem.class));
-                    break;
-                default:
-                    Toast.makeText(this, menu.toString(), Toast.LENGTH_SHORT).show();
-            }
-            sideMenu.setVisibility(View.GONE);
-        });
+        if (adapter == null) {
+            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, taskNames);
+            lvActivity.setAdapter(adapter);
+        } else {
+            adapter.clear();
+            adapter.addAll(taskNames);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void openAddTaskDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
+
         EditText etName = dialogView.findViewById(R.id.etTaskName);
         EditText etStart = dialogView.findViewById(R.id.etTaskStart);
         EditText etEnd = dialogView.findViewById(R.id.etTaskEnd);
-        Spinner spinnerTopic = dialogView.findViewById(R.id.spinnerTopic);
+        EditText etDate = dialogView.findViewById(R.id.etTaskDate);
+        EditText etPriority = dialogView.findViewById(R.id.etPriority);
 
+        Spinner spinnerTopic = dialogView.findViewById(R.id.spinnerTopic);
+        Spinner spinnerRepeat = dialogView.findViewById(R.id.spinnerRepeat);
+        Spinner spinnerImportance = dialogView.findViewById(R.id.spinnerImportance);
+        Spinner spinnerStrict = dialogView.findViewById(R.id.spinnerStrict);
+
+        Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
+
+        // TimePickers
         etStart.setOnClickListener(v -> showTimePicker(etStart));
         etEnd.setOnClickListener(v -> showTimePicker(etEnd));
 
+        // DatePicker
+        etDate.setOnClickListener(v -> showDatePicker(etDate));
+
+        // Load topics
         loadUserTopics(spinnerTopic);
 
+        // RepeatType spinner
+        Constant.RepeatType[] repeatTypes = Constant.RepeatType.values();
+        String[] repeatTypeNames = new String[repeatTypes.length];
+        for (int i = 0; i < repeatTypes.length; i++) {
+            repeatTypeNames[i] = repeatTypes[i].name(); // או friendly name
+        }
+        ArrayAdapter<String> repeatAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, repeatTypeNames);
+        repeatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRepeat.setAdapter(repeatAdapter);
+
+        // Importance spinner
+        ArrayAdapter<String> importanceAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, new String[]{"Not Important", "Important"});
+        importanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerImportance.setAdapter(importanceAdapter);
+
+        // Strict spinner
+        ArrayAdapter<String> strictAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, new String[]{"Not Constant", "Constant"});
+        strictAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStrict.setAdapter(strictAdapter);
+
+        // Switch behavior
+        switchHasTime.setChecked(true); // ברירת מחדל
+        switchHasTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                etStart.setVisibility(View.VISIBLE);
+                etEnd.setVisibility(View.VISIBLE);
+            } else {
+                etStart.setText("00:00");
+                etEnd.setText("24:00");
+                etStart.setVisibility(View.GONE);
+                etEnd.setVisibility(View.GONE);
+            }
+        });
+
+        // Dialog itself
         new AlertDialog.Builder(this)
                 .setTitle("Add New Task")
                 .setView(dialogView)
@@ -124,26 +157,73 @@ public class TasksScreem extends AppCompatActivity {
                     String name = etName.getText().toString().trim();
                     String startStr = etStart.getText().toString().trim();
                     String endStr = etEnd.getText().toString().trim();
+                    String dateStr = etDate.getText().toString().trim();
                     String selectedTopic = spinnerTopic.getSelectedItem() != null
-                            ? spinnerTopic.getSelectedItem().toString()
-                            : null;
+                            ? spinnerTopic.getSelectedItem().toString() : null;
 
-                    if (!name.isEmpty()) {
-                        Task newTask = new Task();
-                        newTask.setName(name);
-                        if (selectedTopic != null) newTask.setTopic(new Topic(selectedTopic));
-                        try {
-                            if (!startStr.isEmpty()) newTask.setStart(LocalTime.parse(startStr));
-                            if (!endStr.isEmpty()) newTask.setEnd(LocalTime.parse(endStr));
-                        } catch (Exception e) { e.printStackTrace(); }
+                    Constant.RepeatType repeatType = Constant.RepeatType.values()[spinnerRepeat.getSelectedItemPosition()];
+                    boolean isImportant = spinnerImportance.getSelectedItem().equals("Important");
+                    boolean strict = spinnerStrict.getSelectedItem().equals("Constant");
 
-                        tasks.add(newTask);
-                        updateListView();
-                        saveTaskToUser(newTask);
+                    int priority = 0;
+                    try { priority = Integer.parseInt(etPriority.getText().toString()); } catch (Exception ignored) {}
+
+                    Task newTask = new Task();
+                    newTask.setName(name);
+                    if (selectedTopic != null) newTask.setTopic(new Topic(selectedTopic));
+                    newTask.setType(repeatType);
+                    newTask.setImportant(isImportant);
+                    newTask.setStrict(strict);
+                    newTask.setPriority(priority);
+
+                    // Times
+                    try {
+                        if (!startStr.isEmpty()) newTask.setStart(LocalTime.parse(startStr));
+                        if (!endStr.isEmpty()) newTask.setEnd(LocalTime.parse(endStr));
+                    } catch (Exception e) { e.printStackTrace(); }
+
+                    // Date
+                    if (!dateStr.isEmpty()) {
+                        String[] parts = dateStr.split("/");
+                        if (parts.length == 3) {
+                            try {
+                                int day = Integer.parseInt(parts[0]);
+                                int month = Integer.parseInt(parts[1]);
+                                int year = Integer.parseInt(parts[2]);
+                                newTask.setDate(new Date(year, month, day));
+                            } catch (Exception ignored) {}
+                        }
                     }
+
+                    tasks.add(newTask);
+                    updateListView();
+                    saveTaskToUser(newTask);
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    private void showDatePicker(EditText editText) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        int year = calendar.get(java.util.Calendar.YEAR);
+        int month = calendar.get(java.util.Calendar.MONTH);
+        int day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
+
+        new android.app.DatePickerDialog(this, (view, y, m, d) -> {
+            editText.setText(String.format("%02d/%02d/%04d", d, m + 1, y));
+        }, year, month, day).show();
+    }
+
+    private void showTimePicker(EditText editText) {
+        int hour = 9, minute = 0;
+        String current = editText.getText().toString();
+        if (!current.isEmpty()) {
+            String[] parts = current.split(":");
+            try { hour = Integer.parseInt(parts[0]); minute = Integer.parseInt(parts[1]); } catch (Exception ignored) {}
+        }
+        new android.app.TimePickerDialog(this,
+                (view, hourOfDay, minute1) -> editText.setText(String.format("%02d:%02d", hourOfDay, minute1)),
+                hour, minute, true).show();
     }
 
     private void loadUserTopics(Spinner spinnerTopic) {
@@ -231,31 +311,5 @@ public class TasksScreem extends AppCompatActivity {
                 .update("tasks", tasks)
                 .addOnSuccessListener(aVoid -> Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show());
-    }
-
-    private void updateListView() {
-        ArrayList<String> taskNames = new ArrayList<>();
-        for (Task t : tasks) taskNames.add(t.getName());
-
-        if (adapter == null) {
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, taskNames);
-            lvActivity.setAdapter(adapter);
-        } else {
-            adapter.clear();
-            adapter.addAll(taskNames);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    private void showTimePicker(EditText editText) {
-        int hour = 9, minute = 0;
-        String current = editText.getText().toString();
-        if (!current.isEmpty()) {
-            String[] parts = current.split(":");
-            try { hour = Integer.parseInt(parts[0]); minute = Integer.parseInt(parts[1]); } catch (Exception ignored) {}
-        }
-        new android.app.TimePickerDialog(this,
-                (view, hourOfDay, minute1) -> editText.setText(String.format("%02d:%02d", hourOfDay, minute1)),
-                hour, minute, true).show();
     }
 }
