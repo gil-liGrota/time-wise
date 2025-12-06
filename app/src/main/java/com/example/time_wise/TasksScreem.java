@@ -3,26 +3,78 @@ package com.example.time_wise;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
-public class HomeScreen extends AppCompatActivity {
-    private Intent intent;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+public class TasksScreem extends AppCompatActivity {
+
     private LinearLayout sideMenu;
     private TextView btnMenu;
-    private String userId;
+    Intent intent;
+    private ListView lvActivity;
+    private ArrayList<Task> tasks;
+    private ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_screen);
-        Intent lastIntent = getIntent();
-        userId = lastIntent.getStringExtra("userId");
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.tasks_screem);
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
+
+        lvActivity = findViewById(R.id.activityList);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        tasks = new ArrayList<>();
+
+        db.collection("users")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        // קח את רשימת המשימות (לדוגמה, "tasks") מה־User
+                        ArrayList<Map<String, Object>> taskListFromDB =
+                                (ArrayList<Map<String, Object>>) doc.get("tasks");
+
+                        if (taskListFromDB != null) {
+                            for (Map<String, Object> t : taskListFromDB) {
+                                try {
+                                    String name = t.get("name") != null ? t.get("name").toString() : "No Name";
+                                    Task task = new Task();
+                                    task.setName(name);
+                                    // ניתן להוסיף קריאת שדות נוספים אם צריך: start, end וכו.
+                                    tasks.add(task);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+                    // צור רשימת שמות המשימות להצגה
+                    ArrayList<String> taskNames = new ArrayList<>();
+                    for (Task t : tasks) {
+                        taskNames.add(t.getName());
+                    }
+
+                    adapter = new ArrayAdapter<>(TasksScreem.this, android.R.layout.simple_list_item_1, taskNames);
+                    lvActivity.setAdapter(adapter);
+                });
 
         // לחיצה על כפתור המבורגר לפתיחה/סגירה
         btnMenu.setOnClickListener(v -> {
@@ -45,17 +97,18 @@ public class HomeScreen extends AppCompatActivity {
 
     }
 
-
     private void setMenuClickListener(int id, Constant.Menu menu) {
         TextView item = findViewById(id);
 
         item.setOnClickListener(v -> {
             switch (menu){
                 case Home:
-                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
+                    intent = new Intent(TasksScreem.this, TasksScreem.class);
+                    startActivity(intent);
+
                     break;
                 case ACTIVITY:
-                    intent = new Intent(HomeScreen.this, TasksScreem.class);
+                    Toast.makeText(this, "activity", Toast.LENGTH_LONG).show();
                     break;
                 case SCHOOL_SCHEDULE:
                     Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
@@ -88,8 +141,7 @@ public class HomeScreen extends AppCompatActivity {
                     Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();
                     break;
             }
-            intent.putExtra("userId", userId);
-            startActivity(intent);
+//            startActivity(intent);
             sideMenu.setVisibility(View.GONE);
         });
     }

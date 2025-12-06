@@ -8,4 +8,16 @@ public class Constant {
         MONTHLY,
         YEARLE
     }
+
+    public enum Menu{
+        Home,
+        ACTIVITY,
+        SCHOOL_SCHEDULE,
+        FOLLOW_EFFICIENCY,
+        TODO,
+        CALENDER,
+        NOTES,
+        LERNING_PLAN,
+        FOLLOW_GOAL
+    }
 }

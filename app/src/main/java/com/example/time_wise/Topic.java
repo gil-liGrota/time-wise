@@ -1,5 +1,7 @@
 package com.example.time_wise;
 
+import androidx.annotation.NonNull;
+
 public class Topic {
     protected String name;
 
@@ -17,4 +19,10 @@ public class Topic {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

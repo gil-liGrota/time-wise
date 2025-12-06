@@ -1,5 +1,7 @@
 package com.example.time_wise;
 
+import androidx.annotation.NonNull;
+
 import java.time.LocalTime;
 
 public class Task {
@@ -74,4 +76,13 @@ public class Task {
     public void setImportant(boolean important) { isImportant = important; }
     public void setPriority(int priority) { this.priority = priority; }
     public void setStrict(boolean strict) { this.strict = strict;}
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.name + ", " + this.topic + ", " + this.date.getDay() + "/" + this.date.getMonth()
+                + "/" + this.date.getYear() + ", start: " + this.start + ", end: " + this.end +
+                ", importent? " + this.isImportant + ", priority: " + this.priority +
+                ", strict? " + this.strict;
+    }
 }

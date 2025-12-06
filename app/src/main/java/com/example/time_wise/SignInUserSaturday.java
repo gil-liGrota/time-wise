@@ -20,10 +20,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class SignInUserSaturday extends AppCompatActivity {
-    EditText EffStartH, EffStartM, EffEndH, EffEndM;
-    EditText BadStartH, BadStartM, BadEndH, BadEndM;
-    EditText SleepStartH, SleepStartM, SleepEndH, SleepEndM;
+    private EditText EffStartH, EffStartM, EffEndH, EffEndM;
+    private EditText BadStartH, BadStartM, BadEndH, BadEndM;
+    private EditText SleepStartH, SleepStartM, SleepEndH, SleepEndM;
     private Button next;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,35 +53,11 @@ public class SignInUserSaturday extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (!isdaySleepTimeEmpty() || !isdayBadTimeEmpty() || !isdayEfficientTimeEmpty()) {
-                    ArrayList<EfficientTime> effciency = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("effciency");
-                    if (!isdayEfficientTimeEmpty()) {
-                        effciency.add(getdayEfficientTime());
-                    }
-
-                    ArrayList<EfficientTime> uneffciency = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("uneffciency");
-                    if (!isdayBadTimeEmpty()) {
-                        uneffciency.add(getdayBadTime());
-                    }
-
-                    ArrayList<EfficientTime> sleep = (ArrayList<EfficientTime>) getIntent().getSerializableExtra("sleep");
-                    if (!isdaySleepTimeEmpty()) {
-                        sleep.add(getdaySleepTime());
-                    }
-
-                    String user = lastIntent.getStringExtra("username");
-                    String phone = lastIntent.getStringExtra("phoneNum");
-                    String pass = lastIntent.getStringExtra("password");
                     Intent intent = new Intent(SignInUserSaturday.this, HomeScreen.class);
-                    intent.putExtra("effciency", effciency);
-                    intent.putExtra("uneffciency", uneffciency);
-                    intent.putExtra("sleep", sleep);
-                    intent.putExtra("username", user);
-                    intent.putExtra("phoneNum", phone);
-                    intent.putExtra("password", pass);
+
+                    intent.putExtra("userId", userId);
                     saveData();
                     startActivity(intent);
-                }
             }
         });
     }
@@ -115,6 +92,7 @@ public class SignInUserSaturday extends AppCompatActivity {
         db.collection("users").
                 add(user)
                 .addOnSuccessListener(res -> {
+                    userId = res.getId();
                     Toast.makeText(this, "welcome", Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(exc -> {
