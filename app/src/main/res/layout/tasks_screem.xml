@@ -150,6 +150,19 @@
                 android:src="@drawable/ic_add"
                 />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnAddTopic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toStartOf="@id/btnAddActivity"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="#EADAF5"
+                android:contentDescription="Add Topic"
+                android:src="@drawable/ic_add"
+                />
+
         </RelativeLayout>
 
     </LinearLayout>

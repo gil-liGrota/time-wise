@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 public class Topic {
     protected String name;
+//    protected String userId;
 
     public Topic(){
         this.name = "";
@@ -15,10 +16,13 @@ public class Topic {
      */
     public Topic(String name){
         this.name = name;
+//        this.userId = userId;
     }
 
-    public String getName() { return name; }
+    public String getName() { return this.name; }
+//    public String getUserId() { return  this.userId; }
     public void setName(String name) { this.name = name; }
+//    public void setUserId(String userId) { this.userId = userId; }
 
     @NonNull
     @Override
