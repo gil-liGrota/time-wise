@@ -7,11 +7,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class HomeScreen extends AppCompatActivity {
+public class SchoolSchedule extends AppCompatActivity {
     private Intent intent;
     private LinearLayout sideMenu;
     private TextView btnMenu;
@@ -22,7 +26,8 @@ public class HomeScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_screen);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.school_schedule);
         Intent lastIntent = getIntent();
         userID = lastIntent.getStringExtra("userId");
         Constant.USER_ID = userID;
@@ -31,9 +36,7 @@ public class HomeScreen extends AppCompatActivity {
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
 
-        if(userID == null){
-            getUserIdByUsername(userName);
-        }
+
 
         // לחיצה על כפתור המבורגר לפתיחה/סגירה
         btnMenu.setOnClickListener(v -> {
@@ -56,21 +59,20 @@ public class HomeScreen extends AppCompatActivity {
 
     }
 
-
     private void setMenuClickListener(int id, Constant.Menu menu) {
         TextView item = findViewById(id);
 
         item.setOnClickListener(v -> {
             switch (menu){
                 case Home:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    intent = new Intent(SchoolSchedule.this, HomeScreen.class);
                     Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
                 case ACTIVITY:
-                    intent = new Intent(HomeScreen.this, TasksScreem.class);
+                    intent = new Intent(SchoolSchedule.this, TasksScreem.class);
                     break;
                 case SCHOOL_SCHEDULE:
-                    intent = new Intent(HomeScreen.this, SchoolSchedule.class);
+                    intent = new Intent(SchoolSchedule.this, SchoolSchedule.class);
                     break;
 
                 case FOLLOW_EFFICIENCY:
@@ -105,28 +107,4 @@ public class HomeScreen extends AppCompatActivity {
             sideMenu.setVisibility(View.GONE);
         });
     }
-
-    private void getUserIdByUsername(String username) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("users")
-                .whereEqualTo("userName", username)
-                .get()
-                .addOnSuccessListener(query -> {
-                    if (query.isEmpty()) {
-                        Toast.makeText(this, "Username not found", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    // משתמש קיים → מקבלים את ה-ID
-                    userID = query.getDocuments().get(0).getId();
-
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error connecting to database: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
-
-
-
 }

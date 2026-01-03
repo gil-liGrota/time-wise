@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Timewise"
         tools:targetApi="31">
         <activity
+            android:name=".SchoolSchedule"
+            android:exported="false" />
+        <activity
             android:name=".TasksScreem"
             android:exported="false" />
         <activity
