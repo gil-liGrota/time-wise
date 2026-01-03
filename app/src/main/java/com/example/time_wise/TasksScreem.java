@@ -1,14 +1,11 @@
 package com.example.time_wise;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,11 +22,10 @@ import java.util.Map;
 
 public class TasksScreem extends AppCompatActivity {
 
-    private TextView btnMenu;
     private ListView lvActivity;
     private ArrayList<Task> tasks;
-    private ArrayAdapter<String> adapter;
     private String userID;
+    private TaskAdapter taskAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +33,9 @@ public class TasksScreem extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.tasks_screem);
 
-        btnMenu = findViewById(R.id.btnMenu);
         lvActivity = findViewById(R.id.activityList);
-
-        userID = getIntent().getStringExtra("userId");
         tasks = new ArrayList<>();
+        userID = getIntent().getStringExtra("userId");
 
         FloatingActionButton btnAddActivity = findViewById(R.id.btnAddActivity);
         btnAddActivity.setOnClickListener(v -> openAddTaskDialog());
@@ -52,6 +46,7 @@ public class TasksScreem extends AppCompatActivity {
         loadTasks();
     }
 
+    // --- Load tasks from Firestore ---
     private void loadTasks() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(userID)
@@ -62,9 +57,9 @@ public class TasksScreem extends AppCompatActivity {
 
                     if (taskListFromDB != null) {
                         for (Map<String, Object> t : taskListFromDB) {
-                            String name = t.get("name") != null ? t.get("name").toString() : "No Name";
                             Task task = new Task();
-                            task.setName(name);
+                            task.setName(t.get("name") != null ? t.get("name").toString() : "No Name");
+                            // כאן ניתן לטעון גם שדות נוספים אם רוצים
                             tasks.add(task);
                         }
                     }
@@ -72,20 +67,17 @@ public class TasksScreem extends AppCompatActivity {
                 });
     }
 
+    // --- Update ListView using TaskAdapter ---
     private void updateListView() {
-        ArrayList<String> taskNames = new ArrayList<>();
-        for (Task t : tasks) taskNames.add(t.getName());
-
-        if (adapter == null) {
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, taskNames);
-            lvActivity.setAdapter(adapter);
+        if (taskAdapter == null) {
+            taskAdapter = new TaskAdapter(this, tasks, userID);
+            lvActivity.setAdapter(taskAdapter);
         } else {
-            adapter.clear();
-            adapter.addAll(taskNames);
-            adapter.notifyDataSetChanged();
+            taskAdapter.notifyDataSetChanged();
         }
     }
 
+    // --- Add new task dialog ---
     private void openAddTaskDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
 
@@ -102,41 +94,37 @@ public class TasksScreem extends AppCompatActivity {
 
         Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
 
-        // TimePickers
+        // Pickers
         etStart.setOnClickListener(v -> showTimePicker(etStart));
         etEnd.setOnClickListener(v -> showTimePicker(etEnd));
-
-        // DatePicker
         etDate.setOnClickListener(v -> showDatePicker(etDate));
 
-        // Load topics
+        // Load topics to spinner
         loadUserTopics(spinnerTopic);
 
         // RepeatType spinner
         Constant.RepeatType[] repeatTypes = Constant.RepeatType.values();
         String[] repeatTypeNames = new String[repeatTypes.length];
-        for (int i = 0; i < repeatTypes.length; i++) {
-            repeatTypeNames[i] = repeatTypes[i].name(); // או friendly name
-        }
-        ArrayAdapter<String> repeatAdapter = new ArrayAdapter<>(this,
+        for (int i = 0; i < repeatTypes.length; i++) repeatTypeNames[i] = repeatTypes[i].name();
+        android.widget.ArrayAdapter<String> repeatAdapter = new android.widget.ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, repeatTypeNames);
         repeatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRepeat.setAdapter(repeatAdapter);
 
         // Importance spinner
-        ArrayAdapter<String> importanceAdapter = new ArrayAdapter<>(this,
+        android.widget.ArrayAdapter<String> importanceAdapter = new android.widget.ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, new String[]{"Not Important", "Important"});
         importanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerImportance.setAdapter(importanceAdapter);
 
         // Strict spinner
-        ArrayAdapter<String> strictAdapter = new ArrayAdapter<>(this,
+        android.widget.ArrayAdapter<String> strictAdapter = new android.widget.ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, new String[]{"Not Constant", "Constant"});
         strictAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStrict.setAdapter(strictAdapter);
 
         // Switch behavior
-        switchHasTime.setChecked(true); // ברירת מחדל
+        switchHasTime.setChecked(true);
         switchHasTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 etStart.setVisibility(View.VISIBLE);
@@ -149,51 +137,16 @@ public class TasksScreem extends AppCompatActivity {
             }
         });
 
-        // Dialog itself
         new AlertDialog.Builder(this)
                 .setTitle("Add New Task")
                 .setView(dialogView)
                 .setPositiveButton("Add", (dialog, which) -> {
-                    String name = etName.getText().toString().trim();
-                    String startStr = etStart.getText().toString().trim();
-                    String endStr = etEnd.getText().toString().trim();
-                    String dateStr = etDate.getText().toString().trim();
-                    String selectedTopic = spinnerTopic.getSelectedItem() != null
-                            ? spinnerTopic.getSelectedItem().toString() : null;
-
-                    Constant.RepeatType repeatType = Constant.RepeatType.values()[spinnerRepeat.getSelectedItemPosition()];
-                    boolean isImportant = spinnerImportance.getSelectedItem().equals("Important");
-                    boolean strict = spinnerStrict.getSelectedItem().equals("Constant");
-
-                    int priority = 0;
-                    try { priority = Integer.parseInt(etPriority.getText().toString()); } catch (Exception ignored) {}
-
                     Task newTask = new Task();
-                    newTask.setName(name);
-                    if (selectedTopic != null) newTask.setTopic(new Topic(selectedTopic));
-                    newTask.setType(repeatType);
-                    newTask.setImportant(isImportant);
-                    newTask.setStrict(strict);
-                    newTask.setPriority(priority);
-
-                    // Times
-                    try {
-                        if (!startStr.isEmpty()) newTask.setStart(LocalTime.parse(startStr));
-                        if (!endStr.isEmpty()) newTask.setEnd(LocalTime.parse(endStr));
-                    } catch (Exception e) { e.printStackTrace(); }
-
-                    // Date
-                    if (!dateStr.isEmpty()) {
-                        String[] parts = dateStr.split("/");
-                        if (parts.length == 3) {
-                            try {
-                                int day = Integer.parseInt(parts[0]);
-                                int month = Integer.parseInt(parts[1]);
-                                int year = Integer.parseInt(parts[2]);
-                                newTask.setDate(new Date(year, month, day));
-                            } catch (Exception ignored) {}
-                        }
-                    }
+                    newTask.setName(etName.getText().toString().trim());
+                    try { if (!etStart.getText().toString().isEmpty()) newTask.setStart(LocalTime.parse(etStart.getText().toString())); } catch (Exception ignored) {}
+                    try { if (!etEnd.getText().toString().isEmpty()) newTask.setEnd(LocalTime.parse(etEnd.getText().toString())); } catch (Exception ignored) {}
+                    try { newTask.setPriority(Integer.parseInt(etPriority.getText().toString())); } catch (Exception ignored) {}
+                    // כאן ניתן להוסיף עדכון שדות נוספים כמו date, topic, repeat, importance, strict
 
                     tasks.add(newTask);
                     updateListView();
@@ -203,6 +156,154 @@ public class TasksScreem extends AppCompatActivity {
                 .show();
     }
 
+    // --- Edit task dialog (called from TaskAdapter) ---
+    public void openEditTaskDialog(Task task, int position) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
+
+        // --- Get all views ---
+        EditText etName = dialogView.findViewById(R.id.etTaskName);
+        EditText etStart = dialogView.findViewById(R.id.etTaskStart);
+        EditText etEnd = dialogView.findViewById(R.id.etTaskEnd);
+        EditText etDate = dialogView.findViewById(R.id.etTaskDate);
+        EditText etPriority = dialogView.findViewById(R.id.etPriority);
+
+        Spinner spinnerTopic = dialogView.findViewById(R.id.spinnerTopic);
+        Spinner spinnerRepeat = dialogView.findViewById(R.id.spinnerRepeat);
+        Spinner spinnerImportance = dialogView.findViewById(R.id.spinnerImportance);
+        Spinner spinnerStrict = dialogView.findViewById(R.id.spinnerStrict);
+
+        Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
+
+        // --- Fill current values ---
+        etName.setText(task.getName());
+        etStart.setText(task.getStart() != null ? task.getStart().toString() : "09:00");
+        etEnd.setText(task.getEnd() != null ? task.getEnd().toString() : "10:00");
+
+        if (task.getDate() != null) {
+            etDate.setText(String.format("%02d/%02d/%04d",
+                    task.getDate().getDay(), task.getDate().getMonth(), task.getDate().getYear()));
+        }
+
+        etPriority.setText(String.valueOf(task.getPriority()));
+
+        // --- Include Time switch ---
+        switchHasTime.setChecked(task.getStart() != null && task.getEnd() != null);
+        switchHasTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                etStart.setVisibility(View.VISIBLE);
+                etEnd.setVisibility(View.VISIBLE);
+            } else {
+                etStart.setVisibility(View.GONE);
+                etEnd.setVisibility(View.GONE);
+            }
+        });
+
+        // --- Date & Time pickers ---
+        etDate.setOnClickListener(v -> showDatePicker(etDate));
+        etStart.setOnClickListener(v -> showTimePicker(etStart));
+        etEnd.setOnClickListener(v -> showTimePicker(etEnd));
+
+        // --- Load Topics into Spinner ---
+        loadUserTopics(spinnerTopic);
+        if (task.getTopic() != null) {
+            // נבחר את הנושא הנוכחי
+            spinnerTopic.post(() -> {
+                for (int i = 0; i < spinnerTopic.getCount(); i++) {
+                    if (spinnerTopic.getItemAtPosition(i).toString().equals(task.getTopic().getName())) {
+                        spinnerTopic.setSelection(i);
+                        break;
+                    }
+                }
+            });
+        }
+
+        // --- RepeatType Spinner ---
+        Constant.RepeatType[] repeatTypes = Constant.RepeatType.values();
+        String[] repeatTypeNames = new String[repeatTypes.length];
+        for (int i = 0; i < repeatTypes.length; i++) repeatTypeNames[i] = repeatTypes[i].name();
+        android.widget.ArrayAdapter<String> repeatAdapter = new android.widget.ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, repeatTypeNames);
+        repeatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRepeat.setAdapter(repeatAdapter);
+        if (task.getType() != null) spinnerRepeat.setSelection(task.getType().ordinal());
+
+        // --- Importance Spinner ---
+        android.widget.ArrayAdapter<String> importanceAdapter = new android.widget.ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, new String[]{"Not Important", "Important"});
+        importanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerImportance.setAdapter(importanceAdapter);
+        spinnerImportance.setSelection(task.isImportant() ? 1 : 0);
+
+        // --- Strict Spinner ---
+        android.widget.ArrayAdapter<String> strictAdapter = new android.widget.ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, new String[]{"Not Constant", "Constant"});
+        strictAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStrict.setAdapter(strictAdapter);
+        spinnerStrict.setSelection(task.isStrict() ? 1 : 0);
+
+        // --- Show dialog ---
+        new AlertDialog.Builder(this)
+                .setTitle("Edit Task")
+                .setView(dialogView)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    // --- Save all changes ---
+                    task.setName(etName.getText().toString().trim());
+
+                    try {
+                        if (switchHasTime.isChecked()) {
+                            task.setStart(LocalTime.parse(etStart.getText().toString()));
+                            task.setEnd(LocalTime.parse(etEnd.getText().toString()));
+                        } else {
+                            task.setStart(null);
+                            task.setEnd(null);
+                        }
+                    } catch (Exception ignored) {}
+
+                    // Date
+                    String dateStr = etDate.getText().toString();
+                    if (!dateStr.isEmpty()) {
+                        String[] parts = dateStr.split("/");
+                        if (parts.length == 3) {
+                            try {
+                                int day = Integer.parseInt(parts[0]);
+                                int month = Integer.parseInt(parts[1]);
+                                int year = Integer.parseInt(parts[2]);
+                                task.setDate(new Date(year, month, day));
+                            } catch (Exception ignored) {}
+                        }
+                    }
+
+                    // Priority
+                    try { task.setPriority(Integer.parseInt(etPriority.getText().toString())); } catch (Exception ignored) {}
+
+                    // Topic
+                    String selectedTopic = spinnerTopic.getSelectedItem() != null ? spinnerTopic.getSelectedItem().toString() : null;
+                    if (selectedTopic != null) task.setTopic(new Topic(selectedTopic));
+
+                    // Repeat, Importance, Strict
+                    task.setType(Constant.RepeatType.values()[spinnerRepeat.getSelectedItemPosition()]);
+                    task.setImportant(spinnerImportance.getSelectedItemPosition() == 1);
+                    task.setStrict(spinnerStrict.getSelectedItemPosition() == 1);
+
+                    // Update ListView & Firestore
+                    updateListView();
+                    saveTaskToUser(task);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+
+    // --- Save tasks to Firestore ---
+    private void saveTaskToUser(Task task) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userID)
+                .update("tasks", tasks)
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show());
+    }
+
+    // --- Date picker ---
     private void showDatePicker(EditText editText) {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         int year = calendar.get(java.util.Calendar.YEAR);
@@ -214,6 +315,7 @@ public class TasksScreem extends AppCompatActivity {
         }, year, month, day).show();
     }
 
+    // --- Time picker ---
     private void showTimePicker(EditText editText) {
         int hour = 9, minute = 0;
         String current = editText.getText().toString();
@@ -226,6 +328,7 @@ public class TasksScreem extends AppCompatActivity {
                 hour, minute, true).show();
     }
 
+    // --- Load topics for spinner ---
     private void loadUserTopics(Spinner spinnerTopic) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(userID).collection("topics")
@@ -237,8 +340,7 @@ public class TasksScreem extends AppCompatActivity {
                         if (topicName != null) topicNames.add(topicName);
                     }
                     topicNames.add("Add Topic...");
-
-                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                    android.widget.ArrayAdapter<String> spinnerAdapter = new android.widget.ArrayAdapter<>(this,
                             android.R.layout.simple_spinner_item, topicNames);
                     spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerTopic.setAdapter(spinnerAdapter);
@@ -259,7 +361,7 @@ public class TasksScreem extends AppCompatActivity {
                 });
     }
 
-    private void showAddTopicDialog(Spinner spinnerTopic, ArrayAdapter<String> spinnerAdapter) {
+    private void showAddTopicDialog(Spinner spinnerTopic, android.widget.ArrayAdapter<String> spinnerAdapter) {
         EditText etNewTopic = new EditText(this);
         etNewTopic.setHint("Enter topic name");
 
@@ -303,13 +405,5 @@ public class TasksScreem extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
-    }
-
-    private void saveTaskToUser(Task task) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(userID)
-                .update("tasks", tasks)
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show());
     }
 }

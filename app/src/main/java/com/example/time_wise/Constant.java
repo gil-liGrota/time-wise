@@ -20,4 +20,6 @@ public class Constant {
         LERNING_PLAN,
         FOLLOW_GOAL
     }
+
+    public static String USER_ID;
 }

@@ -25,6 +25,7 @@ public class HomeScreen extends AppCompatActivity {
         setContentView(R.layout.home_screen);
         Intent lastIntent = getIntent();
         userID = lastIntent.getStringExtra("userId");
+        Constant.USER_ID = userID;
         userName = lastIntent.getStringExtra("username");
         password = lastIntent.getStringExtra("password");
         sideMenu = findViewById(R.id.sideMenu);
