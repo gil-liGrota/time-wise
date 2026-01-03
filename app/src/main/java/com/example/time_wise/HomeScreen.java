@@ -63,6 +63,7 @@ public class HomeScreen extends AppCompatActivity {
         item.setOnClickListener(v -> {
             switch (menu){
                 case Home:
+                    intent = new Intent(HomeScreen.this, HomeScreen.class);
                     Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
                 case ACTIVITY:
