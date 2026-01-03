@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.time.LocalTime;
 
 public class Task {
+    private String firestoreId;
     protected String name;
     protected Topic topic;
     protected Date date;
@@ -76,6 +77,16 @@ public class Task {
     public void setImportant(boolean important) { isImportant = important; }
     public void setPriority(int priority) { this.priority = priority; }
     public void setStrict(boolean strict) { this.strict = strict;}
+
+
+
+    public String getFirestoreId() {
+        return firestoreId;
+    }
+
+    public void setFirestoreId(String firestoreId) {
+        this.firestoreId = firestoreId;
+    }
 
     @NonNull
     @Override
