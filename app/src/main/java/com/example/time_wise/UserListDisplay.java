@@ -50,7 +50,7 @@ public class UserListDisplay extends AppCompatActivity {
 
                         User u = new User(phoneNumber, userName, password,
                                 efficiency, unefficiency, sleep,
-                                null, null, null);
+                                null, null, null, null);
 
                         users.add(u);
                     }

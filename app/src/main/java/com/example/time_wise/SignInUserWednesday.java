@@ -68,8 +68,10 @@ public class SignInUserWednesday extends AppCompatActivity {
             String user = lastIntent.getStringExtra("username");
             String phone = lastIntent.getStringExtra("phoneNum");
             String pass = lastIntent.getStringExtra("password");
+            ArrayList<SchoolDay> schoolDays = (ArrayList<SchoolDay>) getIntent().getSerializableExtra("school");
 
             Intent intent = new Intent(SignInUserWednesday.this, SignInUserThursday.class);
+            intent.putExtra("school", schoolDays);
             intent.putExtra("effciency", effciency);
             intent.putExtra("uneffciency", uneffciency);
             intent.putExtra("sleep", sleep);
