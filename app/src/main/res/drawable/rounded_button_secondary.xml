@@ -1,6 +1,10 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <corners android:radius="16dp" />
-    <solid android:color="#FFFFFF" />
-    <stroke android:width="2dp" android:color="#FAB7D0" />
-</shape>
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#FFCEE0"> <!-- אפקט לחיצה ורוד בהיר -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FAB7D0"/> <!-- צבע ורוד קבוע -->
+            <corners android:radius="30dp"/> <!-- פינות מעוגלות -->
+        </shape>
+    </item>
+</ripple>

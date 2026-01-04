@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Timewise"
         tools:targetApi="31">
         <activity
+            android:name=".SchoolSun"
+            android:exported="false" />
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.actions" -->
+        <!-- android:resource="@xml/rounded_button" /> -->
+        <activity
             android:name=".SchoolSchedule"
             android:exported="false" />
         <activity

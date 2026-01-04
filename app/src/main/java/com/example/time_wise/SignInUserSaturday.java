@@ -107,7 +107,7 @@ public class SignInUserSaturday extends AppCompatActivity {
         ArrayList<DayEfficiency> efficiencyHistory = new ArrayList<>();
         ArrayList<Todo> todos = new ArrayList<>();
 
-        User user = new User(phone, username, pass, effciency, uneffciency, sleep, tasks, efficiencyHistory, todos);
+        User user = new User(phone, username, pass, effciency, uneffciency, sleep, tasks, efficiencyHistory, todos, null);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users")

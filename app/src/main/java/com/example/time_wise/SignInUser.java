@@ -90,7 +90,7 @@ public class SignInUser extends AppCompatActivity {
         String phone = phoneNum.getText().toString();
         String pass = password.getText().toString();
 
-        Intent intent = new Intent(SignInUser.this, SignInUserSunday.class);
+        Intent intent = new Intent(SignInUser.this, SchoolSun.class);
         intent.putExtra("username", user);
         intent.putExtra("phoneNum", phone);
         intent.putExtra("password", pass);

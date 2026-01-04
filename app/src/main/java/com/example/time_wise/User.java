@@ -3,7 +3,6 @@ package com.example.time_wise;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class User {
 
@@ -14,6 +13,7 @@ public class User {
     protected ArrayList<Task> tasks;
     protected ArrayList<DayEfficiency> efficiencyHistory;
     protected ArrayList<Todo> todos;
+    protected ArrayList<SchoolDay> schoolSchedule; // <-- הוספנו את זה
 
     public User(){
         this.phoneNumber = "";
@@ -25,6 +25,7 @@ public class User {
         this.tasks = null;
         this.efficiencyHistory = null;
         this.todos = null;
+        this.schoolSchedule = null; // <-- אתחול
     }
 
     /**
@@ -34,9 +35,10 @@ public class User {
      * @param efficiency - efficiency hours during the day List
      * @param unefficiency - unefficiency hours during the day List
      * @param sleep - sleep hours during the day List
-     * @param tasks - taske List
+     * @param tasks - task List
      * @param efficiencyHistory - efficiency history List
      * @param todos - todos List
+     * @param schoolSchedule - מערכת שעות של המשתמש
      */
     public User(String phoneNumber,
                 String userName,
@@ -46,7 +48,8 @@ public class User {
                 ArrayList<EfficientTime> sleep,
                 ArrayList<Task> tasks,
                 ArrayList<DayEfficiency> efficiencyHistory,
-                ArrayList<Todo> todos){
+                ArrayList<Todo> todos,
+                ArrayList<SchoolDay> schoolSchedule){
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.password = password;
@@ -56,6 +59,7 @@ public class User {
         this.tasks = tasks;
         this.efficiencyHistory = efficiencyHistory;
         this.todos = todos;
+        this.schoolSchedule = schoolSchedule; // <-- אתחול
     }
 
     public String getPhoneNumber() { return phoneNumber; }
@@ -67,6 +71,7 @@ public class User {
     public ArrayList<Task> getTasks() { return tasks; }
     public ArrayList<DayEfficiency> getEfficiencyHistory() { return efficiencyHistory; }
     public ArrayList<Todo> getTodos() { return todos; }
+    public ArrayList<SchoolDay> getSchoolSchedule() { return schoolSchedule; } // <-- Getter
 
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public void setUserName(String userName) { this.userName = userName; }
@@ -77,6 +82,7 @@ public class User {
     public void setTasks(ArrayList<Task> tasks) { this.tasks = tasks; }
     public void setEfficiencyHistory(ArrayList<DayEfficiency> efficiencyHistory) { this.efficiencyHistory = efficiencyHistory; }
     public void setTodos(ArrayList<Todo> todos) { this.todos = todos; }
+    public void setSchoolSchedule(ArrayList<SchoolDay> schoolSchedule) { this.schoolSchedule = schoolSchedule; } // <-- Setter
 
     @Override
     public String toString() {
@@ -92,6 +98,7 @@ public class User {
         sb.append("Tasks: ").append(tasks != null ? tasks.toString() : "[]").append("\n");
         sb.append("Efficiency History: ").append(efficiencyHistory != null ? efficiencyHistory.toString() : "[]").append("\n");
         sb.append("Todos: ").append(todos != null ? todos.toString() : "[]").append("\n");
+        sb.append("School Schedule: ").append(schoolSchedule != null ? schoolSchedule.toString() : "[]").append("\n"); // <-- הוספה
 
         return sb.toString();
     }
