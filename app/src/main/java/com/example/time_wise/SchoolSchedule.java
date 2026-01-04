@@ -2,6 +2,7 @@ package com.example.time_wise;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -11,6 +12,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,6 +73,52 @@ public class SchoolSchedule extends AppCompatActivity {
         adapter = new LessonAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+// נניח שיש לך את userID
+        db.collection("users").document(userID)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if(documentSnapshot.exists()) {
+                        List<Map<String, Object>> schoolScheduleMap =
+                                (List<Map<String, Object>>) documentSnapshot.get("schoolSchedule");
+
+                        ArrayList<SchoolDay> schoolScheduleList = new ArrayList<>();
+
+                        if(schoolScheduleMap != null) {
+                            for(Map<String, Object> dayMap : schoolScheduleMap) {
+                                String dayName = (String) dayMap.get("dayName");
+
+                                // שליפת השיעורים
+                                List<Map<String, Object>> lessonsMapList =
+                                        (List<Map<String, Object>>) dayMap.get("lessons");
+
+                                ArrayList<Lesson> lessonsList = new ArrayList<>();
+                                if(lessonsMapList != null) {
+                                    for(Map<String, Object> lessonMap : lessonsMapList) {
+                                        int number = ((Long) lessonMap.get("hour")).intValue();
+                                        String name = (String) lessonMap.get("name");
+                                        lessonsList.add(new Lesson(number, name));
+                                    }
+                                }
+
+                                schoolScheduleList.add(new SchoolDay(dayName, lessonsList));
+                            }
+                        }
+
+                        // עכשיו יש לך ArrayList<SchoolDay> מלא
+                        // אפשר לעדכן את ה-weekSchedule שלך
+                        for(SchoolDay day : schoolScheduleList){
+                            weekSchedule.put(day.getDayName(), day);
+                        }
+
+                        // לדוגמה, הצגת יום ראשון כברירת מחדל
+                        showDay("Sun");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error getting user", e);
+                });
 
 //        // יצירת ה-SchoolDay לכל יום עם שיעורים לדוגמה
 //        weekSchedule.put("Sun", new SchoolDay("Sun"));
@@ -127,12 +176,12 @@ public class SchoolSchedule extends AppCompatActivity {
 //        ));
 
         // חיבור כפתורי ימים ל-Adapter
-        ((Button)findViewById(R.id.btnSun)).setOnClickListener(v -> showDay("Sun"));
-        ((Button)findViewById(R.id.btnMon)).setOnClickListener(v -> showDay("Mon"));
-        ((Button)findViewById(R.id.btnTue)).setOnClickListener(v -> showDay("Tue"));
-        ((Button)findViewById(R.id.btnWed)).setOnClickListener(v -> showDay("Wed"));
-        ((Button)findViewById(R.id.btnThu)).setOnClickListener(v -> showDay("Thu"));
-        ((Button)findViewById(R.id.btnFri)).setOnClickListener(v -> showDay("Fri"));
+        ((Button)findViewById(R.id.btnSun)).setOnClickListener(v -> showDay("Sunday"));
+        ((Button)findViewById(R.id.btnMon)).setOnClickListener(v -> showDay("Monday"));
+        ((Button)findViewById(R.id.btnTue)).setOnClickListener(v -> showDay("Tuesday"));
+        ((Button)findViewById(R.id.btnWed)).setOnClickListener(v -> showDay("Wednsday"));
+        ((Button)findViewById(R.id.btnThu)).setOnClickListener(v -> showDay("Thursday"));
+        ((Button)findViewById(R.id.btnFri)).setOnClickListener(v -> showDay("Friday"));
 
         // הצגת יום ראשון כברירת מחדל
         showDay("Sun");

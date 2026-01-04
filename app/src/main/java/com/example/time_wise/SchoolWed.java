@@ -8,12 +8,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
-public class SchoolSun extends AppCompatActivity {
-
+public class SchoolWed extends AppCompatActivity {
     private EditText[] editHours = new EditText[11];
     private TextView txtDayTitle;
     private Button btnNext;
@@ -54,19 +57,20 @@ public class SchoolSun extends AppCompatActivity {
                 }
 
                 if (lessonsList.isEmpty()) {
-                    Toast.makeText(SchoolSun.this, "No lessons entered!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SchoolWed.this, "No lessons entered!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 String dayName = txtDayTitle.getText().toString();
-                SchoolDay schoolDay = new SchoolDay("Sunday", lessonsList);
+                SchoolDay schoolDay = new SchoolDay("Wednsday", lessonsList);
+
+                ArrayList<SchoolDay> schoolDays = (ArrayList<SchoolDay>) getIntent().getSerializableExtra("school");
 
 
-                ArrayList<SchoolDay> schoolDays = new ArrayList<>();
                 schoolDays.add(schoolDay);
 
 
-                Intent intent = new Intent(SchoolSun.this, SchoolMon.class);
+                Intent intent = new Intent(SchoolWed.this, SchoolThursday.class);
                 intent.putExtra("school", schoolDays);
                 startActivity(intent);
             }
