@@ -98,33 +98,42 @@ public class TasksScreem extends AppCompatActivity {
                     intent = new Intent(TasksScreem.this, TasksScreem.class);
                     break;
                 case SCHOOL_SCHEDULE:
+                    intent = new Intent(TasksScreem.this, HomeScreen.class);
                     Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 
                 case FOLLOW_EFFICIENCY:
+                    intent = new Intent(TasksScreem.this, HomeScreen.class);
                     Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
                     break;
 
                 case TODO:
+                    intent = new Intent(TasksScreem.this, HomeScreen.class);
                     Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
                     break;
 
                 case CALENDER:
+                    intent = new Intent(TasksScreem.this, HomeScreen.class);
                     Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
                     break;
 
                 case NOTES:
+                    intent = new Intent(TasksScreem.this, HomeScreen.class);
                     Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 
                 case LERNING_PLAN:
+                    intent = new Intent(TasksScreem.this, HomeScreen.class);
                     Toast.makeText(this, "Learning Plan", Toast.LENGTH_LONG).show();
                     break;
 
                 case FOLLOW_GOAL:
+                    intent = new Intent(TasksScreem.this, HomeScreen.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
+
                 default:
+                    intent = new Intent(TasksScreem.this, HomeScreen.class);
                     Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();
                     break;
             }
