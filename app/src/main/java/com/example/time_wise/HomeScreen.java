@@ -80,7 +80,7 @@ public class HomeScreen extends AppCompatActivity {
                     break;
 
                 case TODO:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    intent = new Intent(HomeScreen.this, Todos.class);
                     Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
                     break;
 

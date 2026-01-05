@@ -120,61 +120,6 @@ public class SchoolSchedule extends AppCompatActivity {
                     Log.e("Firestore", "Error getting user", e);
                 });
 
-//        // יצירת ה-SchoolDay לכל יום עם שיעורים לדוגמה
-//        weekSchedule.put("Sun", new SchoolDay("Sun"));
-//        weekSchedule.get("Sun").setLessons(Arrays.asList(
-//                new Lesson(1, "מתמטיקה"),
-//                new Lesson(2, "עברית"),
-//                new Lesson(3, "אנגלית"),
-//                new Lesson(4, "היסטוריה"),
-//                new Lesson(5, "גיאוגרפיה")
-//        ));
-//
-//        weekSchedule.put("Mon", new SchoolDay("Mon"));
-//        weekSchedule.get("Mon").setLessons(Arrays.asList(
-//                new Lesson(1, "פיזיקה"),
-//                new Lesson(2, "כימיה"),
-//                new Lesson(3, "ספורט"),
-//                new Lesson(4, "תנ\"ך"),
-//                new Lesson(5, "מוזיקה")
-//        ));
-//
-//        weekSchedule.put("Tue", new SchoolDay("Tue"));
-//        weekSchedule.get("Tue").setLessons(Arrays.asList(
-//                new Lesson(1, "מתמטיקה"),
-//                new Lesson(2, "אנגלית"),
-//                new Lesson(3, "תכנות"),
-//                new Lesson(4, "עברית"),
-//                new Lesson(5, "גיאוגרפיה")
-//        ));
-//
-//        weekSchedule.put("Wed", new SchoolDay("Wed"));
-//        weekSchedule.get("Wed").setLessons(Arrays.asList(
-//                new Lesson(1, "ספורט"),
-//                new Lesson(2, "כימיה"),
-//                new Lesson(3, "היסטוריה"),
-//                new Lesson(4, "מוזיקה"),
-//                new Lesson(5, "אנגלית")
-//        ));
-//
-//        weekSchedule.put("Thu", new SchoolDay("Thu"));
-//        weekSchedule.get("Thu").setLessons(Arrays.asList(
-//                new Lesson(1, "תנ\"ך"),
-//                new Lesson(2, "מתמטיקה"),
-//                new Lesson(3, "פיזיקה"),
-//                new Lesson(4, "אנגלית"),
-//                new Lesson(5, "תכנות")
-//        ));
-//
-//        weekSchedule.put("Fri", new SchoolDay("Fri"));
-//        weekSchedule.get("Fri").setLessons(Arrays.asList(
-//                new Lesson(1, "מוזיקה"),
-//                new Lesson(2, "תנ\"ך"),
-//                new Lesson(3, "ספורט"),
-//                new Lesson(4, "כימיה"),
-//                new Lesson(5, "גיאוגרפיה")
-//        ));
-
         // חיבור כפתורי ימים ל-Adapter
         ((Button)findViewById(R.id.btnSun)).setOnClickListener(v -> showDay("Sunday"));
         ((Button)findViewById(R.id.btnMon)).setOnClickListener(v -> showDay("Monday"));
@@ -226,7 +171,7 @@ public class SchoolSchedule extends AppCompatActivity {
                     break;
 
                 case TODO:
-                    intent = new Intent(SchoolSchedule.this, HomeScreen.class);
+                    intent = new Intent(SchoolSchedule.this, Todos.class);
                     Toast.makeText(this, "To-Do", Toast.LENGTH_SHORT).show();
                     break;
 

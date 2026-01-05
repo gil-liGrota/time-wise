@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Toolbar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="#FAB7D0"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/btnMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="☰"
+            android:textSize="28sp"
+            android:textColor="@android:color/white"
+            android:padding="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TODO"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:paddingStart="16dp"/>
+    </LinearLayout>
+
+    <!-- תוכן + תפריט -->
+    <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <!-- תפריט צד -->
+        <LinearLayout
+            android:id="@+id/sideMenu"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#FFEAF0"
+            android:padding="8dp"
+            android:visibility="gone">
+
+            <!-- כפתורי ניווט (כמו שיש לך) -->
+            <TextView
+                android:id="@+id/nav_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:padding="8dp"/>
+
+            <TextView
+                android:id="@+id/nav_todo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TODO"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- ⭐ תוכן מרכזי – רשימת TODO -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/todosRecycler"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+</LinearLayout>

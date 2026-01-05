@@ -108,7 +108,7 @@ public class TasksScreem extends AppCompatActivity {
                     break;
 
                 case TODO:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
+                    intent = new Intent(TasksScreem.this, Todos.class);
                     Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
                     break;
 
@@ -146,7 +146,7 @@ public class TasksScreem extends AppCompatActivity {
     // --- Load tasks from Firestore ---
     private void loadTasks() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(Constant.USER_ID)
+        db.collection("users").document(userID)
                 .get()
                 .addOnSuccessListener(doc -> {
                     ArrayList<Map<String, Object>> taskListFromDB =
