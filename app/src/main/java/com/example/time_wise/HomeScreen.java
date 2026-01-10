@@ -70,7 +70,7 @@ public class HomeScreen extends AppCompatActivity {
                     intent = new Intent(HomeScreen.this, TasksScreem.class);
                     break;
                 case SCHOOL_SCHEDULE:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    intent = new Intent(HomeScreen.this, SchoolSchedule.class);
                     Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 

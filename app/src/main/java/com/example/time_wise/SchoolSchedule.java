@@ -162,8 +162,8 @@ public class SchoolSchedule extends AppCompatActivity {
 
                 case SCHOOL_SCHEDULE:
                     // אם אנחנו כבר במסך מערכת שעות, לא עושים כלום
-                    sideMenu.setVisibility(View.GONE);
-                    return;
+                    intent = new Intent(SchoolSchedule.this, SchoolSchedule.class);
+                    break;
 
                 case FOLLOW_EFFICIENCY:
                     intent = new Intent(SchoolSchedule.this, HomeScreen.class);

@@ -98,7 +98,7 @@ public class TasksScreem extends AppCompatActivity {
                     intent = new Intent(TasksScreem.this, TasksScreem.class);
                     break;
                 case SCHOOL_SCHEDULE:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
+                    intent = new Intent(TasksScreem.this, SchoolSchedule.class);
                     Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 

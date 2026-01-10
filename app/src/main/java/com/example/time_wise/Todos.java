@@ -124,7 +124,7 @@ public class Todos extends AppCompatActivity {
                     intent = new Intent(Todos.this, TasksScreem.class);
                     break;
                 case SCHOOL_SCHEDULE:
-                    intent = new Intent(Todos.this, HomeScreen.class);
+                    intent = new Intent(Todos.this, SchoolSchedule.class);
                     Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 
