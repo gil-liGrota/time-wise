@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write your note..."
+        android:minLines="5"
+        android:gravity="top"/>
+
+    <ImageView
+        android:id="@+id/imgNote"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btnAddImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add image"
+        android:backgroundTint="#FAB7D0"/>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save note"
+        android:backgroundTint="#FAB7D0"/>
+</LinearLayout>
