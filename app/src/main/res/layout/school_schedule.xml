@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home"
+            android:text="School Schedule"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:paddingStart="16dp"/>
@@ -52,65 +52,90 @@
                 android:id="@+id/nav_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Home"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:text="🏠 Home"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
             <TextView
                 android:id="@+id/nav_activity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Activity"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:text="📊 Activity"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FAB7D0"
+                android:layout_margin="8dp"/>
+
             <TextView
                 android:id="@+id/nav_school_schedule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="School Schedule"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:text="📚 School Schedule"
+                android:textStyle="bold"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#FAB7D0"/>
+
             <TextView
                 android:id="@+id/nav_follow_efficiency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Follow Efficiency"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:text="📈 Follow Efficiency"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
             <TextView
                 android:id="@+id/nav_todo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TODO"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:text="✅ TODO"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#333333"/>
+
             <TextView
                 android:id="@+id/nav_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Calendar"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:text="📅 Calendar"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
             <TextView
                 android:id="@+id/nav_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Notes"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:text="📝 Notes"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
             <TextView
                 android:id="@+id/nav_learning_plan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Learning Plan"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:text="🎓 Learning Plan"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
             <TextView
                 android:id="@+id/nav_follow_goal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Follow Goal"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:text="🎯 Follow Goal"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
         </LinearLayout>
 
         <!-- תוכן מרכזי -->

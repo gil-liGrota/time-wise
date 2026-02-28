@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Toolbar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
         android:background="#FAB7D0"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:elevation="4dp">
 
         <TextView
             android:id="@+id/btnMenu"
@@ -20,57 +20,132 @@
             android:text="☰"
             android:textSize="28sp"
             android:textColor="@android:color/white"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:clickable="true"
+            android:focusable="true"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TODO"
+            android:text="TODO LIST"
             android:textColor="@android:color/white"
             android:textSize="20sp"
+            android:textStyle="bold"
             android:paddingStart="16dp"/>
     </LinearLayout>
 
-    <!-- תוכן + תפריט -->
     <LinearLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <!-- תפריט צד -->
         <LinearLayout
             android:id="@+id/sideMenu"
-            android:layout_width="200dp"
+            android:layout_width="220dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="#FFEAF0"
             android:padding="8dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:elevation="8dp">
 
-            <!-- כפתורי ניווט (כמו שיש לך) -->
             <TextView
                 android:id="@+id/nav_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Home"
-                android:padding="8dp"/>
+                android:text="🏠 Home"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/nav_activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📊 Activity"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/nav_school_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📚 School Schedule"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/nav_follow_efficiency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📈 Follow Efficiency"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FAB7D0"
+                android:layout_margin="8dp"/>
 
             <TextView
                 android:id="@+id/nav_todo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TODO"
-                android:padding="8dp"/>
+                android:text="✅ TODO"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#FAB7D0"/>
+
+            <TextView
+                android:id="@+id/nav_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📅 Calendar"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/nav_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📝 Notes"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/nav_learning_plan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🎓 Learning Plan"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/nav_follow_goal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🎯 Follow Goal"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
         </LinearLayout>
 
-        <!-- ⭐ תוכן מרכזי – רשימת TODO -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todosRecycler"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:clipToPadding="false"/>
     </LinearLayout>
 
 </LinearLayout>

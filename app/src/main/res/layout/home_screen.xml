@@ -47,78 +47,92 @@
             android:background="#FFEAF0"
             android:padding="8dp"
             android:visibility="gone">
-            <TextView
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="1dp"
+                android:background="#FAB7D0"
+                android:layout_margin="8dp"/>
+            <TextView
                 android:id="@+id/nav_home"
-                android:text="Home"
-                android:padding="8dp"
-                android:textSize="16sp"/>
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:id="@+id/nav_activity"
-                android:text="activity"
-                android:padding="8dp"
+                android:text="🏠 Home"
+                android:textStyle="bold"
+                android:padding="12dp"
                 android:textSize="16sp"
-                />
+                android:textColor="#FAB7D0"/>
+
             <TextView
+                android:id="@+id/nav_activity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:text="📊 Activity"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
                 android:id="@+id/nav_school_schedule"
-                android:text="school schedule"
-                android:padding="8dp"
-                android:textSize="16sp"/>
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:text="📚 School Schedule"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
                 android:id="@+id/nav_follow_efficiency"
-                android:text="follow efficiency"
-                android:padding="8dp"
-                android:textSize="16sp"/>
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:text="📈 Follow Efficiency"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
                 android:id="@+id/nav_todo"
-                android:text="TODO"
-                android:padding="8dp"
-                android:textSize="16sp"/>
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:text="✅ TODO"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
                 android:id="@+id/nav_calendar"
-                android:text="calendar"
-                android:padding="8dp"
-                android:textSize="16sp"/>
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:text="📅 Calendar"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
                 android:id="@+id/nav_notes"
-                android:text="notes"
-                android:padding="8dp"
-                android:textSize="16sp"/>
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:text="📝 Notes"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
                 android:id="@+id/nav_learning_plan"
-                android:text="learning plane"
-                android:padding="8dp"
-                android:textSize="16sp"/>
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:text="🎓 Learning Plan"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+
+            <TextView
                 android:id="@+id/nav_follow_goal"
-                android:text="follow goal"
-                android:padding="8dp"
-                android:textSize="16sp"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🎯 Follow Goal"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
         </LinearLayout>
 
         <!-- תוכן מרכזי -->
