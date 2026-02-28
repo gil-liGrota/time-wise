@@ -86,11 +86,12 @@ public class SignInUser extends AppCompatActivity {
 
 
     private void goToNextScreen() {
+        Intent intent = new Intent(SignInUser.this, School.class);
+
         String user = userName.getText().toString();
         String phone = phoneNum.getText().toString();
         String pass = password.getText().toString();
 
-        Intent intent = new Intent(SignInUser.this, SchoolSun.class);
         intent.putExtra("username", user);
         intent.putExtra("phoneNum", phone);
         intent.putExtra("password", pass);
