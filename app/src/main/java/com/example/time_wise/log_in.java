@@ -9,9 +9,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,13 +17,20 @@ public class log_in extends AppCompatActivity {
     private Button logIn, signIn;
     private TextView user, pass;
     private FirebaseFirestore db;
+    // הוסיפי את האובייקט הזה
+    private SecurityManager securityManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.log_in_screen);
+
         db = FirebaseFirestore.getInstance();
+
+        securityManager = new SecurityManager(this);
+
+
         logIn = findViewById(R.id.btnLogin);
         signIn = findViewById(R.id.btnSignIn);
         user = findViewById(R.id.editTextEmail);
@@ -64,6 +68,8 @@ public class log_in extends AppCompatActivity {
     }
 
     private void checkLogin(String username, String password) {
+        // --- דרישה 9: הצפנת הסיסמה שהוקלדה לפני הבדיקה ---
+        String encryptedInput = securityManager.hashPassword(password);
 
         db.collection("users")
                 .whereEqualTo("userName", username)
@@ -71,26 +77,30 @@ public class log_in extends AppCompatActivity {
                 .addOnSuccessListener(query -> {
 
                     if (query.isEmpty()) {
-                        // אין משתמש כזה
                         user.setError("username not found");
                         Toast.makeText(this, "Username incorrect", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    // יש משתמש → בודקים את הסיסמה
-                    String realPassword = query.getDocuments().get(0).getString("password");
+                    // שליפת הסיסמה מהמסמך (היא תהיה מוצפנת ב-DB)
+                    String realPasswordInDB = query.getDocuments().get(0).getString("password");
+                    String docId = query.getDocuments().get(0).getId();
 
-                    if (realPassword == null || !realPassword.equals(password)) {
+                    // השוואה בין שתי ההצפנות
+                    if (realPasswordInDB == null || !realPasswordInDB.equals(encryptedInput)) {
                         pass.setError("password incorrect");
                         Toast.makeText(this, "Wrong password", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
+                    // --- דרישה 10: שמירת ה-ID מקומית ב-SharedPrefs לאחר כניסה מוצלחת ---
+                    securityManager.saveUserId(docId);
+
                     // הצלחה — עוברים למסך הבא
                     Intent intent = new Intent(log_in.this, HomeScreen.class);
-                    intent.putExtra("username", username);
-                    intent.putExtra("password", password);
+                    intent.putExtra("userId", docId); // מומלץ להעביר ID במקום סיסמה
                     startActivity(intent);
+                    finish();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error connecting to database", Toast.LENGTH_SHORT).show();

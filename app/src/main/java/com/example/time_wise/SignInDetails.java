@@ -39,13 +39,17 @@ public class SignInDetails extends AppCompatActivity {
     private ArrayList<EfficientTime> unefficiencyList = new ArrayList<>();
     private ArrayList<EfficientTime> sleepList = new ArrayList<>();
 
+    // אובייקט אבטחה (דרישות 9 ו-10)
+    private SecurityManager securityManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sign_in_details);
 
-        // הגדרת Insets (ריפוד למערכת)
+        securityManager = new SecurityManager(this);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -67,7 +71,6 @@ public class SignInDetails extends AppCompatActivity {
         SleepStart = findViewById(R.id.SleepStartH);
         SleepEnd = findViewById(R.id.SleepEndH);
 
-        // הגדרת TimePicker לכל השדות
         EditText[] fields = {EffStart, EffEnd, BadStart, BadEnd, SleepStart, SleepEnd};
         for (EditText et : fields) {
             et.setOnClickListener(v -> showTimePicker(et));
@@ -81,8 +84,6 @@ public class SignInDetails extends AppCompatActivity {
 
     private void updateUI() {
         txtDayTitle.setText(days[currentDayIndex].name());
-
-        // הצגת כפתור Back רק מיום שני והלאה
         btnBack.setVisibility(currentDayIndex == 0 ? View.GONE : View.VISIBLE);
 
         if (currentDayIndex == days.length - 1) {
@@ -93,9 +94,9 @@ public class SignInDetails extends AppCompatActivity {
     }
 
     private void handleNextStep() {
-        // ולידציה: בדיקה שכל השדות מלאים
+        // ולידציה - חובה למלא הכל (חלק מדרישה 10 - Validation)
         if (isAnyFieldEmpty()) {
-            Toast.makeText(this, "Please fill all time fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill all fields for " + days[currentDayIndex].name(), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -113,8 +114,7 @@ public class SignInDetails extends AppCompatActivity {
     private void handleBackStep() {
         if (currentDayIndex > 0) {
             currentDayIndex--;
-
-            // הסרת הנתונים האחרונים שנשמרו כדי שלא יהיו כפילויות
+            // הסרת הנתונים של היום שבוטל
             if (!efficiencyList.isEmpty()) efficiencyList.remove(efficiencyList.size() - 1);
             if (!unefficiencyList.isEmpty()) unefficiencyList.remove(unefficiencyList.size() - 1);
             if (!sleepList.isEmpty()) sleepList.remove(sleepList.size() - 1);
@@ -122,18 +122,6 @@ public class SignInDetails extends AppCompatActivity {
             clearAllFields();
             updateUI();
         }
-    }
-
-    private boolean isAnyFieldEmpty() {
-        EditText[] fields = {EffStart, EffEnd, BadStart, BadEnd, SleepStart, SleepEnd};
-        boolean isEmpty = false;
-        for (EditText et : fields) {
-            if (et.getText().toString().trim().isEmpty()) {
-                et.setError("Required");
-                isEmpty = true;
-            }
-        }
-        return isEmpty;
     }
 
     private void collectCurrentDayData() {
@@ -147,22 +135,42 @@ public class SignInDetails extends AppCompatActivity {
         Intent lastIntent = getIntent();
         String username = lastIntent.getStringExtra("username");
         String phone = lastIntent.getStringExtra("phoneNum");
-        String pass = lastIntent.getStringExtra("password");
+        String rawPassword = lastIntent.getStringExtra("password");
         ArrayList<SchoolDay> schoolDays = (ArrayList<SchoolDay>) lastIntent.getSerializableExtra("school");
 
-        User user = new User(phone, username, pass, efficiencyList, unefficiencyList, sleepList,
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), schoolDays);
+        // --- דרישה 9: הצפנת הסיסמה לפני השמירה ---
+        String encryptedPassword = securityManager.hashPassword(rawPassword);
+
+        User user = new User(phone, username, encryptedPassword, efficiencyList,
+                unefficiencyList, sleepList, new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), schoolDays);
 
         FirebaseFirestore.getInstance().collection("users")
                 .add(user)
                 .addOnSuccessListener(doc -> {
-                    Toast.makeText(this, "Welcome " + username, Toast.LENGTH_LONG).show();
+                    // --- דרישה 10: שמירת ה-ID בקובץ XML מקומי ---
+                    securityManager.saveUserId(doc.getId());
+
+                    Toast.makeText(this, "Welcome to TimeWise!", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(this, HomeScreen.class);
                     intent.putExtra("userId", doc.getId());
                     startActivity(intent);
                     finish();
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    // פונקציות עזר
+    private boolean isAnyFieldEmpty() {
+        EditText[] fields = {EffStart, EffEnd, BadStart, BadEnd, SleepStart, SleepEnd};
+        boolean empty = false;
+        for (EditText et : fields) {
+            if (et.getText().toString().trim().isEmpty()) {
+                et.setError("Required");
+                empty = true;
+            }
+        }
+        return empty;
     }
 
     private void showTimePicker(EditText editText) {
