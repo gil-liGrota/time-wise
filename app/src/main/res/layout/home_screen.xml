@@ -138,6 +138,7 @@
         <!-- תוכן מרכזי -->
         <LinearLayout
             android:layout_width="1dp"
+            android:background="#FFEAF0"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"

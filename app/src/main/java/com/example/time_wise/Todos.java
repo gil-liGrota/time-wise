@@ -82,30 +82,53 @@ public class Todos extends AppCompatActivity {
 
     private void setMenuClickListener(int id, Constant.Menu menu) {
         TextView item = findViewById(id);
-        if (item == null) return;
 
         item.setOnClickListener(v -> {
-            switch (menu) {
+            switch (menu){
                 case Home:
                     intent = new Intent(Todos.this, HomeScreen.class);
+                    Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
                     break;
+
                 case ACTIVITY:
                     intent = new Intent(Todos.this, TasksScreem.class);
                     break;
+
                 case SCHOOL_SCHEDULE:
+                    // אם אנחנו כבר במסך מערכת שעות, לא עושים כלום
                     intent = new Intent(Todos.this, SchoolSchedule.class);
                     break;
-                case TODO:
-                    // אנחנו כבר כאן, רק סוגרים את התפריט
-                    sideMenu.setVisibility(View.GONE);
-                    return;
+
                 case FOLLOW_EFFICIENCY:
+                    intent = new Intent(Todos.this, HomeScreen.class);
+                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case TODO:
+                    intent = new Intent(Todos.this, Todos.class);
+                    Toast.makeText(this, "To-Do", Toast.LENGTH_SHORT).show();
+                    break;
+
                 case CALENDER:
+                    intent = new Intent(Todos.this, CalendarActivity.class);
+                    Toast.makeText(this, "Calendar", Toast.LENGTH_SHORT).show();
+                    break;
+
                 case NOTES:
+                    intent = new Intent(Todos.this, HomeScreen.class);
+                    Toast.makeText(this, "Notes", Toast.LENGTH_SHORT).show();
+                    break;
+
                 case LERNING_PLAN:
+                    intent = new Intent(Todos.this, HomeScreen.class);
+                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_SHORT).show();
+                    break;
+
                 case FOLLOW_GOAL:
                     intent = new Intent(Todos.this, HomeScreen.class);
+                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_SHORT).show();
                     break;
+
                 default:
                     Toast.makeText(this, "not working", Toast.LENGTH_SHORT).show();
                     return;
@@ -116,6 +139,7 @@ public class Todos extends AppCompatActivity {
             sideMenu.setVisibility(View.GONE);
         });
     }
+
 
     private void loadFromFirestore() {
         if (userID == null || userID.isEmpty()) return;

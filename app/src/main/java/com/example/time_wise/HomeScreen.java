@@ -85,7 +85,7 @@ public class HomeScreen extends AppCompatActivity {
                     break;
 
                 case CALENDER:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    intent = new Intent(HomeScreen.this, CalendarActivity.class);
                     Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
                     break;
 

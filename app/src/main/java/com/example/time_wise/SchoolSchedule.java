@@ -176,7 +176,7 @@ public class SchoolSchedule extends AppCompatActivity {
                     break;
 
                 case CALENDER:
-                    intent = new Intent(SchoolSchedule.this, HomeScreen.class);
+                    intent = new Intent(SchoolSchedule.this, CalendarActivity.class);
                     Toast.makeText(this, "Calendar", Toast.LENGTH_SHORT).show();
                     break;
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,14 +56,16 @@ public class TaskAdapter extends BaseAdapter {
         Task task = tasks.get(position);
         tvTaskName.setText(task.getName());
 
-        // --- Edit button ---
+        // --- כפתור עריכה שמותאם לשני המסכים ---
         btnEdit.setOnClickListener(v -> {
             if (context instanceof TasksScreem) {
                 ((TasksScreem) context).openEditTaskDialog(task, position);
+            } else if (context instanceof CalendarActivity) {
+                ((CalendarActivity) context).openEditTaskDialog(task, position);
             }
         });
 
-        // --- Delete button ---
+        // --- כפתור מחיקה ---
         btnDelete.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
                     .setTitle("Delete Task")
@@ -72,7 +73,13 @@ public class TaskAdapter extends BaseAdapter {
                     .setPositiveButton("Yes", (dialog, which) -> {
                         tasks.remove(position);
                         notifyDataSetChanged();
-                        saveTasksToDB();
+
+                        // אם אנחנו בלוח שנה, צריך לעדכן את הרשימה הכללית ב-Activity
+                        if (context instanceof CalendarActivity) {
+                            ((CalendarActivity) context).syncTasksWithFirebase();
+                        } else {
+                            saveTasksToDB();
+                        }
                     })
                     .setNegativeButton("Cancel", null)
                     .show();

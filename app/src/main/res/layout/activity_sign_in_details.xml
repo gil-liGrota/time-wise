@@ -3,7 +3,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFEAF0">
 
     <LinearLayout
         android:orientation="vertical"
@@ -19,14 +19,15 @@
             android:textSize="28sp"
             android:textStyle="bold"
             android:layout_marginTop="20dp"
-            android:textColor="#333333"/>
+            android:textColor="#FAB7D0"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Efficiency Time"
             android:textSize="20sp"
-            android:background="#FAB7D0"
+            android:textColor="#FAB7D0"
+            android:textStyle="bold"
             android:padding="4dp"
             android:layout_marginTop="16dp"/>
 
@@ -44,7 +45,8 @@
             android:layout_height="wrap_content"
             android:text="Unefficiency Time"
             android:textSize="20sp"
-            android:background="#FAB7D0"
+            android:textStyle="bold"
+            android:textColor="#FAB7D0"
             android:padding="4dp"/>
 
         <LinearLayout
@@ -60,8 +62,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sleep Time"
+            android:textStyle="bold"
             android:textSize="20sp"
-            android:background="#FAB7D0"
+            android:textColor="#FAB7D0"
             android:padding="4dp"/>
 
         <LinearLayout

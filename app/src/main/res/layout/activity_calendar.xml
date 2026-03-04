@@ -5,48 +5,59 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Toolbar עם כפתור המבורגר -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
         android:background="#FAB7D0"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:elevation="4dp">
 
-        <TextView
-            android:id="@+id/btnMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="☰"
-            android:textSize="28sp"
-            android:textColor="@android:color/white"
-            android:padding="12dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#FFEAF0"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notes"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:paddingStart="16dp"/>
+            <TextView
+                android:id="@+id/btnMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="☰"
+                android:textColor="#FAB7D0"
+                android:textSize="28sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="My Calendar"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="16dp"
+                android:layout_marginEnd="40dp"
+                android:textColor="#FAB7D0" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- תוכן + תפריט -->
     <LinearLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <!-- תפריט צד שמאל -->
         <LinearLayout
             android:id="@+id/sideMenu"
-            android:layout_width="200dp"
+            android:layout_width="220dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="#FFEAF0"
             android:padding="8dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:elevation="8dp">
+
             <TextView
                 android:id="@+id/nav_home"
                 android:layout_width="match_parent"
@@ -90,16 +101,6 @@
                 android:text="✅ TODO"
                 android:padding="12dp"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#333333"/>
-
-            <TextView
-                android:id="@+id/nav_calendar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="📅 Calendar"
-                android:padding="12dp"
-                android:textSize="16sp"
                 android:textColor="#333333"/>
 
             <View
@@ -109,14 +110,23 @@
                 android:layout_margin="8dp"/>
 
             <TextView
+                android:id="@+id/nav_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📅 Calendar"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#FAB7D0"/>
+
+            <TextView
                 android:id="@+id/nav_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="📝 Notes"
-                android:textStyle="bold"
                 android:padding="12dp"
                 android:textSize="16sp"
-                android:textColor="#FAB7D0"/>
+                android:textColor="#333333"/>
 
             <TextView
                 android:id="@+id/nav_learning_plan"
@@ -134,32 +144,47 @@
                 android:text="🎯 Follow Goal"
                 android:padding="12dp"
                 android:textSize="16sp"
-                android:textColor="#333333"/>        </LinearLayout>
-
-        <!-- תוכן מרכזי -->
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:textColor="#333333"/>
+        </LinearLayout>
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="#FFEAF0">
 
-
-            <!-- RecyclerView -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/notesRecycler"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="#FFEAF0"
-                android:layout_weight="1"
-                android:padding="8dp"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <!-- כפתור הוספה -->
-            <Button
-                android:id="@+id/btnAddNote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Add Note"
-                android:backgroundTint="#FAB7D0"/>
-        </LinearLayout>
+
+                <CalendarView
+                    android:id="@+id/calendarView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:layout_margin="8dp"
+                    android:elevation="4dp" />
+
+                <TextView
+                    android:id="@+id/tvSelectedDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select a date to see tasks"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:textColor="#333333" />
+
+                <ListView
+                    android:id="@+id/lvTasksForDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="8dp"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
+
 </LinearLayout>
