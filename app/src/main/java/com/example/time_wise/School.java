@@ -122,7 +122,7 @@ public class School extends AppCompatActivity {
         String phone = lastIntent.getStringExtra("phoneNum");
         String pass = lastIntent.getStringExtra("password");
 
-        Intent intent = new Intent(School.this, SignInDetails.class);
+        Intent intent = new Intent(School.this, SignInDetails.class);//change from SignInDetails to HomeScreen
 
         // 3. העברת כל המידע הלאה: גם הלו"ז וגם פרטי המשתמש
         intent.putExtra("school", allWeekSchedule);
