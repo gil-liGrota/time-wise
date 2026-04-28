@@ -46,8 +46,6 @@ public class CalendarActivity extends AppCompatActivity {
         SecurityManager securityManager = new SecurityManager(this);
         userID = securityManager.getUserId();
 
-        sideMenu = findViewById(R.id.sideMenu);
-        btnMenu = findViewById(R.id.btnMenu);
         if (userID == null) {
             finish();
             return;
@@ -57,12 +55,9 @@ public class CalendarActivity extends AppCompatActivity {
         loadTasksFromFirebase();
 
         btnMenu.setOnClickListener(v -> {
-            if (sideMenu.getVisibility() == View.GONE) {
-                sideMenu.setVisibility(View.VISIBLE);
-            } else {
-                sideMenu.setVisibility(View.GONE);
-            }
+            sideMenu.setVisibility(sideMenu.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
         });
+
         setMenuClickListener(R.id.nav_home, Constant.Menu.Home);
         setMenuClickListener(R.id.nav_activity, Constant.Menu.ACTIVITY);
         setMenuClickListener(R.id.nav_school_schedule, Constant.Menu.SCHOOL_SCHEDULE);
@@ -72,8 +67,6 @@ public class CalendarActivity extends AppCompatActivity {
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
-
-
 
     }
 
@@ -101,12 +94,42 @@ public class CalendarActivity extends AppCompatActivity {
                         Task task = convertMapToTask(map);
                         if (task != null) allTasks.add(task);
                     }
-                    // הצגת היום הנוכחי בטעינה
                     Calendar cal = Calendar.getInstance();
                     filterTasks(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.YEAR));
                 }
             }
         });
+    }
+
+    // פונקציית המרה שתואמת לפורמט של Firebase ו-LocalTime
+    private Task convertMapToTask(Map<String, Object> map) {
+        try {
+            Task task = new Task();
+            task.setName((String) map.get("name"));
+
+            Map<String, Object> dateMap = (Map<String, Object>) map.get("date");
+            if (dateMap != null) {
+                task.setDate(new Date(
+                        ((Long) dateMap.get("year")).intValue(),
+                        ((Long) dateMap.get("month")).intValue(),
+                        ((Long) dateMap.get("day")).intValue()));
+            }
+
+            if (map.get("start") != null) {
+                Map<String, Object> s = (Map<String, Object>) map.get("start");
+                task.setStart(LocalTime.of(((Long) s.get("hour")).intValue(), ((Long) s.get("minute")).intValue()));
+            }
+            if (map.get("end") != null) {
+                Map<String, Object> e = (Map<String, Object>) map.get("end");
+                task.setEnd(LocalTime.of(((Long) e.get("hour")).intValue(), ((Long) e.get("minute")).intValue()));
+            }
+
+            if (map.get("priority") != null) task.setPriority(((Long) map.get("priority")).intValue());
+            if (map.get("important") != null) task.setImportant((Boolean) map.get("important"));
+            if (map.get("strict") != null) task.setStrict((Boolean) map.get("strict"));
+
+            return task;
+        } catch (Exception e) { return null; }
     }
 
     private void filterTasks(int day, int month, int year) {
@@ -125,32 +148,55 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
-    // --- פונקציית עריכה (הופעלה עבור הלוח שנה) ---
+    // העתקת הלוגיקה המדויקת מה-TasksScreem שלך
     public void openEditTaskDialog(Task task, int position) {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
 
         EditText etName = dialogView.findViewById(R.id.etTaskName);
+        EditText etStart = dialogView.findViewById(R.id.etTaskStart);
+        EditText etEnd = dialogView.findViewById(R.id.etTaskEnd);
         EditText etDate = dialogView.findViewById(R.id.etTaskDate);
-        // ... (ניתן להוסיף כאן את שאר ה-findViewById מה-Screem הקודם אם רוצים עריכה מלאה)
+        EditText etPriority = dialogView.findViewById(R.id.etPriority);
+        Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
 
+        // מילוי ערכים קיימים
         etName.setText(task.getName());
+        etStart.setText(task.getStart() != null ? task.getStart().toString() : "09:00");
+        etEnd.setText(task.getEnd() != null ? task.getEnd().toString() : "10:00");
+
         if (task.getDate() != null) {
             etDate.setText(String.format("%02d/%02d/%04d", task.getDate().getDay(), task.getDate().getMonth(), task.getDate().getYear()));
         }
+        etPriority.setText(String.valueOf(task.getPriority()));
+
+        // הגדרת ה-Switch
+        switchHasTime.setChecked(task.getStart() != null);
+        etStart.setVisibility(switchHasTime.isChecked() ? View.VISIBLE : View.GONE);
+        etEnd.setVisibility(switchHasTime.isChecked() ? View.VISIBLE : View.GONE);
+
+        switchHasTime.setOnCheckedChangeListener((v, isChecked) -> {
+            etStart.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            etEnd.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
 
         etDate.setOnClickListener(v -> showDatePicker(etDate));
+        etStart.setOnClickListener(v -> showTimePicker(etStart));
+        etEnd.setOnClickListener(v -> showTimePicker(etEnd));
 
         new AlertDialog.Builder(this)
                 .setTitle("Edit Task")
                 .setView(dialogView)
                 .setPositiveButton("Save", (dialog, which) -> {
                     task.setName(etName.getText().toString().trim());
-
-                    String dateStr = etDate.getText().toString();
-                    if (!dateStr.isEmpty()) {
-                        String[] parts = dateStr.split("/");
-                        task.setDate(new Date(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0])));
-                    }
+                    try {
+                        if (switchHasTime.isChecked()) {
+                            task.setStart(LocalTime.parse(etStart.getText().toString()));
+                            task.setEnd(LocalTime.parse(etEnd.getText().toString()));
+                        } else {
+                            task.setStart(null);
+                            task.setEnd(null);
+                        }
+                    } catch (Exception ignored) {}
 
                     syncTasksWithFirebase();
                     taskAdapter.notifyDataSetChanged();
@@ -159,11 +205,17 @@ public class CalendarActivity extends AppCompatActivity {
                 .show();
     }
 
-    // עדכון ה-DB עם הרשימה המלאה (allTasks)
+    public void deleteTaskFromCalendar(Task task) {
+        allTasks.remove(task);
+        filteredTasks.remove(task);
+        syncTasksWithFirebase();
+        taskAdapter.notifyDataSetChanged();
+    }
+
     public void syncTasksWithFirebase() {
         db.collection("users").document(userID)
                 .update("tasks", allTasks)
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Updated", Toast.LENGTH_SHORT).show());
     }
 
     private void showDatePicker(EditText editText) {
@@ -173,18 +225,10 @@ public class CalendarActivity extends AppCompatActivity {
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    private Task convertMapToTask(Map<String, Object> map) {
-        try {
-            Task task = new Task();
-            task.setName((String) map.get("name"));
-            Map<String, Object> dateMap = (Map<String, Object>) map.get("date");
-            if (dateMap != null) {
-                task.setDate(new Date(((Long) dateMap.get("year")).intValue(),
-                        ((Long) dateMap.get("month")).intValue(),
-                        ((Long) dateMap.get("day")).intValue()));
-            }
-            return task;
-        } catch (Exception e) { return null; }
+    private void showTimePicker(EditText editText) {
+        new android.app.TimePickerDialog(this, (view, h, m) -> {
+            editText.setText(String.format("%02d:%02d", h, m));
+        }, 9, 0, true).show();
     }
 
     private void setMenuClickListener(int id, Constant.Menu menu) {
@@ -194,56 +238,55 @@ public class CalendarActivity extends AppCompatActivity {
             switch (menu){
                 case Home:
                     intent = new Intent(CalendarActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
-
                 case ACTIVITY:
                     intent = new Intent(CalendarActivity.this, TasksScreem.class);
                     break;
-
                 case SCHOOL_SCHEDULE:
-                    // אם אנחנו כבר במסך מערכת שעות, לא עושים כלום
                     intent = new Intent(CalendarActivity.this, SchoolSchedule.class);
+                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 
                 case FOLLOW_EFFICIENCY:
-                    intent = new Intent(CalendarActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_SHORT).show();
+                    intent = new Intent(CalendarActivity.this, EfficiencyActivity.class);
+                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
                     break;
 
                 case TODO:
                     intent = new Intent(CalendarActivity.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
                     break;
 
                 case CALENDER:
                     intent = new Intent(CalendarActivity.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
                     break;
 
                 case NOTES:
                     intent = new Intent(CalendarActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 
                 case LERNING_PLAN:
                     intent = new Intent(CalendarActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_LONG).show();
                     break;
 
                 case FOLLOW_GOAL:
                     intent = new Intent(CalendarActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
 
                 default:
-                    Toast.makeText(this, "not working", Toast.LENGTH_SHORT).show();
-                    return;
+                    intent = new Intent(CalendarActivity.this, HomeScreen.class);
+                    Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();
+                    break;
             }
-
             intent.putExtra("userId", userID);
             startActivity(intent);
             sideMenu.setVisibility(View.GONE);
         });
     }
+
 }

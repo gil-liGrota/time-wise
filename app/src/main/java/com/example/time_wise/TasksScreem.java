@@ -103,7 +103,7 @@ public class TasksScreem extends AppCompatActivity {
                     break;
 
                 case FOLLOW_EFFICIENCY:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
+                    intent = new Intent(TasksScreem.this, EfficiencyActivity.class);
                     Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
                     break;
 
@@ -144,24 +144,78 @@ public class TasksScreem extends AppCompatActivity {
     }
 
     // --- Load tasks from Firestore ---
+//    private void loadTasks() {
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        db.collection("users").document(userID)
+//                .get()
+//                .addOnSuccessListener(doc -> {
+//                    ArrayList<Map<String, Object>> taskListFromDB =
+//                            (ArrayList<Map<String, Object>>) doc.get("tasks");
+//
+//                    if (taskListFromDB != null) {
+//                        for (Map<String, Object> t : taskListFromDB) {
+//                            Task task = new Task();
+//                            task.setName(t.get("name") != null ? t.get("name").toString() : "No Name");
+//                            // כאן ניתן לטעון גם שדות נוספים אם רוצים
+//                            tasks.add(task);
+//                        }
+//                    }
+//                    updateListView();
+//                });
+//    }
+
     private void loadTasks() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(userID)
                 .get()
                 .addOnSuccessListener(doc -> {
-                    ArrayList<Map<String, Object>> taskListFromDB =
-                            (ArrayList<Map<String, Object>>) doc.get("tasks");
+                    if (doc.exists()) {
+                        ArrayList<Map<String, Object>> taskListFromDB =
+                                (ArrayList<Map<String, Object>>) doc.get("tasks");
 
-                    if (taskListFromDB != null) {
-                        for (Map<String, Object> t : taskListFromDB) {
-                            Task task = new Task();
-                            task.setName(t.get("name") != null ? t.get("name").toString() : "No Name");
-                            // כאן ניתן לטעון גם שדות נוספים אם רוצים
-                            tasks.add(task);
+                        if (taskListFromDB != null) {
+                            tasks.clear(); // מנקה כדי שלא יהיו כפילויות בטעינה חוזרת
+                            for (Map<String, Object> t : taskListFromDB) {
+                                Task task = convertMapToTask(t); // שימוש בפונקציית המרה
+                                if (task != null) tasks.add(task);
+                            }
                         }
+                        updateListView();
                     }
-                    updateListView();
                 });
+    }
+
+    // הוסיפי את הפונקציה הזו לתוך TasksScreem (מתחת ל-loadTasks)
+    private Task convertMapToTask(Map<String, Object> map) {
+        try {
+            Task task = new Task();
+            task.setName(map.get("name") != null ? map.get("name").toString() : "No Name");
+
+            // המרת תאריך
+            Map<String, Object> dateMap = (Map<String, Object>) map.get("date");
+            if (dateMap != null) {
+                task.setDate(new Date(
+                        ((Long) dateMap.get("year")).intValue(),
+                        ((Long) dateMap.get("month")).intValue(),
+                        ((Long) dateMap.get("day")).intValue()));
+            }
+
+            // המרת זמנים
+            if (map.get("start") != null) {
+                Map<String, Object> s = (Map<String, Object>) map.get("start");
+                task.setStart(LocalTime.of(((Long) s.get("hour")).intValue(), ((Long) s.get("minute")).intValue()));
+            }
+            if (map.get("end") != null) {
+                Map<String, Object> e = (Map<String, Object>) map.get("end");
+                task.setEnd(LocalTime.of(((Long) e.get("hour")).intValue(), ((Long) e.get("minute")).intValue()));
+            }
+
+            if (map.get("priority") != null) task.setPriority(((Long) map.get("priority")).intValue());
+
+            return task;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     // --- Update ListView using TaskAdapter ---

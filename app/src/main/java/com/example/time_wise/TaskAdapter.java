@@ -56,7 +56,6 @@ public class TaskAdapter extends BaseAdapter {
         Task task = tasks.get(position);
         tvTaskName.setText(task.getName());
 
-        // --- כפתור עריכה שמותאם לשני המסכים ---
         btnEdit.setOnClickListener(v -> {
             if (context instanceof TasksScreem) {
                 ((TasksScreem) context).openEditTaskDialog(task, position);
@@ -65,19 +64,16 @@ public class TaskAdapter extends BaseAdapter {
             }
         });
 
-        // --- כפתור מחיקה ---
         btnDelete.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
                     .setTitle("Delete Task")
                     .setMessage("Are you sure you want to delete this task?")
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        tasks.remove(position);
-                        notifyDataSetChanged();
-
-                        // אם אנחנו בלוח שנה, צריך לעדכן את הרשימה הכללית ב-Activity
                         if (context instanceof CalendarActivity) {
-                            ((CalendarActivity) context).syncTasksWithFirebase();
+                            ((CalendarActivity) context).deleteTaskFromCalendar(task);
                         } else {
+                            tasks.remove(position);
+                            notifyDataSetChanged();
                             saveTasksToDB();
                         }
                     })

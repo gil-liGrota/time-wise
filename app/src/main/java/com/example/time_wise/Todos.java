@@ -100,7 +100,7 @@ public class Todos extends AppCompatActivity {
                     break;
 
                 case FOLLOW_EFFICIENCY:
-                    intent = new Intent(Todos.this, HomeScreen.class);
+                    intent = new Intent(Todos.this, EfficiencyActivity.class);
                     Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_SHORT).show();
                     break;
 

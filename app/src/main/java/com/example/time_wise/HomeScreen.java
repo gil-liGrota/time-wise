@@ -1,6 +1,9 @@
 package com.example.time_wise;
 
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -23,6 +26,7 @@ public class HomeScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_screen);
+        startDailyAlarm();
         Intent lastIntent = getIntent();
         userID = lastIntent.getStringExtra("userId");
         Constant.USER_ID = userID;
@@ -56,6 +60,32 @@ public class HomeScreen extends AppCompatActivity {
 
     }
 
+    private void startDailyAlarm() {//TODO change to right hour
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 17);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        // אם השעה כבר אחרי אחת בצהריים, נקבע למחר
+        if (Calendar.getInstance().after(calendar)) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        // דגל FLAG_IMMUTABLE חובה באנדרואיד חדש
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        android.app.AlarmManager alarmManager = (android.app.AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        // הגדרה שתחזור על עצמה כל יום
+        if (alarmManager != null) {
+            alarmManager.setRepeating(android.app.AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    android.app.AlarmManager.INTERVAL_DAY,
+                    pendingIntent);
+        }
+    }
 
     private void setMenuClickListener(int id, Constant.Menu menu) {
         TextView item = findViewById(id);
@@ -75,7 +105,7 @@ public class HomeScreen extends AppCompatActivity {
                     break;
 
                 case FOLLOW_EFFICIENCY:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    intent = new Intent(HomeScreen.this, EfficiencyActivity.class);
                     Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
                     break;
 

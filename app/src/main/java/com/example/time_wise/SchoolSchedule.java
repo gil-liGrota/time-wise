@@ -166,7 +166,7 @@ public class SchoolSchedule extends AppCompatActivity {
                     break;
 
                 case FOLLOW_EFFICIENCY:
-                    intent = new Intent(SchoolSchedule.this, HomeScreen.class);
+                    intent = new Intent(SchoolSchedule.this, EfficiencyActivity.class);
                     Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_SHORT).show();
                     break;
 
