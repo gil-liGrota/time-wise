@@ -12,9 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Timewise"
         tools:targetApi="31">
-        <receiver android:name=".AlarmReceiver" android:exported="false" />
+        <activity
+            android:name=".GoalsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddGoalActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".AlarmReceiver"
+            android:exported="false" />
 
         <activity android:name=".EfficiencyActivity" />
+        <activity
+            android:name=".GoalDetailsActivity"
+            android:exported="false" />
         <activity
             android:name=".CalendarActivity"
             android:exported="false" />

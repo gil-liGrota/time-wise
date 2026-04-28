@@ -13,7 +13,8 @@ public class User {
     protected ArrayList<Task> tasks;
     protected ArrayList<DayEfficiency> efficiencyHistory;
     protected ArrayList<Todo> todos;
-    protected ArrayList<SchoolDay> schoolSchedule; // <-- הוספנו את זה
+    protected ArrayList<SchoolDay> schoolSchedule;
+    protected ArrayList<Goal> goals;
 
     public User(){
         this.phoneNumber = "";
@@ -25,7 +26,8 @@ public class User {
         this.tasks = null;
         this.efficiencyHistory = null;
         this.todos = null;
-        this.schoolSchedule = null; // <-- אתחול
+        this.schoolSchedule = null;
+        this.goals = new ArrayList<>();
     }
 
     /**
@@ -38,7 +40,8 @@ public class User {
      * @param tasks - task List
      * @param efficiencyHistory - efficiency history List
      * @param todos - todos List
-     * @param schoolSchedule - מערכת שעות של המשתמש
+     * @param schoolSchedule - school schedule List
+     *
      */
     public User(String phoneNumber,
                 String userName,
@@ -49,7 +52,8 @@ public class User {
                 ArrayList<Task> tasks,
                 ArrayList<DayEfficiency> efficiencyHistory,
                 ArrayList<Todo> todos,
-                ArrayList<SchoolDay> schoolSchedule){
+                ArrayList<SchoolDay> schoolSchedule,
+                ArrayList<Goal> goals){
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.password = password;
@@ -59,7 +63,8 @@ public class User {
         this.tasks = tasks;
         this.efficiencyHistory = efficiencyHistory;
         this.todos = todos;
-        this.schoolSchedule = schoolSchedule; // <-- אתחול
+        this.schoolSchedule = schoolSchedule;
+        this.goals = goals;
     }
 
     public String getPhoneNumber() { return phoneNumber; }
@@ -71,7 +76,8 @@ public class User {
     public ArrayList<Task> getTasks() { return tasks; }
     public ArrayList<DayEfficiency> getEfficiencyHistory() { return efficiencyHistory; }
     public ArrayList<Todo> getTodos() { return todos; }
-    public ArrayList<SchoolDay> getSchoolSchedule() { return schoolSchedule; } // <-- Getter
+    public ArrayList<SchoolDay> getSchoolSchedule() { return schoolSchedule; }
+    public ArrayList<Goal> getGoals() { return goals; }
 
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public void setUserName(String userName) { this.userName = userName; }
@@ -82,7 +88,8 @@ public class User {
     public void setTasks(ArrayList<Task> tasks) { this.tasks = tasks; }
     public void setEfficiencyHistory(ArrayList<DayEfficiency> efficiencyHistory) { this.efficiencyHistory = efficiencyHistory; }
     public void setTodos(ArrayList<Todo> todos) { this.todos = todos; }
-    public void setSchoolSchedule(ArrayList<SchoolDay> schoolSchedule) { this.schoolSchedule = schoolSchedule; } // <-- Setter
+    public void setSchoolSchedule(ArrayList<SchoolDay> schoolSchedule) { this.schoolSchedule = schoolSchedule; }
+    public void setGoals(ArrayList<Goal> goals) { this.goals = goals; }
 
     @Override
     public String toString() {

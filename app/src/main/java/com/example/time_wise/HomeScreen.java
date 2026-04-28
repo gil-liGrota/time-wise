@@ -130,7 +130,7 @@ public class HomeScreen extends AppCompatActivity {
                     break;
 
                 case FOLLOW_GOAL:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    intent = new Intent(HomeScreen.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
                 default:

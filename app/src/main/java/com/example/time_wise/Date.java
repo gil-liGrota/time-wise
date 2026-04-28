@@ -2,7 +2,7 @@ package com.example.time_wise;
 
 import androidx.annotation.NonNull;
 
-public class Date {
+public class Date implements java.io.Serializable{
     protected int year;
     protected int month;
     protected int day;

@@ -274,7 +274,7 @@ public class CalendarActivity extends AppCompatActivity {
                     break;
 
                 case FOLLOW_GOAL:
-                    intent = new Intent(CalendarActivity.this, HomeScreen.class);
+                    intent = new Intent(CalendarActivity.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
 

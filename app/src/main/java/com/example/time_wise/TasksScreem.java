@@ -128,7 +128,7 @@ public class TasksScreem extends AppCompatActivity {
                     break;
 
                 case FOLLOW_GOAL:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
+                    intent = new Intent(TasksScreem.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
 

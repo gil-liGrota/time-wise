@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="20dp"
+    android:background="#FFF5F7"> <TextView
+    android:id="@+id/tvGoalTitleDetail"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Goal Title"
+    android:textSize="28sp"
+    android:textStyle="bold"
+    android:textColor="#333333"
+    android:layout_marginTop="40dp" />
+
+    <TextView
+        android:id="@+id/tvCountdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5 Days Remaining"
+        android:textSize="22sp"
+        android:textColor="#FF69B4"
+        android:layout_marginTop="20dp"
+        android:visibility="visible" />
+
+    <CheckBox
+        android:id="@+id/cbDailyDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="I did it today!"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:elevation="4dp"
+        app:cardCornerRadius="15dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="#FFE4E1">
+
+            <TextView
+                android:id="@+id/tvEncouragement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="You can do it!"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                android:textColor="#555555" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back to List"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#FFB6C1"
+        android:onClick="finishActivity" />
+
+</LinearLayout>

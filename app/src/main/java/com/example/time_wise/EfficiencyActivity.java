@@ -128,7 +128,7 @@ public class EfficiencyActivity extends AppCompatActivity {
                     break;
 
                 case FOLLOW_GOAL:
-                    intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
+                    intent = new Intent(EfficiencyActivity.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
                 default:

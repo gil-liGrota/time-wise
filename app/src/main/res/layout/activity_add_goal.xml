@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#FFF0F5">
+
+    <EditText
+        android:id="@+id/etGoalTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Goal Title" />
+
+    <EditText
+        android:id="@+id/etGoalNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Somting to yourself ;)" />
+
+    <RadioGroup
+        android:id="@+id/rgGoalType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+        <RadioButton android:id="@+id/rbDaily" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Daily Goal" android:checked="true"/>
+        <RadioButton android:id="@+id/rbTarget" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Target Date Goal" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/etTargetDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select Target Date"
+        android:focusable="false"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnSaveGoal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Goal"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="#FFB6C1"/>
+</LinearLayout>

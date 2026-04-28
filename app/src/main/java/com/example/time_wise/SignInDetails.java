@@ -143,7 +143,7 @@ public class SignInDetails extends AppCompatActivity {
 
         User user = new User(phone, username, encryptedPassword, efficiencyList,
                 unefficiencyList, sleepList, new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>(), schoolDays);
+                new ArrayList<>(), schoolDays, new ArrayList<>());
 
         FirebaseFirestore.getInstance().collection("users")
                 .add(user)

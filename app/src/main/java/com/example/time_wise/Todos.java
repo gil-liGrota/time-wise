@@ -125,7 +125,7 @@ public class Todos extends AppCompatActivity {
                     break;
 
                 case FOLLOW_GOAL:
-                    intent = new Intent(Todos.this, HomeScreen.class);
+                    intent = new Intent(Todos.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_SHORT).show();
                     break;
 
