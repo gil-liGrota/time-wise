@@ -1,29 +1,38 @@
 package com.example.time_wise;
+import java.io.Serializable;
 
-import androidx.annotation.NonNull;
+public class Note implements Serializable {
+    private String id;
+    private String title;
+    private String content;
+    private String folderId; // אם null, הפתק בחוץ. אם לא, הוא בתוך תיקייה.
 
-public class Note {
-    public String id;
-    public String text;
-    public String imageUrl;
+    public Note() {} // חובה בשביל Firebase
 
-    public Note() {}
-
-    public Note(String id, String text, String imageUrl) {
+    public Note(String id, String title, String content, String folderId) {
         this.id = id;
-        this.text = text;
-        this.imageUrl = imageUrl;
+        this.title = title;
+        this.content = content;
+        this.folderId = folderId;
     }
 
     public String getId() { return id; }
-    public String getText() { return text; }
-    public String getImageUrl() { return imageUrl; }
-    public void setId(String id) { this.id = id; }
-    public void setText(String text) { this.text = text; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getTitle() { return title; }
+    public String getContent() { return content; }
+    public String getFolderId() { return folderId; }
+
+    public void setContent(String content) { this.content = content; }
 
     @Override
     public String toString() {
-        return this.text;
+        return "📝 " + title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Note note = (Note) o;
+        return id.equals(note.id); // השוואה לפי ה-ID הייחודי
     }
 }

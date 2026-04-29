@@ -118,7 +118,7 @@ public class TasksScreem extends AppCompatActivity {
                     break;
 
                 case NOTES:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
+                    intent = new Intent(TasksScreem.this, NotesActivity.class);
                     Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 

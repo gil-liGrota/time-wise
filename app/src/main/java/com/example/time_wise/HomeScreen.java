@@ -120,7 +120,7 @@ public class HomeScreen extends AppCompatActivity {
                     break;
 
                 case NOTES:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    intent = new Intent(HomeScreen.this, NotesActivity.class);
                     Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 

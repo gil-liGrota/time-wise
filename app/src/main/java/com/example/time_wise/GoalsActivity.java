@@ -110,7 +110,7 @@ public class GoalsActivity extends AppCompatActivity {
                     break;
 
                 case NOTES:
-                    intent = new Intent(GoalsActivity.this, HomeScreen.class);
+                    intent = new Intent(GoalsActivity.this, NotesActivity.class);
                     Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 

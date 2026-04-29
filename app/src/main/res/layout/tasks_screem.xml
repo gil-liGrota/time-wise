@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#FAB7D0"
+        android:background="#FFEAF0"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:padding="12dp"
             android:text="☰"
-            android:textColor="@android:color/white"
+            android:textColor="#FAB7D0"
             android:textSize="28sp" />
 
         <TextView
@@ -30,7 +30,9 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:text="Activity"
-            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginLeft="85dp"
+            android:textColor="#FAB7D0"
             android:textSize="20sp" />
     </LinearLayout>
 

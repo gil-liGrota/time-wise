@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
-        android:background="#FAB7D0"
+        android:background="#FFEAF0"
         android:gravity="center_vertical">
 
         <TextView
@@ -20,15 +20,17 @@
             android:layout_height="wrap_content"
             android:text="☰"
             android:textSize="28sp"
-            android:textColor="@android:color/white"
+            android:textColor="#FAB7D0"
             android:padding="12dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="School Schedule"
-            android:textColor="@android:color/white"
+            android:textColor="#FAB7D0"
+            android:textStyle="bold"
             android:textSize="20sp"
+            android:layout_marginLeft="75dp"
             android:paddingStart="16dp"/>
     </LinearLayout>
 
@@ -152,64 +154,88 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="6"
-                android:gravity="center_horizontal"
-                android:layout_marginBottom="8dp">
+                android:padding="8dp"
+                android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSun"
-                    android:text="Sun"
                     android:layout_width="0dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_button_ripple"
-                    android:textColor="@android:color/white"/>
+                    android:layout_margin="2dp"
+                    android:text="Sun"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FAB7D0"
+                    style="@style/Widget.AppCompat.Button.Colored"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnMon"
-                    android:text="Mon"
                     android:layout_width="0dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_button_ripple"
-                    android:textColor="@android:color/white"/>
+                    android:layout_margin="2dp"
+                    android:text="Mon"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FAB7D0"
+                    style="@style/Widget.AppCompat.Button.Colored"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnTue"
-                    android:text="Tue"
                     android:layout_width="0dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_button_ripple"
-                    android:textColor="@android:color/white"/>
+                    android:layout_margin="2dp"
+                    android:text="Tue"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FAB7D0"
+                    style="@style/Widget.AppCompat.Button.Colored"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnWed"
-                    android:text="Wed"
                     android:layout_width="0dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_button_ripple"
-                    android:textColor="@android:color/white"/>
+                    android:layout_margin="2dp"
+                    android:text="Wed"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FAB7D0"
+                    style="@style/Widget.AppCompat.Button.Colored"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnThu"
-                    android:text="Thu"
                     android:layout_width="0dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_button_ripple"
-                    android:textColor="@android:color/white"/>
+                    android:layout_margin="2dp"
+                    android:text="Thu"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FAB7D0"
+                    style="@style/Widget.AppCompat.Button.Colored"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnFri"
-                    android:text="Fri"
                     android:layout_width="0dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_button_ripple"
-                    android:textColor="@android:color/white"/>
-            </LinearLayout>
+                    android:layout_margin="2dp"
+                    android:text="Fri"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FAB7D0"
+                    style="@style/Widget.AppCompat.Button.Colored"/>
 
+            </LinearLayout>
             <!-- רשימת מערכת שעות -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/scheduleRecycler"

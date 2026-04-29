@@ -115,7 +115,7 @@ public class Todos extends AppCompatActivity {
                     break;
 
                 case NOTES:
-                    intent = new Intent(Todos.this, HomeScreen.class);
+                    intent = new Intent(Todos.this, NotesActivity.class);
                     Toast.makeText(this, "Notes", Toast.LENGTH_SHORT).show();
                     break;
 

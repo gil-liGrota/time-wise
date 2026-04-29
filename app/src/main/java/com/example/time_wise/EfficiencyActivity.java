@@ -118,7 +118,7 @@ public class EfficiencyActivity extends AppCompatActivity {
                     break;
 
                 case NOTES:
-                    intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
+                    intent = new Intent(EfficiencyActivity.this, NotesActivity.class);
                     Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 

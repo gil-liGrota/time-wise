@@ -181,7 +181,7 @@ public class SchoolSchedule extends AppCompatActivity {
                     break;
 
                 case NOTES:
-                    intent = new Intent(SchoolSchedule.this, HomeScreen.class);
+                    intent = new Intent(SchoolSchedule.this, NotesActivity.class);
                     Toast.makeText(this, "Notes", Toast.LENGTH_SHORT).show();
                     break;
 

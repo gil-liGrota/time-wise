@@ -264,7 +264,7 @@ public class CalendarActivity extends AppCompatActivity {
                     break;
 
                 case NOTES:
-                    intent = new Intent(CalendarActivity.this, HomeScreen.class);
+                    intent = new Intent(CalendarActivity.this, NotesActivity.class);
                     Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 
