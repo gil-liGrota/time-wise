@@ -1,21 +1,27 @@
 package com.example.time_wise;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class EditNoteActivity extends AppCompatActivity {
+import okhttp3.OkHttpClient;
 
+public class EditNoteActivity extends AppCompatActivity {
+    private TextView tvSummaryResult;
+    private LinearLayout llSummaryArea;
+    private final String GEMINI_API_KEY = "AIzaSyCGWLFye5bE7xmQV77Yr0XjgCX8czgi9JY";
     private EditText etNoteTitle, etNoteContent;
     private Button btnSave, btnSummarize;
     private FirebaseFirestore db;
@@ -37,7 +43,17 @@ public class EditNoteActivity extends AppCompatActivity {
         etNoteContent = findViewById(R.id.etNoteContent);
         btnSave = findViewById(R.id.btnSaveNote);
         btnSummarize = findViewById(R.id.btnSummarize);
+        tvSummaryResult = findViewById(R.id.tvSummaryResult);
+        llSummaryArea = findViewById(R.id.llSummaryArea);
 
+        btnSummarize.setOnClickListener(v -> {
+            String content = etNoteContent.getText().toString();
+            if (!content.isEmpty()) {
+                summarizeWithGemini(content);
+            } else {
+                Toast.makeText(this, "Write something first!", Toast.LENGTH_SHORT).show();
+            }
+        });
         if (existingNote != null) {
             etNoteTitle.setText(existingNote.getTitle());
             etNoteContent.setText(existingNote.getContent());
@@ -51,6 +67,62 @@ public class EditNoteActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void summarizeWithGemini(String textToSummarize) {
+        llSummaryArea.setVisibility(View.VISIBLE);
+        tvSummaryResult.setText("Summarizing... ✨");
+
+        OkHttpClient client = new OkHttpClient();
+
+        // 1. טיפול בתווים שעלולים לשבור את ה-JSON
+        String safeContent = textToSummarize.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r");
+
+        // 2. בניית ה-JSON
+        String json = "{\"contents\":[{\"parts\":[{\"text\":\"Summarize this briefly and in the same language as the text: " + safeContent + "\"}]}]}";
+
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(
+                json, okhttp3.MediaType.parse("application/json; charset=utf-8"));
+
+        // 3. בניית ה-URL
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY;
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, java.io.IOException e) {
+                runOnUiThread(() -> tvSummaryResult.setText("Error: " + e.getMessage()));
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    try {
+                        org.json.JSONObject jsonObject = new org.json.JSONObject(responseBody);
+                        String summary = jsonObject.getJSONArray("candidates")
+                                .getJSONObject(0)
+                                .getJSONObject("content")
+                                .getJSONArray("parts")
+                                .getJSONObject(0)
+                                .getString("text");
+
+                        runOnUiThread(() -> tvSummaryResult.setText(summary.trim()));
+                    } catch (org.json.JSONException e) {
+                        runOnUiThread(() -> tvSummaryResult.setText("Parsing error: " + e.getMessage()));
+                    }
+                } else {
+                    // הצגת פירוט השגיאה מהשרת כדי שנדע למה יש 404 או 400
+                    runOnUiThread(() -> tvSummaryResult.setText("Server error " + response.code() + ": " + responseBody));
+                }
+            }
+        });
     }
 
     @Override
