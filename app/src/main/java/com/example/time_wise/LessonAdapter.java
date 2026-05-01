@@ -15,6 +15,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
 
     private List<String> lessons = new ArrayList<>();
 
+    // פונקציה שמחליפה את המערכת לפי יום
     public void setData(List<String> newLessons) {
         lessons = newLessons;
         notifyDataSetChanged();
@@ -30,8 +31,10 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
 
     @Override
     public void onBindViewHolder(@NonNull LessonViewHolder holder, int position) {
+        // מספר השעה (1, 2, 3...)
         holder.txtHour.setText(String.valueOf(position + 1));
 
+        // שם השיעור
         holder.txtLesson.setText(lessons.get(position));
     }
 
@@ -40,6 +43,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
         return lessons.size();
     }
 
+    // ViewHolder
     static class LessonViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtHour;

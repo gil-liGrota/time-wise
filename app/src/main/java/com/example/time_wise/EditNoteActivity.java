@@ -1,7 +1,6 @@
 package com.example.time_wise;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,16 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.firebase.ai.FirebaseAI;
-import com.google.firebase.ai.GenerativeModel;
-import com.google.firebase.ai.java.GenerativeModelFutures;
-import com.google.firebase.ai.type.Content;
-import com.google.firebase.ai.type.GenerateContentResponse;
-import com.google.firebase.ai.type.GenerativeBackend;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
@@ -26,9 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
+import okhttp3.OkHttpClient;
 
 public class EditNoteActivity extends AppCompatActivity {
     private TextView tvSummaryResult;
@@ -75,51 +63,66 @@ public class EditNoteActivity extends AppCompatActivity {
 
         btnSave.setOnClickListener(v -> saveNote());
 
+        // הוספת אפשרות חזרה אחורה ב-Action Bar אם קיים
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
     private void summarizeWithGemini(String textToSummarize) {
-        // הכנת ממשק המשתמש
         llSummaryArea.setVisibility(View.VISIBLE);
         tvSummaryResult.setText("Summarizing... ✨");
 
-        GenerativeModel ai = FirebaseAI.getInstance(GenerativeBackend.googleAI())
-                .generativeModel("gemini-1.5-flash");
-        GenerativeModelFutures model = GenerativeModelFutures.from(ai);
+        OkHttpClient client = new OkHttpClient();
 
-        Executor executor = Executors.newSingleThreadExecutor();
+        // 1. טיפול בתווים שעלולים לשבור את ה-JSON
+        String safeContent = textToSummarize.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r");
 
-        Content prompt = new Content.Builder()
-                .addText("Summarize this briefly and in the same language as the text: " + textToSummarize)
+        // 2. בניית ה-JSON
+        String json = "{\"contents\":[{\"parts\":[{\"text\":\"Summarize this briefly and in the same language as the text: " + safeContent + "\"}]}]}";
+
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(
+                json, okhttp3.MediaType.parse("application/json; charset=utf-8"));
+
+        // 3. בניית ה-URL
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY;
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .post(body)
                 .build();
 
-        ListenableFuture<GenerateContentResponse> response = model.generateContent(prompt);
-
-        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
+        client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
-            public void onSuccess(GenerateContentResponse result) {
-                String resultText = result.getText();
+            public void onFailure(okhttp3.Call call, java.io.IOException e) {
+                runOnUiThread(() -> tvSummaryResult.setText("Error: " + e.getMessage()));
+            }
 
-                runOnUiThread(() -> {
-                    if (resultText != null && !resultText.isEmpty()) {
-                        tvSummaryResult.setText(resultText.trim());
-                    } else {
-                        tvSummaryResult.setText("לא התקבל סיכום.");
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
+                String responseBody = response.body().string();
+                if (response.isSuccessful()) {
+                    try {
+                        org.json.JSONObject jsonObject = new org.json.JSONObject(responseBody);
+                        String summary = jsonObject.getJSONArray("candidates")
+                                .getJSONObject(0)
+                                .getJSONObject("content")
+                                .getJSONArray("parts")
+                                .getJSONObject(0)
+                                .getString("text");
+
+                        runOnUiThread(() -> tvSummaryResult.setText(summary.trim()));
+                    } catch (org.json.JSONException e) {
+                        runOnUiThread(() -> tvSummaryResult.setText("Parsing error: " + e.getMessage()));
                     }
-                });
+                } else {
+                    // הצגת פירוט השגיאה מהשרת כדי שנדע למה יש 404 או 400
+                    runOnUiThread(() -> tvSummaryResult.setText("Server error " + response.code() + ": " + responseBody));
+                }
             }
-
-            @Override
-            public void onFailure(Throwable t) {
-                runOnUiThread(() -> {
-                    tvSummaryResult.setText("oops..");
-                    Toast.makeText(EditNoteActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-                Log.d("TimeWise-AI", Log.getStackTraceString(t));
-            }
-        }, executor);
+        });
     }
 
     @Override

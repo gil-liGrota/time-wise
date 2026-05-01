@@ -16,7 +16,7 @@ public class AddGoalActivity extends AppCompatActivity {
     private EditText etTitle, etNote, etDate;
     private RadioGroup rgType;
     private Button btnSave;
-    private Date selectedDate;
+    private Date selectedDate; // המחלקה Date שלך
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,7 @@ public class AddGoalActivity extends AppCompatActivity {
         rgType = findViewById(R.id.rgGoalType);
         btnSave = findViewById(R.id.btnSaveGoal);
 
+        // מציג את שדה התאריך רק אם המשתמש בחר "Target Date Goal"
         rgType.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rbTarget) {
                 etDate.setVisibility(View.VISIBLE);
@@ -38,6 +39,7 @@ public class AddGoalActivity extends AppCompatActivity {
             }
         });
 
+        // פתיחת בחירת תאריך בלחיצה על השדה
         etDate.setOnClickListener(v -> showDatePicker());
 
         btnSave.setOnClickListener(v -> saveGoal());
@@ -66,14 +68,18 @@ public class AddGoalActivity extends AppCompatActivity {
             return;
         }
 
+        // יצירת אובייקט מטרה חדש עם ID ייחודי
         String goalID = UUID.randomUUID().toString();
         Goal newGoal = new Goal(goalID, title, note, isDaily, selectedDate);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // משיכת הרשימה הקיימת, הוספת המטרה ושמירה חזרה
         db.collection("users").document(Constant.USER_ID).get().addOnSuccessListener(doc -> {
             ArrayList<Goal> goalsList = new ArrayList<>();
             if (doc.exists() && doc.get("goals") != null) {
+                // כאן אנחנו משתמשים בשיטה שקיימת אצלך להמרת נתונים מ-Firebase
+                // לצורך הפשטות, נעדכן ישירות את המערך
                 db.collection("users").document(Constant.USER_ID)
                         .update("goals", com.google.firebase.firestore.FieldValue.arrayUnion(newGoal))
                         .addOnSuccessListener(aVoid -> {
@@ -81,6 +87,7 @@ public class AddGoalActivity extends AppCompatActivity {
                             finish();
                         });
             } else {
+                // אם אין עדיין רשימת מטרות, יוצרים אחת חדשה
                 goalsList.add(newGoal);
                 db.collection("users").document(Constant.USER_ID).update("goals", goalsList)
                         .addOnSuccessListener(aVoid -> finish());

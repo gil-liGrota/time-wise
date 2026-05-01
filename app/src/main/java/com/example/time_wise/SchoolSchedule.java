@@ -31,6 +31,7 @@ public class SchoolSchedule extends AppCompatActivity {
 
     private LessonAdapter adapter;
 
+    // השבוע: שם יום -> SchoolDay
     private Map<String, SchoolDay> weekSchedule = new HashMap<>();
 
     @Override
@@ -38,6 +39,7 @@ public class SchoolSchedule extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.school_schedule);
 
+        // קבלת פרטי המשתמש מהIntent
         Intent lastIntent = getIntent();
         userID = lastIntent.getStringExtra("userId");
         Constant.USER_ID = userID;
@@ -47,6 +49,7 @@ public class SchoolSchedule extends AppCompatActivity {
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
 
+        // לחיצה על כפתור המבורגר לפתיחה/סגירה
         btnMenu.setOnClickListener(v -> {
             if (sideMenu.getVisibility() == View.GONE) {
                 sideMenu.setVisibility(View.VISIBLE);
@@ -65,12 +68,14 @@ public class SchoolSchedule extends AppCompatActivity {
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
 
+        // חיבור RecyclerView וה-Adapter
         RecyclerView recyclerView = findViewById(R.id.scheduleRecycler);
         adapter = new LessonAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+// נניח שיש לך את userID
         db.collection("users").document(userID)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -84,6 +89,7 @@ public class SchoolSchedule extends AppCompatActivity {
                             for(Map<String, Object> dayMap : schoolScheduleMap) {
                                 String dayName = (String) dayMap.get("dayName");
 
+                                // שליפת השיעורים
                                 List<Map<String, Object>> lessonsMapList =
                                         (List<Map<String, Object>>) dayMap.get("lessons");
 
@@ -100,9 +106,13 @@ public class SchoolSchedule extends AppCompatActivity {
                             }
                         }
 
+                        // עכשיו יש לך ArrayList<SchoolDay> מלא
+                        // אפשר לעדכן את ה-weekSchedule שלך
                         for(SchoolDay day : schoolScheduleList){
                             weekSchedule.put(day.getDayName(), day);
                         }
+
+                        // לדוגמה, הצגת יום ראשון כברירת מחדל
                         showDay("Sun");
                     }
                 })
@@ -110,6 +120,7 @@ public class SchoolSchedule extends AppCompatActivity {
                     Log.e("Firestore", "Error getting user", e);
                 });
 
+        // חיבור כפתורי ימים ל-Adapter
         ((Button)findViewById(R.id.btnSun)).setOnClickListener(v -> showDay("Sunday"));
         ((Button)findViewById(R.id.btnMon)).setOnClickListener(v -> showDay("Monday"));
         ((Button)findViewById(R.id.btnTue)).setOnClickListener(v -> showDay("Tuesday"));
@@ -117,12 +128,15 @@ public class SchoolSchedule extends AppCompatActivity {
         ((Button)findViewById(R.id.btnThu)).setOnClickListener(v -> showDay("Thursday"));
         ((Button)findViewById(R.id.btnFri)).setOnClickListener(v -> showDay("Friday"));
 
+        // הצגת יום ראשון כברירת מחדל
         showDay("Sun");
     }
 
+    // עדכון ה-Adapter לפי יום
     private void showDay(String dayName) {
         SchoolDay day = weekSchedule.get(dayName);
         if(day != null) {
+            // יצירת רשימת שמות שיעורים ידנית
             List<String> lessonNames = new ArrayList<>();
             for (Lesson lesson : day.getLessons()) {
                 lessonNames.add(lesson.getName());
@@ -139,6 +153,7 @@ public class SchoolSchedule extends AppCompatActivity {
             switch (menu){
                 case Home:
                     intent = new Intent(SchoolSchedule.this, HomeScreen.class);
+                    Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
                     break;
 
                 case ACTIVITY:
@@ -146,23 +161,28 @@ public class SchoolSchedule extends AppCompatActivity {
                     break;
 
                 case SCHOOL_SCHEDULE:
+                    // אם אנחנו כבר במסך מערכת שעות, לא עושים כלום
                     intent = new Intent(SchoolSchedule.this, SchoolSchedule.class);
                     break;
 
                 case FOLLOW_EFFICIENCY:
                     intent = new Intent(SchoolSchedule.this, EfficiencyActivity.class);
+                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_SHORT).show();
                     break;
 
                 case TODO:
                     intent = new Intent(SchoolSchedule.this, Todos.class);
+                    Toast.makeText(this, "To-Do", Toast.LENGTH_SHORT).show();
                     break;
 
                 case CALENDER:
                     intent = new Intent(SchoolSchedule.this, CalendarActivity.class);
+                    Toast.makeText(this, "Calendar", Toast.LENGTH_SHORT).show();
                     break;
 
                 case NOTES:
                     intent = new Intent(SchoolSchedule.this, NotesActivity.class);
+                    Toast.makeText(this, "Notes", Toast.LENGTH_SHORT).show();
                     break;
 
                 case LERNING_PLAN:
@@ -172,6 +192,7 @@ public class SchoolSchedule extends AppCompatActivity {
 
                 case FOLLOW_GOAL:
                     intent = new Intent(SchoolSchedule.this, GoalsActivity.class);
+                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_SHORT).show();
                     break;
 
                 default:

@@ -28,7 +28,7 @@ public class TodoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return todos.size() + 1;
+        return todos.size() + 1; // כולל TAP TO ENTER MORE
     }
 
     @Override
@@ -69,8 +69,9 @@ public class TodoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
 
-        } else {
+        } else { // TYPE_ADD
             holder.itemView.setOnClickListener(v -> {
+                // פותח Dialog להוספה
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 View dialogView = LayoutInflater.from(v.getContext())
                         .inflate(R.layout.dialog_add_todo, null);
@@ -94,6 +95,7 @@ public class TodoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    // -------- ViewHolders --------
     static class TodoViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView todoText;
@@ -111,6 +113,7 @@ public class TodoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    // -------- Listener לעדכון Activity --------
     public interface OnTodosChangedListener {
         void onTodosChanged(ArrayList<Todo> todos);
     }

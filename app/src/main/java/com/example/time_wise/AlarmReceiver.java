@@ -11,22 +11,27 @@ import androidx.core.app.NotificationCompat;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
+    // הפעולה הזו תקרה בדיוק ב-13:00
     @Override
     public void onReceive(Context context, Intent intent) {
         String channelId = "efficiency_channel";
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        // הגדרת ערוץ התראות (חובה לאנדרואיד מודרני)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId, "Daily Efficiency", NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(channel);
         }
 
+        // הגדרה מה קורה כשלוחצים על ההתראה - פתיחת מסך הדירוג
         Intent activityIntent = new Intent(context, EfficiencyActivity.class);
+        // שימוש ב-Constant כדי להעביר את ה-ID של המשתמש
         activityIntent.putExtra("userId", Constant.USER_ID);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
+        // בניית ההתראה עצמה
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(android.R.drawable.ic_dialog_info) // תוכלי להחליף לאייקון שלך
                 .setContentTitle("TimeWise")

@@ -36,14 +36,17 @@ public class Todos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.todos);
 
+        // 1. קבלת ה-ID מה-Intent (כמו ב-SchoolSchedule)
         userID = getIntent().getStringExtra("userId");
         Constant.USER_ID = userID;
 
+        // 2. אתחול רכיבי ממשק
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
         recyclerView = findViewById(R.id.todosRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // 3. לחיצה על כפתור המבורגר לפתיחה/סגירה
         btnMenu.setOnClickListener(v -> {
             if (sideMenu.getVisibility() == View.GONE) {
                 sideMenu.setVisibility(View.VISIBLE);
@@ -52,6 +55,7 @@ public class Todos extends AppCompatActivity {
             }
         });
 
+        // 4. חיבור ישיר של כפתורי התפריט (בדיוק כמו ב-SchoolSchedule)
         setMenuClickListener(R.id.nav_home, Constant.Menu.Home);
         setMenuClickListener(R.id.nav_activity, Constant.Menu.ACTIVITY);
         setMenuClickListener(R.id.nav_school_schedule, Constant.Menu.SCHOOL_SCHEDULE);
@@ -62,6 +66,7 @@ public class Todos extends AppCompatActivity {
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
 
+        // 5. אתחול רשימה ו-Adapter
         todos = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
@@ -71,6 +76,7 @@ public class Todos extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapter);
 
+        // 6. טעינת נתונים מה-Firestore
         loadFromFirestore();
     }
 
@@ -81,6 +87,7 @@ public class Todos extends AppCompatActivity {
             switch (menu){
                 case Home:
                     intent = new Intent(Todos.this, HomeScreen.class);
+                    Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
                     break;
 
                 case ACTIVITY:
@@ -88,23 +95,28 @@ public class Todos extends AppCompatActivity {
                     break;
 
                 case SCHOOL_SCHEDULE:
+                    // אם אנחנו כבר במסך מערכת שעות, לא עושים כלום
                     intent = new Intent(Todos.this, SchoolSchedule.class);
                     break;
 
                 case FOLLOW_EFFICIENCY:
                     intent = new Intent(Todos.this, EfficiencyActivity.class);
+                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_SHORT).show();
                     break;
 
                 case TODO:
                     intent = new Intent(Todos.this, Todos.class);
+                    Toast.makeText(this, "To-Do", Toast.LENGTH_SHORT).show();
                     break;
 
                 case CALENDER:
                     intent = new Intent(Todos.this, CalendarActivity.class);
+                    Toast.makeText(this, "Calendar", Toast.LENGTH_SHORT).show();
                     break;
 
                 case NOTES:
                     intent = new Intent(Todos.this, NotesActivity.class);
+                    Toast.makeText(this, "Notes", Toast.LENGTH_SHORT).show();
                     break;
 
                 case LERNING_PLAN:
@@ -114,6 +126,7 @@ public class Todos extends AppCompatActivity {
 
                 case FOLLOW_GOAL:
                     intent = new Intent(Todos.this, GoalsActivity.class);
+                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_SHORT).show();
                     break;
 
                 default:

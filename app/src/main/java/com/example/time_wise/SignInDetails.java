@@ -27,16 +27,19 @@ public class SignInDetails extends AppCompatActivity {
     private TextView txtDayTitle;
     private Button btnNext, btnBack;
 
+    // ניהול הימים
     private DayOfWeek[] days = {
             DayOfWeek.SUNDAY, DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
             DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY
     };
     private int currentDayIndex = 0;
 
+    // רשימות נתונים מצטברות
     private ArrayList<EfficientTime> efficiencyList = new ArrayList<>();
     private ArrayList<EfficientTime> unefficiencyList = new ArrayList<>();
     private ArrayList<EfficientTime> sleepList = new ArrayList<>();
 
+    // אובייקט אבטחה (דרישות 9 ו-10)
     private SecurityManager securityManager;
 
     @Override
@@ -91,6 +94,7 @@ public class SignInDetails extends AppCompatActivity {
     }
 
     private void handleNextStep() {
+        // ולידציה - חובה למלא הכל (חלק מדרישה 10 - Validation)
         if (isAnyFieldEmpty()) {
             Toast.makeText(this, "Please fill all fields for " + days[currentDayIndex].name(), Toast.LENGTH_SHORT).show();
             return;
@@ -110,6 +114,7 @@ public class SignInDetails extends AppCompatActivity {
     private void handleBackStep() {
         if (currentDayIndex > 0) {
             currentDayIndex--;
+            // הסרת הנתונים של היום שבוטל
             if (!efficiencyList.isEmpty()) efficiencyList.remove(efficiencyList.size() - 1);
             if (!unefficiencyList.isEmpty()) unefficiencyList.remove(unefficiencyList.size() - 1);
             if (!sleepList.isEmpty()) sleepList.remove(sleepList.size() - 1);
@@ -133,6 +138,7 @@ public class SignInDetails extends AppCompatActivity {
         String rawPassword = lastIntent.getStringExtra("password");
         ArrayList<SchoolDay> schoolDays = (ArrayList<SchoolDay>) lastIntent.getSerializableExtra("school");
 
+        // --- דרישה 9: הצפנת הסיסמה לפני השמירה ---
         String encryptedPassword = securityManager.hashPassword(rawPassword);
 
         User user = new User(phone, username, encryptedPassword, efficiencyList,
@@ -142,6 +148,7 @@ public class SignInDetails extends AppCompatActivity {
         FirebaseFirestore.getInstance().collection("users")
                 .add(user)
                 .addOnSuccessListener(doc -> {
+                    // --- דרישה 10: שמירת ה-ID בקובץ XML מקומי ---
                     securityManager.saveUserId(doc.getId());
 
                     Toast.makeText(this, "Welcome to TimeWise!", Toast.LENGTH_LONG).show();
@@ -153,6 +160,7 @@ public class SignInDetails extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    // פונקציות עזר
     private boolean isAnyFieldEmpty() {
         EditText[] fields = {EffStart, EffEnd, BadStart, BadEnd, SleepStart, SleepEnd};
         boolean empty = false;

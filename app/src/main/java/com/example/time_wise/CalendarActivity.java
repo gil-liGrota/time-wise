@@ -101,6 +101,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
+    // פונקציית המרה שתואמת לפורמט של Firebase ו-LocalTime
     private Task convertMapToTask(Map<String, Object> map) {
         try {
             Task task = new Task();
@@ -147,6 +148,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
+    // העתקת הלוגיקה המדויקת מה-TasksScreem שלך
     public void openEditTaskDialog(Task task, int position) {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
 
@@ -157,6 +159,7 @@ public class CalendarActivity extends AppCompatActivity {
         EditText etPriority = dialogView.findViewById(R.id.etPriority);
         Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
 
+        // מילוי ערכים קיימים
         etName.setText(task.getName());
         etStart.setText(task.getStart() != null ? task.getStart().toString() : "09:00");
         etEnd.setText(task.getEnd() != null ? task.getEnd().toString() : "10:00");
@@ -166,6 +169,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
         etPriority.setText(String.valueOf(task.getPriority()));
 
+        // הגדרת ה-Switch
         switchHasTime.setChecked(task.getStart() != null);
         etStart.setVisibility(switchHasTime.isChecked() ? View.VISIBLE : View.GONE);
         etEnd.setVisibility(switchHasTime.isChecked() ? View.VISIBLE : View.GONE);
@@ -234,28 +238,34 @@ public class CalendarActivity extends AppCompatActivity {
             switch (menu){
                 case Home:
                     intent = new Intent(CalendarActivity.this, HomeScreen.class);
+                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
                 case ACTIVITY:
                     intent = new Intent(CalendarActivity.this, TasksScreem.class);
                     break;
                 case SCHOOL_SCHEDULE:
                     intent = new Intent(CalendarActivity.this, SchoolSchedule.class);
+                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 
                 case FOLLOW_EFFICIENCY:
                     intent = new Intent(CalendarActivity.this, EfficiencyActivity.class);
+                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
                     break;
 
                 case TODO:
                     intent = new Intent(CalendarActivity.this, Todos.class);
+                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
                     break;
 
                 case CALENDER:
                     intent = new Intent(CalendarActivity.this, CalendarActivity.class);
+                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
                     break;
 
                 case NOTES:
                     intent = new Intent(CalendarActivity.this, NotesActivity.class);
+                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 
                 case LERNING_PLAN:
@@ -265,6 +275,7 @@ public class CalendarActivity extends AppCompatActivity {
 
                 case FOLLOW_GOAL:
                     intent = new Intent(CalendarActivity.this, GoalsActivity.class);
+                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
 
                 default:

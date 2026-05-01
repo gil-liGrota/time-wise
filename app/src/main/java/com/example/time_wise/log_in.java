@@ -17,6 +17,7 @@ public class log_in extends AppCompatActivity {
     private Button logIn, signIn;
     private TextView user, pass;
     private FirebaseFirestore db;
+    // הוסיפי את האובייקט הזה
     private SecurityManager securityManager;
 
     @Override
@@ -67,6 +68,7 @@ public class log_in extends AppCompatActivity {
     }
 
     private void checkLogin(String username, String password) {
+        // --- דרישה 9: הצפנת הסיסמה שהוקלדה לפני הבדיקה ---
         String encryptedInput = securityManager.hashPassword(password);
 
         db.collection("users")
@@ -80,19 +82,23 @@ public class log_in extends AppCompatActivity {
                         return;
                     }
 
+                    // שליפת הסיסמה מהמסמך (היא תהיה מוצפנת ב-DB)
                     String realPasswordInDB = query.getDocuments().get(0).getString("password");
                     String docId = query.getDocuments().get(0).getId();
 
+                    // השוואה בין שתי ההצפנות
                     if (realPasswordInDB == null || !realPasswordInDB.equals(encryptedInput)) {
                         pass.setError("password incorrect");
                         Toast.makeText(this, "Wrong password", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
+                    // --- דרישה 10: שמירת ה-ID מקומית ב-SharedPrefs לאחר כניסה מוצלחת ---
                     securityManager.saveUserId(docId);
 
+                    // הצלחה — עוברים למסך הבא
                     Intent intent = new Intent(log_in.this, HomeScreen.class);
-                    intent.putExtra("userId", docId);
+                    intent.putExtra("userId", docId); // מומלץ להעביר ID במקום סיסמה
                     startActivity(intent);
                     finish();
                 })

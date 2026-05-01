@@ -35,15 +35,18 @@ public class GoalsActivity extends AppCompatActivity {
         FloatingActionButton fabAdd = findViewById(R.id.fabAddGoal);
 
         goals = new ArrayList<>();
+        // נשתמש ב-ArrayAdapter פשוט שמציג את שם המטרה (מתוך ה-toString של Goal)
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, goals);
         lvGoals.setAdapter(adapter);
 
+        // מעבר למסך פרטי המטרה בלחיצה על פריט ברשימה
         lvGoals.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(GoalsActivity.this, GoalDetailsActivity.class);
             intent.putExtra("goal", goals.get(position));
             startActivity(intent);
         });
 
+        // מעבר למסך הוספת מטרה חדשה
         fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(GoalsActivity.this, AddGoalActivity.class);
             startActivity(intent);
@@ -53,6 +56,7 @@ public class GoalsActivity extends AppCompatActivity {
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
 
+        // לחיצה על כפתור המבורגר לפתיחה/סגירה
         btnMenu.setOnClickListener(v -> {
             if (sideMenu.getVisibility() == View.GONE) {
                 sideMenu.setVisibility(View.VISIBLE);
@@ -80,28 +84,34 @@ public class GoalsActivity extends AppCompatActivity {
             switch (menu){
                 case Home:
                     intent = new Intent(GoalsActivity.this, HomeScreen.class);
+                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
                 case ACTIVITY:
                     intent = new Intent(GoalsActivity.this, TasksScreem.class);
                     break;
                 case SCHOOL_SCHEDULE:
                     intent = new Intent(GoalsActivity.this, SchoolSchedule.class);
+                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 
                 case FOLLOW_EFFICIENCY:
                     intent = new Intent(GoalsActivity.this, EfficiencyActivity.class);
+                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
                     break;
 
                 case TODO:
                     intent = new Intent(GoalsActivity.this, Todos.class);
+                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
                     break;
 
                 case CALENDER:
                     intent = new Intent(GoalsActivity.this, CalendarActivity.class);
+                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
                     break;
 
                 case NOTES:
                     intent = new Intent(GoalsActivity.this, NotesActivity.class);
+                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 
                 case LERNING_PLAN:
@@ -111,6 +121,7 @@ public class GoalsActivity extends AppCompatActivity {
 
                 case FOLLOW_GOAL:
                     intent = new Intent(GoalsActivity.this, GoalsActivity.class);
+                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
                 default:
                     intent = new Intent(GoalsActivity.this, HomeScreen.class);
@@ -127,7 +138,7 @@ public class GoalsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadGoalsFromFirebase();
+        loadGoalsFromFirebase(); // רענון הרשימה כשחוזרים ממסכים אחרים
     }
 
     private void loadGoalsFromFirebase() {
@@ -143,6 +154,7 @@ public class GoalsActivity extends AppCompatActivity {
         });
     }
 
+    // פונקציית עזר להמרת הנתונים מ-Firebase לאובייקט Goal
     private Goal convertMapToGoal(Map<String, Object> map) {
         String id = (String) map.get("id");
         String title = (String) map.get("title");
