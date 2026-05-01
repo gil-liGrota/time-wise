@@ -117,6 +117,8 @@ public class NotesActivity extends AppCompatActivity {
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
+        setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
+
 
     }
 
@@ -165,6 +167,10 @@ public class NotesActivity extends AppCompatActivity {
                 case FOLLOW_GOAL:
                     intent = new Intent(NotesActivity.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
+                    break;
+
+                case SIGN_OUT:
+                    intent = new Intent(NotesActivity.this, log_in.class);
                     break;
                 default:
                     intent = new Intent(NotesActivity.this, HomeScreen.class);

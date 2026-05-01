@@ -69,6 +69,8 @@ public class EfficiencyActivity extends AppCompatActivity {
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
+        setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
+
 
         // עדכון הטקסט כשהמשתמש מזיז את הסליידר
         sbRate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -94,9 +96,11 @@ public class EfficiencyActivity extends AppCompatActivity {
                     intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
                     Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
+
                 case ACTIVITY:
                     intent = new Intent(EfficiencyActivity.this, TasksScreem.class);
                     break;
+
                 case SCHOOL_SCHEDULE:
                     intent = new Intent(EfficiencyActivity.this, SchoolSchedule.class);
                     Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
@@ -131,6 +135,11 @@ public class EfficiencyActivity extends AppCompatActivity {
                     intent = new Intent(EfficiencyActivity.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
+
+                case SIGN_OUT:
+                    intent = new Intent(EfficiencyActivity.this, log_in.class);
+                    break;
+
                 default:
                     intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
                     Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();

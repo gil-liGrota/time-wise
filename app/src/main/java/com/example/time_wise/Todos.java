@@ -65,6 +65,8 @@ public class Todos extends AppCompatActivity {
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
+        setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
+
 
         // 5. אתחול רשימה ו-Adapter
         todos = new ArrayList<>();
@@ -127,6 +129,10 @@ public class Todos extends AppCompatActivity {
                 case FOLLOW_GOAL:
                     intent = new Intent(Todos.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case SIGN_OUT:
+                    intent = new Intent(Todos.this, log_in.class);
                     break;
 
                 default:

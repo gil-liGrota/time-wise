@@ -12,8 +12,8 @@
         android:gravity="center"
         android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/txtLesson"
+    <EditText
+        android:id="@+id/etLesson"
         android:text="מתמטיקה"
         android:layout_width="0dp"
         android:layout_weight="1"

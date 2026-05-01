@@ -18,7 +18,8 @@ public class Constant {
         CALENDER,
         NOTES,
         LERNING_PLAN,
-        FOLLOW_GOAL
+        FOLLOW_GOAL,
+        SIGN_OUT
     }
 
     public static String USER_ID;

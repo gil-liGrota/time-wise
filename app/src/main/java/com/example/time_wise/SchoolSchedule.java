@@ -22,16 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 public class SchoolSchedule extends AppCompatActivity {
-
+    private Button btnSave;
     private Intent intent;
     private LinearLayout sideMenu;
     private TextView btnMenu;
     private String userID;
     private String userName, password;
-
+    private String currentDayName = "Sunday";
     private LessonAdapter adapter;
-
-    // השבוע: שם יום -> SchoolDay
     private Map<String, SchoolDay> weekSchedule = new HashMap<>();
 
     @Override
@@ -39,7 +37,20 @@ public class SchoolSchedule extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.school_schedule);
 
-        // קבלת פרטי המשתמש מהIntent
+        btnSave = findViewById(R.id.btnSaveSchedule);
+        btnSave.setOnClickListener(v -> saveScheduleToFirebase());
+
+        Button btnAddLesson = findViewById(R.id.btnAddLesson);
+        btnAddLesson.setOnClickListener(v -> {
+            SchoolDay day = weekSchedule.get(currentDayName);
+            if (day != null) {
+                ArrayList<Lesson> lessons = day.getLessons();
+                int newHour = lessons.size() + 1;
+                lessons.add(new Lesson(newHour, ""));
+                adapter.setData(lessons);
+            }
+        });
+
         Intent lastIntent = getIntent();
         userID = lastIntent.getStringExtra("userId");
         Constant.USER_ID = userID;
@@ -49,7 +60,8 @@ public class SchoolSchedule extends AppCompatActivity {
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
 
-        // לחיצה על כפתור המבורגר לפתיחה/סגירה
+
+
         btnMenu.setOnClickListener(v -> {
             if (sideMenu.getVisibility() == View.GONE) {
                 sideMenu.setVisibility(View.VISIBLE);
@@ -67,15 +79,17 @@ public class SchoolSchedule extends AppCompatActivity {
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
+        setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
 
-        // חיבור RecyclerView וה-Adapter
+
+
         RecyclerView recyclerView = findViewById(R.id.scheduleRecycler);
         adapter = new LessonAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-// נניח שיש לך את userID
+
         db.collection("users").document(userID)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -83,65 +97,60 @@ public class SchoolSchedule extends AppCompatActivity {
                         List<Map<String, Object>> schoolScheduleMap =
                                 (List<Map<String, Object>>) documentSnapshot.get("schoolSchedule");
 
-                        ArrayList<SchoolDay> schoolScheduleList = new ArrayList<>();
+                        if (schoolScheduleMap != null) {
+                            // ניקוי המפה לפני טעינה חדשה
+                            weekSchedule.clear();
 
-                        if(schoolScheduleMap != null) {
-                            for(Map<String, Object> dayMap : schoolScheduleMap) {
+                            for (Map<String, Object> dayMap : schoolScheduleMap) {
                                 String dayName = (String) dayMap.get("dayName");
+                                List<Map<String, Object>> lessonsMapList = (List<Map<String, Object>>) dayMap.get("lessons");
 
-                                // שליפת השיעורים
-                                List<Map<String, Object>> lessonsMapList =
-                                        (List<Map<String, Object>>) dayMap.get("lessons");
-
-                                ArrayList<Lesson> lessonsList = new ArrayList<>();
-                                if(lessonsMapList != null) {
-                                    for(Map<String, Object> lessonMap : lessonsMapList) {
+                                ArrayList<Lesson> lessonsListForThisDay = new ArrayList<>();
+                                if (lessonsMapList != null) {
+                                    for (Map<String, Object> lessonMap : lessonsMapList) {
                                         int number = ((Long) lessonMap.get("hour")).intValue();
                                         String name = (String) lessonMap.get("name");
-                                        lessonsList.add(new Lesson(number, name));
+                                        lessonsListForThisDay.add(new Lesson(number, name));
                                     }
                                 }
-
-                                schoolScheduleList.add(new SchoolDay(dayName, lessonsList));
+                                // שמירה למפה עם השם המדויק מה-DB
+                                weekSchedule.put(dayName, new SchoolDay(dayName, lessonsListForThisDay));
                             }
                         }
-
-                        // עכשיו יש לך ArrayList<SchoolDay> מלא
-                        // אפשר לעדכן את ה-weekSchedule שלך
-                        for(SchoolDay day : schoolScheduleList){
-                            weekSchedule.put(day.getDayName(), day);
-                        }
-
-                        // לדוגמה, הצגת יום ראשון כברירת מחדל
-                        showDay("Sun");
+                        // הצגת יום ראשון אחרי שהנתונים נטענו
+                        showDay("Sunday");
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error getting user", e);
                 });
 
-        // חיבור כפתורי ימים ל-Adapter
         ((Button)findViewById(R.id.btnSun)).setOnClickListener(v -> showDay("Sunday"));
         ((Button)findViewById(R.id.btnMon)).setOnClickListener(v -> showDay("Monday"));
         ((Button)findViewById(R.id.btnTue)).setOnClickListener(v -> showDay("Tuesday"));
-        ((Button)findViewById(R.id.btnWed)).setOnClickListener(v -> showDay("Wednsday"));
+        ((Button)findViewById(R.id.btnWed)).setOnClickListener(v -> showDay("Wednesday"));
         ((Button)findViewById(R.id.btnThu)).setOnClickListener(v -> showDay("Thursday"));
         ((Button)findViewById(R.id.btnFri)).setOnClickListener(v -> showDay("Friday"));
 
-        // הצגת יום ראשון כברירת מחדל
         showDay("Sun");
     }
+    private void saveScheduleToFirebase() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    // עדכון ה-Adapter לפי יום
+        ArrayList<SchoolDay> updatedList = new ArrayList<>(weekSchedule.values());
+
+        db.collection("users").document(userID)
+                .update("schoolSchedule", updatedList)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Schedule Updated Successfully!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to update", Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void showDay(String dayName) {
+        currentDayName = dayName;
         SchoolDay day = weekSchedule.get(dayName);
         if(day != null) {
-            // יצירת רשימת שמות שיעורים ידנית
-            List<String> lessonNames = new ArrayList<>();
-            for (Lesson lesson : day.getLessons()) {
-                lessonNames.add(lesson.getName());
-            }
-            adapter.setData(lessonNames);
+            adapter.setData(day.getLessons());
         }
     }
 
@@ -161,7 +170,6 @@ public class SchoolSchedule extends AppCompatActivity {
                     break;
 
                 case SCHOOL_SCHEDULE:
-                    // אם אנחנו כבר במסך מערכת שעות, לא עושים כלום
                     intent = new Intent(SchoolSchedule.this, SchoolSchedule.class);
                     break;
 
@@ -193,6 +201,10 @@ public class SchoolSchedule extends AppCompatActivity {
                 case FOLLOW_GOAL:
                     intent = new Intent(SchoolSchedule.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case SIGN_OUT:
+                    intent = new Intent(SchoolSchedule.this, log_in.class);
                     break;
 
                 default:

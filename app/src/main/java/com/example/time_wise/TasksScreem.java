@@ -40,7 +40,7 @@ public class TasksScreem extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.tasks_screem);
+        setContentView(R.layout.tasks_screen);
 
         lvActivity = findViewById(R.id.activityList);
         tasks = new ArrayList<>();
@@ -82,6 +82,8 @@ public class TasksScreem extends AppCompatActivity {
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
+        setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
+
 
     }
 
@@ -94,9 +96,11 @@ public class TasksScreem extends AppCompatActivity {
                     intent = new Intent(TasksScreem.this, HomeScreen.class);
                     Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
+
                 case ACTIVITY:
                     intent = new Intent(TasksScreem.this, TasksScreem.class);
                     break;
+
                 case SCHOOL_SCHEDULE:
                     intent = new Intent(TasksScreem.this, SchoolSchedule.class);
                     Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
@@ -130,6 +134,10 @@ public class TasksScreem extends AppCompatActivity {
                 case FOLLOW_GOAL:
                     intent = new Intent(TasksScreem.this, GoalsActivity.class);
                     Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
+                    break;
+
+                case SIGN_OUT:
+                    intent = new Intent(TasksScreem.this, log_in.class);
                     break;
 
                 default:

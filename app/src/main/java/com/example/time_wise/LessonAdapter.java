@@ -1,8 +1,11 @@
 package com.example.time_wise;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,10 +16,10 @@ import java.util.List;
 
 public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonViewHolder> {
 
-    private List<String> lessons = new ArrayList<>();
+    private List<Lesson> lessons = new ArrayList<>();
 
     // פונקציה שמחליפה את המערכת לפי יום
-    public void setData(List<String> newLessons) {
+    public void setData(List<Lesson> newLessons) {
         lessons = newLessons;
         notifyDataSetChanged();
     }
@@ -31,11 +34,30 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
 
     @Override
     public void onBindViewHolder(@NonNull LessonViewHolder holder, int position) {
-        // מספר השעה (1, 2, 3...)
-        holder.txtHour.setText(String.valueOf(position + 1));
+        Lesson lesson = lessons.get(position);
 
-        // שם השיעור
-        holder.txtLesson.setText(lessons.get(position));
+        if (holder.etLesson.getTag() instanceof TextWatcher) {
+            holder.etLesson.removeTextChangedListener((TextWatcher) holder.etLesson.getTag());
+        }
+
+        holder.txtHour.setText(String.valueOf(lesson.getHour()));
+        holder.etLesson.setText(lesson.getName());
+
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                lesson.setName(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        holder.etLesson.addTextChangedListener(watcher);
+        holder.etLesson.setTag(watcher);
     }
 
     @Override
@@ -47,12 +69,12 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
     static class LessonViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtHour;
-        TextView txtLesson;
+        EditText etLesson;
 
         public LessonViewHolder(@NonNull View itemView) {
             super(itemView);
             txtHour = itemView.findViewById(R.id.txtHour);
-            txtLesson = itemView.findViewById(R.id.txtLesson);
+            etLesson = itemView.findViewById(R.id.etLesson);
         }
     }
 }

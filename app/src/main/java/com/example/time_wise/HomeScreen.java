@@ -57,6 +57,7 @@ public class HomeScreen extends AppCompatActivity {
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
+        setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
 
     }
 
@@ -94,34 +95,30 @@ public class HomeScreen extends AppCompatActivity {
             switch (menu){
                 case Home:
                     intent = new Intent(HomeScreen.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
+
                 case ACTIVITY:
                     intent = new Intent(HomeScreen.this, TasksScreem.class);
                     break;
+
                 case SCHOOL_SCHEDULE:
                     intent = new Intent(HomeScreen.this, SchoolSchedule.class);
-                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 
                 case FOLLOW_EFFICIENCY:
                     intent = new Intent(HomeScreen.this, EfficiencyActivity.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
                     break;
 
                 case TODO:
                     intent = new Intent(HomeScreen.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
                     break;
 
                 case CALENDER:
                     intent = new Intent(HomeScreen.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
                     break;
 
                 case NOTES:
                     intent = new Intent(HomeScreen.this, NotesActivity.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 
                 case LERNING_PLAN:
@@ -131,8 +128,12 @@ public class HomeScreen extends AppCompatActivity {
 
                 case FOLLOW_GOAL:
                     intent = new Intent(HomeScreen.this, GoalsActivity.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
+
+                case SIGN_OUT:
+                    intent = new Intent(HomeScreen.this, log_in.class);
+                    break;
+
                 default:
                     intent = new Intent(HomeScreen.this, HomeScreen.class);
                     Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();
