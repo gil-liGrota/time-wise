@@ -5,7 +5,7 @@ public class Note implements Serializable {
     private String id;
     private String title;
     private String content;
-    private String folderId; // אם null, הפתק בחוץ. אם לא, הוא בתוך תיקייה.
+    private String folderId;
 
     public Note() {} // חובה בשביל Firebase
 
@@ -33,6 +33,6 @@ public class Note implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Note note = (Note) o;
-        return id.equals(note.id); // השוואה לפי ה-ID הייחודי
+        return id.equals(note.id);
     }
 }

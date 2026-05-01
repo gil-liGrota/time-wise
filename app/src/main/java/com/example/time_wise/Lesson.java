@@ -3,8 +3,8 @@ package com.example.time_wise;
 import java.io.Serializable;
 
 public class Lesson implements Serializable {
-    private int hour;       // מספר השעה
-    private String name;    // שם השיעור
+    private int hour;
+    private String name;
 
     public Lesson(int hour, String name) {
         this.hour = hour;

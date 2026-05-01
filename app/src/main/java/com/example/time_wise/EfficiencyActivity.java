@@ -70,7 +70,6 @@ public class EfficiencyActivity extends AppCompatActivity {
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
 
-        // עדכון הטקסט כשהמשתמש מזיז את הסליידר
         sbRate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -92,34 +91,28 @@ public class EfficiencyActivity extends AppCompatActivity {
             switch (menu){
                 case Home:
                     intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
                 case ACTIVITY:
                     intent = new Intent(EfficiencyActivity.this, TasksScreem.class);
                     break;
                 case SCHOOL_SCHEDULE:
                     intent = new Intent(EfficiencyActivity.this, SchoolSchedule.class);
-                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 
                 case FOLLOW_EFFICIENCY:
                     intent = new Intent(EfficiencyActivity.this, EfficiencyActivity.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
                     break;
 
                 case TODO:
                     intent = new Intent(EfficiencyActivity.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
                     break;
 
                 case CALENDER:
                     intent = new Intent(EfficiencyActivity.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
                     break;
 
                 case NOTES:
                     intent = new Intent(EfficiencyActivity.this, NotesActivity.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 
                 case LERNING_PLAN:
@@ -129,7 +122,6 @@ public class EfficiencyActivity extends AppCompatActivity {
 
                 case FOLLOW_GOAL:
                     intent = new Intent(EfficiencyActivity.this, GoalsActivity.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
                 default:
                     intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
@@ -167,13 +159,11 @@ public class EfficiencyActivity extends AppCompatActivity {
     private void saveCurrentEfficiency() {
         int score = sbRate.getProgress() + 1;
 
-        // יצירת תאריך נוכחי בעזרת ה-Calendar של Java
         Calendar cal = Calendar.getInstance();
         Date today = new Date(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
 
         DayEfficiency newEntry = new DayEfficiency(score, today);
 
-        // הוספה לרשימה המקומית ועדכון ה-DB
         historyList.add(newEntry);
 
         db.collection("users").document(userID)
@@ -181,7 +171,7 @@ public class EfficiencyActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Efficiency saved!", Toast.LENGTH_SHORT).show();
                     adapter.notifyDataSetChanged();
-                    btnSend.setEnabled(false); // מניעת שליחה כפולה באותו יום
+                    btnSend.setEnabled(false);
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error saving", Toast.LENGTH_SHORT).show());
     }

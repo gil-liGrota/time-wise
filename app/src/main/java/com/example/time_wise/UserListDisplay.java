@@ -71,7 +71,6 @@ public class UserListDisplay extends AppCompatActivity {
                 if (item instanceof Map<?, ?>) {
                     Map<?, ?> map = (Map<?, ?>) item;
                     try {
-                        // קריאת היום מה-DB (אם קיים)
                         DayOfWeek day = null;
                         if(map.get("day") != null) {
                             day = DayOfWeek.valueOf(map.get("day").toString());

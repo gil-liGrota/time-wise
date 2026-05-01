@@ -27,7 +27,7 @@ public class NotesActivity extends AppCompatActivity {
     private ArrayAdapter<Object> adapter;
     private String currentFolderId = null;
     private FirebaseFirestore db;
-    private String userId; // יתקבל מה-Intent
+    private String userId;
     private TextView tvHeader;
     private String userID;
 
@@ -44,14 +44,12 @@ public class NotesActivity extends AppCompatActivity {
         TextView btnBack = findViewById(R.id.btnBackFromFolder);
         if (currentFolderId != null) {
             btnBack.setVisibility(View.VISIBLE);
-            btnBack.setOnClickListener(v -> finish()); // סוגר את המסך של התיקייה וחוזר לראשי
+            btnBack.setOnClickListener(v -> finish());
         } else {
             btnBack.setVisibility(View.GONE);
         }
-        // מקבלים את ה-userId מהמסך הקודם
         userId = getIntent().getStringExtra("userId");
         if (userId == null) {
-            // אם שכחנו לשלוח אותו, האפליקציה לא תדע לאן לשמור
             Toast.makeText(this, "Error: User ID missing", Toast.LENGTH_SHORT).show();
         }
         sideMenu = findViewById(R.id.sideMenu);
@@ -127,34 +125,28 @@ public class NotesActivity extends AppCompatActivity {
             switch (menu){
                 case Home:
                     intent = new Intent(NotesActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
                     break;
                 case ACTIVITY:
                     intent = new Intent(NotesActivity.this, TasksScreem.class);
                     break;
                 case SCHOOL_SCHEDULE:
                     intent = new Intent(NotesActivity.this, SchoolSchedule.class);
-                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
                     break;
 
                 case FOLLOW_EFFICIENCY:
                     intent = new Intent(NotesActivity.this, EfficiencyActivity.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
                     break;
 
                 case TODO:
                     intent = new Intent(NotesActivity.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
                     break;
 
                 case CALENDER:
                     intent = new Intent(NotesActivity.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
                     break;
 
                 case NOTES:
                     intent = new Intent(NotesActivity.this, NotesActivity.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
                     break;
 
                 case LERNING_PLAN:
@@ -164,7 +156,6 @@ public class NotesActivity extends AppCompatActivity {
 
                 case FOLLOW_GOAL:
                     intent = new Intent(NotesActivity.this, GoalsActivity.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
                     break;
                 default:
                     intent = new Intent(NotesActivity.this, HomeScreen.class);

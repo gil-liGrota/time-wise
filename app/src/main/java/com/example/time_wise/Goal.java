@@ -3,13 +3,13 @@ package com.example.time_wise;
 import java.io.Serializable;
 
 public class Goal implements Serializable {
-    private String id; // מזהה ייחודי למטרה
+    private String id;
     private String title;
     private String note;
-    private boolean isDaily; // true = מטרה יומית, false = מטרה עם תאריך יעד
-    private Date targetDate; // תאריך יעד (עבור מטרת יעד)
-    private Date lastCheckedDate; // מתי סומן ה-V לאחרונה (עבור מטרה יומית)
-    private boolean isCompleted; // עבור מטרת יעד - האם הסתיימה?
+    private boolean isDaily;
+    private Date targetDate;
+    private Date lastCheckedDate;
+    private boolean isCompleted;
 
     public Goal() {}
 
@@ -35,6 +35,6 @@ public class Goal implements Serializable {
 
     @Override
     public String toString() {
-        return this.title; // זה יגיד ל-ListView להציג את שם המטרה
+        return this.title;
     }
 }

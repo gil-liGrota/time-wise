@@ -40,7 +40,6 @@ public class GoalDetailsActivity extends AppCompatActivity {
         tvCountdown.setVisibility(View.GONE);
         cbDaily.setVisibility(View.VISIBLE);
 
-        // בדיקה אם עבר יום מאז הסימון האחרון
         Calendar today = Calendar.getInstance();
         Date lastDate = currentGoal.getLastCheckedDate();
 
@@ -96,7 +95,6 @@ public class GoalDetailsActivity extends AppCompatActivity {
     private void setupTargetGoal() {
         cbDaily.setVisibility(View.GONE);
 
-        // חישוב ימים לסיום
         Calendar today = Calendar.getInstance();
         Calendar target = Calendar.getInstance();
         target.set(currentGoal.getTargetDate().getYear(), currentGoal.getTargetDate().getMonth()-1, currentGoal.getTargetDate().getDay());
@@ -106,7 +104,6 @@ public class GoalDetailsActivity extends AppCompatActivity {
 
         if (daysLeft < 0) {
             tvCountdown.setText("Goal Expired");
-            // לוגיקת מחיקה אוטומטית מה-Firebase יכולה להיכנס כאן
         } else if (daysLeft == 0) {
             tvCountdown.setText("Today is the Last Day!");
             tvEncouragement.setText(EncouragementSystem.getCongratulation());
