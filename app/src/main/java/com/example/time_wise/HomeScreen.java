@@ -122,7 +122,7 @@ public class HomeScreen extends AppCompatActivity {
                     break;
 
                 case LERNING_PLAN:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    intent = new Intent(HomeScreen.this, LearningPlanActivity.class);
                     Toast.makeText(this, "Learning Plan", Toast.LENGTH_LONG).show();
                     break;
 

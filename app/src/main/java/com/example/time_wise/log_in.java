@@ -68,7 +68,6 @@ public class log_in extends AppCompatActivity {
     }
 
     private void checkLogin(String username, String password) {
-        // --- דרישה 9: הצפנת הסיסמה שהוקלדה לפני הבדיקה ---
         String encryptedInput = securityManager.hashPassword(password);
 
         db.collection("users")
