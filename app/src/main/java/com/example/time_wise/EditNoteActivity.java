@@ -81,6 +81,7 @@ public class EditNoteActivity extends AppCompatActivity {
     }
 
     private void summarizeWithGemini(String textToSummarize) {
+        // הכנת ממשק המשתמש
         llSummaryArea.setVisibility(View.VISIBLE);
         tvSummaryResult.setText("Summarizing... ✨");
 
@@ -113,7 +114,7 @@ public class EditNoteActivity extends AppCompatActivity {
             @Override
             public void onFailure(Throwable t) {
                 runOnUiThread(() -> {
-                    tvSummaryResult.setText(t.getMessage());
+                    tvSummaryResult.setText("oops..");
                     Toast.makeText(EditNoteActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 });
                 Log.d("TimeWise-AI", Log.getStackTraceString(t));

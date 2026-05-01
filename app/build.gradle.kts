@@ -33,8 +33,6 @@ android {
 }
 
 dependencies {
-    implementation ("com.google.ai.client.generativeai:generativeai-ext-guava:0.9.0")
-    implementation("com.google.firebase:firebase-vertexai:16.0.0-beta02")
     implementation("com.google.guava:guava:31.0.1-android")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation(libs.appcompat)
