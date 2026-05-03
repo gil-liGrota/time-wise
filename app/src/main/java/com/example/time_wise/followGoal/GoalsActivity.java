@@ -59,6 +59,7 @@ public class GoalsActivity extends AppCompatActivity {
             Intent intent = new Intent(GoalsActivity.this, AddGoalActivity.class);
             startActivity(intent);
         });
+
         loadGoalsFromFirebase();
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);

@@ -15,6 +15,7 @@ import com.example.time_wise.R;
 
 import java.util.ArrayList;
 
+//AI did write a little bit of this code
 public class TodoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_TODO = 0;

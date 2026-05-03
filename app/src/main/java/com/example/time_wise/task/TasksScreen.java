@@ -431,10 +431,10 @@ public class TasksScreen extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(userID).collection("topics")
                 .get()
-                .addOnSuccessListener(snapshot -> {
+                .addOnSuccessListener(doc -> {
                     ArrayList<String> topicNames = new ArrayList<>();
-                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
-                        String topicName = doc.getString("name");
+                    for (DocumentSnapshot snap : doc.getDocuments()) {
+                        String topicName = snap.getString("name");
                         if (topicName != null) topicNames.add(topicName);
                     }
                     topicNames.add("Add Topic...");

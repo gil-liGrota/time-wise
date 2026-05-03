@@ -153,12 +153,12 @@ public class NotesActivity extends AppCompatActivity {
     private void loadData() {
         if (userId == null) return;
 
-        db.collection("users").document(userId).addSnapshotListener((snapshot, e) -> {
-            if (snapshot != null && snapshot.exists()) {
+        db.collection("users").document(userId).addSnapshotListener((doc, e) -> {
+            if (doc != null && doc.exists()) {
                 displayList.clear();
 
                 if (currentFolderId == null) {
-                    List<Map<String, Object>> folders = (List<Map<String, Object>>) snapshot.get("folders");
+                    List<Map<String, Object>> folders = (List<Map<String, Object>>) doc.get("folders");
                     if (folders != null) {
                         for (Map<String, Object> f : folders) {
                             displayList.add(new Folder((String)f.get("id"), (String)f.get("name")));
@@ -166,7 +166,7 @@ public class NotesActivity extends AppCompatActivity {
                     }
                 }
 
-                List<Map<String, Object>> notes = (List<Map<String, Object>>) snapshot.get("notes");
+                List<Map<String, Object>> notes = (List<Map<String, Object>>) doc.get("notes");
                 if (notes != null) {
                     for (Map<String, Object> n : notes) {
                         String fId = (String) n.get("folderId");

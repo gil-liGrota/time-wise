@@ -108,6 +108,7 @@ public class School extends AppCompatActivity {
 
         editHours[0].requestFocus();
     }
+
     private void saveDataToFirebase() {
         Intent lastIntent = getIntent();
         String username = lastIntent.getStringExtra("username");

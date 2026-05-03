@@ -45,12 +45,8 @@ public class UserListDisplay extends AppCompatActivity {
                         String userName = d.getString("userName");
                         String password = d.getString("password");
 
-                        int notificationHour = Integer.parseInt(d.getString("notificationHour"));
-                        int notificationMinute = Integer.parseInt(d.getString("notificationMinute"));
-
-                        ArrayList<EfficientTime> efficiency = parseEfficientTimeList(d.get("efficiency"));
-                        ArrayList<EfficientTime> unefficiency = parseEfficientTimeList(d.get("unefficiency"));
-                        ArrayList<EfficientTime> sleep = parseEfficientTimeList(d.get("sleep"));
+                        int notificationHour = d.getLong("notificationHour").intValue();
+                        int notificationMinute = d.getLong("notificationMinute").intValue();
 
                         User u = new User(phoneNumber, userName, password,
                                 null, null, null, null, null, notificationHour, notificationMinute);
@@ -64,35 +60,6 @@ public class UserListDisplay extends AppCompatActivity {
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, users);
 
         lvUser.setAdapter(adapter);
-    }
-
-    private ArrayList<EfficientTime> parseEfficientTimeList(Object listObj) {
-        ArrayList<EfficientTime> result = new ArrayList<>();
-        if (listObj instanceof List<?>) {
-            List<?> rawList = (List<?>) listObj;
-            for (Object item : rawList) {
-                if (item instanceof Map<?, ?>) {
-                    Map<?, ?> map = (Map<?, ?>) item;
-                    try {
-                        DayOfWeek day = null;
-                        if(map.get("day") != null) {
-                            day = DayOfWeek.valueOf(map.get("day").toString());
-                        }
-
-                        String startStr = map.get("start").toString();
-                        String endStr = map.get("end").toString();
-                        LocalTime start = LocalTime.parse(startStr);
-                        LocalTime end = LocalTime.parse(endStr);
-
-                        EfficientTime et = new EfficientTime(day, start, end);
-                        result.add(et);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return result;
     }
 
 }

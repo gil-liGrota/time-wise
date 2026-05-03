@@ -1,5 +1,7 @@
 package com.example.time_wise.schoolSchedule;
 
+//AI worte half of that
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;

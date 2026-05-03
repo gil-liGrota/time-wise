@@ -106,7 +106,7 @@ public class EditNoteActivity extends AppCompatActivity {
                     if (resultText != null && !resultText.isEmpty()) {
                         tvSummaryResult.setText(resultText.trim());
                     } else {
-                        tvSummaryResult.setText("לא התקבל סיכום.");
+                        tvSummaryResult.setText("no summary received");
                     }
                 });
             }

@@ -61,12 +61,12 @@ public class AddGoalActivity extends AppCompatActivity {
         boolean isDaily = rgType.getCheckedRadioButtonId() == R.id.rbDaily;
 
         if (title.isEmpty()) {
-            Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
+            etTitle.setError("Please enter a title");
             return;
         }
 
         if (!isDaily && selectedDate == null) {
-            Toast.makeText(this, "Please select a target date", Toast.LENGTH_SHORT).show();
+            etDate.setError("Please select a target date");
             return;
         }
 
