@@ -118,7 +118,7 @@ public class School extends AppCompatActivity {
         String encryptedPassword = securityManager.hashPassword(rawPassword);
 
         User user = new User(phone, username, encryptedPassword, new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>(), schoolDays, new ArrayList<>());
+                new ArrayList<>(), schoolDays, new ArrayList<>(), 00, 00);
 
         FirebaseFirestore.getInstance().collection("users")
                 .add(user)

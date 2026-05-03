@@ -20,6 +20,10 @@ public class User {
     protected ArrayList<Todo> todos;
     protected ArrayList<SchoolDay> schoolSchedule;
     protected ArrayList<Goal> goals;
+    protected int notificationHour;
+    protected int notificationMinute;
+
+
 
     public User(){}
 
@@ -40,7 +44,9 @@ public class User {
                 ArrayList<DayEfficiency> efficiencyHistory,
                 ArrayList<Todo> todos,
                 ArrayList<SchoolDay> schoolSchedule,
-                ArrayList<Goal> goals){
+                ArrayList<Goal> goals,
+                int notificationHour,
+                int notificationMinute){
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.password = password;
@@ -49,6 +55,8 @@ public class User {
         this.todos = todos;
         this.schoolSchedule = schoolSchedule;
         this.goals = goals;
+        this.notificationHour = notificationHour;
+        this.notificationMinute = notificationMinute;
     }
 
     public String getPhoneNumber() { return phoneNumber; }
@@ -59,6 +67,9 @@ public class User {
     public ArrayList<Todo> getTodos() { return todos; }
     public ArrayList<SchoolDay> getSchoolSchedule() { return schoolSchedule; }
     public ArrayList<Goal> getGoals() { return goals; }
+    public int getNotificationHour() { return notificationHour; }
+    public int getNotificationMinute() { return notificationMinute; }
+
 
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public void setUserName(String userName) { this.userName = userName; }
@@ -68,6 +79,8 @@ public class User {
     public void setTodos(ArrayList<Todo> todos) { this.todos = todos; }
     public void setSchoolSchedule(ArrayList<SchoolDay> schoolSchedule) { this.schoolSchedule = schoolSchedule; }
     public void setGoals(ArrayList<Goal> goals) { this.goals = goals; }
+    public void setNotificationHour(int notificationHour) { this.notificationHour = notificationHour; }
+    public void setNotificationMinute(int notificationMinute) { this.notificationMinute = notificationMinute; }
 
     @Override
     public String toString() {

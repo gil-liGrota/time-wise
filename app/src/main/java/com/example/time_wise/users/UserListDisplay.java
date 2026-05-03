@@ -45,12 +45,15 @@ public class UserListDisplay extends AppCompatActivity {
                         String userName = d.getString("userName");
                         String password = d.getString("password");
 
+                        int notificationHour = Integer.parseInt(d.getString("notificationHour"));
+                        int notificationMinute = Integer.parseInt(d.getString("notificationMinute"));
+
                         ArrayList<EfficientTime> efficiency = parseEfficientTimeList(d.get("efficiency"));
                         ArrayList<EfficientTime> unefficiency = parseEfficientTimeList(d.get("unefficiency"));
                         ArrayList<EfficientTime> sleep = parseEfficientTimeList(d.get("sleep"));
 
                         User u = new User(phoneNumber, userName, password,
-                                null, null, null, null, null);
+                                null, null, null, null, null, notificationHour, notificationMinute);
 
                         users.add(u);
                     }

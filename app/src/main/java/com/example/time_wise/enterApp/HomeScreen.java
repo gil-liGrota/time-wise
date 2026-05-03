@@ -31,6 +31,11 @@ public class HomeScreen extends AppCompatActivity {
     private String userID;
     private String userName, password;
     private FirebaseFirestore db;
+    private int hour = 17;
+    private int min = 0;
+    private int sec = 0;
+    private TextView tvUsernameDisplay, tvPhoneDisplay, tvNotificationTime;
+    private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,12 @@ public class HomeScreen extends AppCompatActivity {
         password = lastIntent.getStringExtra("password");
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
+        tvUsernameDisplay = findViewById(R.id.tvUsernameDisplay);
+        tvPhoneDisplay = findViewById(R.id.tvPhoneDisplay);
+        tvNotificationTime = findViewById(R.id.tvNotificationTime);
+
+        fetchData();
+        tvNotificationTime.setOnClickListener(v -> showTimePicker());
 
         if(userID == null){
             getUserIdByUsername(userName);
@@ -69,11 +80,57 @@ public class HomeScreen extends AppCompatActivity {
 
     }
 
+    private void fetchData(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").document(userID)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if(doc.exists()){
+                        String name = doc.getString("userName");
+                        String phone = doc.getString("phoneNumber");
+                        if(doc.getLong("notificationHour") != null && doc.getLong("notificationMinute") != null){
+                            hour = doc.getLong("notificationHour").intValue();
+                            min = doc.getLong("notificationMinute").intValue();
+
+                        }
+
+                        tvPhoneDisplay.setText("phone number: " + phone);
+                        tvUsernameDisplay.setText("username: " + name);
+                        tvNotificationTime.setText(hour + ":" + min);
+                    }
+                });
+
+
+    }
+
+    private void showTimePicker() {
+        android.app.TimePickerDialog timePickerDialog = new android.app.TimePickerDialog(this,
+                (view, hourOfDay, minute) -> {
+                    this.hour = hourOfDay;
+                    this.min = minute;
+
+                    String timeStr = String.format("%02d:%02d", hourOfDay, minute);
+                    tvNotificationTime.setText(timeStr);
+
+                    startDailyAlarm();
+                    updateNotificationTimeInDB(hourOfDay, minute);
+                }, hour, min, true);
+        timePickerDialog.show();
+    }
+
+    private void updateNotificationTimeInDB(int h, int m) {
+        if (userID != null) {
+            FirebaseFirestore.getInstance().collection("users").document(userID)
+                    .update("notificationHour", h, "notificationMinute", m);
+        }
+    }
+
     private void startDailyAlarm() {//TODO change to right hour
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 17);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.SECOND, sec);
 
         if (Calendar.getInstance().after(calendar)) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);

@@ -143,23 +143,50 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="1dp"
-            android:background="#FFEAF0"
-            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:background="#FFEAF0"
+            android:orientation="vertical"
+            android:padding="20dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/tvUsernameDisplay"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/tvWelcome"
-                android:layout_gravity="center"
-                android:text="welcome"
-                android:textSize="48dp"
+                android:text="username: "
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/tvPhoneDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="phone number: "
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="change notification tine:"
+                android:textSize="20sp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/tvNotificationTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="17:00"
+                android:textSize="32sp"
                 android:textStyle="bold"
-                android:textColor="#000000"/>
+                android:textColor="#FAB7D0"
+                android:padding="10dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
