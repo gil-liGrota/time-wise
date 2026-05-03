@@ -26,6 +26,7 @@ import com.google.firebase.ai.java.GenerativeModelFutures;
 import com.google.firebase.ai.type.Content;
 import com.google.firebase.ai.type.GenerateContentResponse;
 import com.google.firebase.ai.type.GenerativeBackend;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -283,7 +284,7 @@ public class LearningPlanActivity extends AppCompatActivity {
         GenerativeModelFutures model = GenerativeModelFutures.from(ai);
 
         String promptText = "create a study plan for: " + topicName + " durating " + duration + " minutes. " +
-                "break it down into 3 steps, answer in the language of the topic";
+                "break it down into 3 steps, answer in the language of the topic, write the date in the format of DD/MM/YYYY";
 
         Content prompt = new Content.Builder().addText(promptText).build();
         Executor executor = Executors.newSingleThreadExecutor();
@@ -308,7 +309,7 @@ public class LearningPlanActivity extends AppCompatActivity {
         int day = Integer.parseInt(dateParts[0]);
         int month = Integer.parseInt(dateParts[1]);
         int year = Integer.parseInt(dateParts[2]);
-        com.example.time_wise.Date taskDate = new com.example.time_wise.Date(day, month, year);
+        Date taskDate = new Date(day, month, year);
 
         Map<String, Object> taskMap = new HashMap<>();
 
@@ -326,8 +327,7 @@ public class LearningPlanActivity extends AppCompatActivity {
         //FIXME the path is worng, im to tired to fix this shit
         FirebaseFirestore.getInstance().collection("users")
                                         .document(userID)
-                .update("tasks", taskMap)
-//                                        .collection("tasks").add(taskMap)
+                .update("tasks", FieldValue.arrayUnion(taskMap))
                 .addOnSuccessListener(ref -> Log.d("TimeWise", "Task saved with correct fields: " + title))
                 .addOnFailureListener(e -> Log.e("TimeWise", "Error saving task", e));
     }

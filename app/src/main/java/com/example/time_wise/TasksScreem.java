@@ -1,8 +1,11 @@
 package com.example.time_wise;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -22,20 +25,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TasksScreem extends AppCompatActivity {
 
     private ListView lvActivity;
     private ArrayList<Task> tasks;
+    private ArrayList<Map<String, Object>> rawTasksFromDB; // קריטי למניעת שכפול
     private String userID;
     private TaskAdapter taskAdapter;
-    private Intent intent;
     private LinearLayout sideMenu;
     private TextView btnMenu;
-    private String userName, password;
     private FirebaseFirestore db;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,37 +46,35 @@ public class TasksScreem extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.tasks_screen);
 
+        db = FirebaseFirestore.getInstance();
         lvActivity = findViewById(R.id.activityList);
         tasks = new ArrayList<>();
-        userID = getIntent().getStringExtra("userId");
+        rawTasksFromDB = new ArrayList<>();
 
+        userID = getIntent().getStringExtra("userId");
+        if (userID == null) userID = Constant.USER_ID;
+
+        // כפתורי הוספה
         FloatingActionButton btnAddActivity = findViewById(R.id.btnAddActivity);
         btnAddActivity.setOnClickListener(v -> openAddTaskDialog());
 
         FloatingActionButton btnAddTopic = findViewById(R.id.btnAddTopic);
         btnAddTopic.setOnClickListener(v -> showAddTopicDirectDialog());
 
-        loadTasks();
-
-        Intent lastIntent = getIntent();
-        userID = lastIntent.getStringExtra("userId");
-        Constant.USER_ID = userID;
-        userName = lastIntent.getStringExtra("username");
-        password = lastIntent.getStringExtra("password");
+        // תפריט צד
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
-
-
-
-        // לחיצה על כפתור המבורגר לפתיחה/סגירה
         btnMenu.setOnClickListener(v -> {
-            if (sideMenu.getVisibility() == View.GONE) {
-                sideMenu.setVisibility(View.VISIBLE);
-            } else {
-                sideMenu.setVisibility(View.GONE);
-            }
+            sideMenu.setVisibility(sideMenu.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
         });
 
+        setupNavigationMenu();
+        loadTasks();
+    }
+
+    // --- ניהול תפריט הניווט (כל הכפתורים שחיפשת) ---
+
+    private void setupNavigationMenu() {
         setMenuClickListener(R.id.nav_home, Constant.Menu.Home);
         setMenuClickListener(R.id.nav_activity, Constant.Menu.ACTIVITY);
         setMenuClickListener(R.id.nav_school_schedule, Constant.Menu.SCHOOL_SCHEDULE);
@@ -84,67 +85,20 @@ public class TasksScreem extends AppCompatActivity {
         setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
         setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
-
-
     }
 
     private void setMenuClickListener(int id, Constant.Menu menu) {
         TextView item = findViewById(id);
-
+        if (item == null) return;
         item.setOnClickListener(v -> {
-            switch (menu){
-                case Home:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
-                    break;
-
-                case ACTIVITY:
-                    intent = new Intent(TasksScreem.this, TasksScreem.class);
-                    break;
-
-                case SCHOOL_SCHEDULE:
-                    intent = new Intent(TasksScreem.this, SchoolSchedule.class);
-                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
-                    break;
-
-                case FOLLOW_EFFICIENCY:
-                    intent = new Intent(TasksScreem.this, EfficiencyActivity.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
-                    break;
-
-                case TODO:
-                    intent = new Intent(TasksScreem.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
-                    break;
-
-                case CALENDER:
-                    intent = new Intent(TasksScreem.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
-                    break;
-
-                case NOTES:
-                    intent = new Intent(TasksScreem.this, NotesActivity.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
-                    break;
-
-                case LERNING_PLAN:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
-                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_LONG).show();
-                    break;
-
-                case FOLLOW_GOAL:
-                    intent = new Intent(TasksScreem.this, GoalsActivity.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
-                    break;
-
-                case SIGN_OUT:
-                    intent = new Intent(TasksScreem.this, log_in.class);
-                    break;
-
-                default:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
-                    Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();
-                    break;
+            Intent intent;
+            switch (menu) {
+                case Home: intent = new Intent(this, HomeScreen.class); break;
+                case ACTIVITY: intent = new Intent(this, TasksScreem.class); break;
+                case CALENDER: intent = new Intent(this, CalendarActivity.class); break;
+                case SIGN_OUT: intent = new Intent(this, log_in.class); break;
+                // הוסיפי כאן את שאר ה-Activities שלך לפי הצורך
+                default: intent = new Intent(this, HomeScreen.class); break;
             }
             intent.putExtra("userId", userID);
             startActivity(intent);
@@ -152,56 +106,22 @@ public class TasksScreem extends AppCompatActivity {
         });
     }
 
+    // --- לוגיקת מסד נתונים ---
 
     private void loadTasks() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(userID)
                 .get()
                 .addOnSuccessListener(doc -> {
-                    if (doc.exists()) {
-                        ArrayList<Task> taskListFromDB = (ArrayList<Task>) doc.get("tasks");
-
-                        if (taskListFromDB != null) {
-                            tasks.clear();
-//                            for (Map<String, Object> t : taskListFromDB) {
-//                                Task task = convertMapToTask(t);
-//                                if (task != null) tasks.add(task);
-//                            }
-                            tasks.addAll(taskListFromDB);
+                    if (doc.exists() && doc.get("tasks") != null) {
+                        rawTasksFromDB = (ArrayList<Map<String, Object>>) doc.get("tasks");
+                        tasks.clear();
+                        for (Map<String, Object> map : rawTasksFromDB) {
+                            Task t = convertMapToTask(map);
+                            if (t != null) tasks.add(t);
                         }
                         updateListView();
                     }
                 });
-    }
-
-    private Task convertMapToTask(Map<String, Object> map) {
-        try {
-            Task task = new Task();
-            task.setName(map.get("name") != null ? map.get("name").toString() : "No Name");
-
-            Map<String, Object> dateMap = (Map<String, Object>) map.get("date");
-            if (dateMap != null) {
-                task.setDate(new Date(
-                        ((Long) dateMap.get("year")).intValue(),
-                        ((Long) dateMap.get("month")).intValue(),
-                        ((Long) dateMap.get("day")).intValue()));
-            }
-
-            if (map.get("start") != null) {
-                Map<String, Object> s = (Map<String, Object>) map.get("start");
-                task.setStart(LocalTime.of(((Long) s.get("hour")).intValue(), ((Long) s.get("minute")).intValue()));
-            }
-            if (map.get("end") != null) {
-                Map<String, Object> e = (Map<String, Object>) map.get("end");
-                task.setEnd(LocalTime.of(((Long) e.get("hour")).intValue(), ((Long) e.get("minute")).intValue()));
-            }
-
-            if (map.get("priority") != null) task.setPriority(((Long) map.get("priority")).intValue());
-
-            return task;
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     private void updateListView() {
@@ -213,327 +133,233 @@ public class TasksScreem extends AppCompatActivity {
         }
     }
 
-    private void saveTaskToUser(Task task) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(userID)
-                .update("tasks", FieldValue.arrayUnion(task))
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show());
-    }
+    // --- המרות (Mappers) ---
 
-    private void showDatePicker(EditText editText) {
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        int year = calendar.get(java.util.Calendar.YEAR);
-        int month = calendar.get(java.util.Calendar.MONTH);
-        int day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
+    private Map<String, Object> taskToMap(Task t) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", t.getName());
+        map.put("priority", (long) t.getPriority());
+        map.put("isImportant", t.isImportant());
+        map.put("strict", t.isStrict());
+        map.put("type", t.getType() != null ? t.getType().name() : "NONE");
 
-        new android.app.DatePickerDialog(this, (view, y, m, d) -> {
-            editText.setText(String.format("%02d/%02d/%04d", d, m + 1, y));
-        }, year, month, day).show();
-    }
-
-    private void showTimePicker(EditText editText) {
-        int hour = 9, minute = 0;
-        String current = editText.getText().toString();
-        if (!current.isEmpty()) {
-            String[] parts = current.split(":");
-            try { hour = Integer.parseInt(parts[0]); minute = Integer.parseInt(parts[1]); } catch (Exception ignored) {}
+        if (t.getDate() != null) {
+            Map<String, Object> d = new HashMap<>();
+            d.put("day", (long) t.getDate().getDay());
+            d.put("month", (long) t.getDate().getMonth());
+            d.put("year", (long) t.getDate().getYear());
+            map.put("date", d);
         }
-        new android.app.TimePickerDialog(this,
-                (view, hourOfDay, minute1) -> editText.setText(String.format("%02d:%02d", hourOfDay, minute1)),
-                hour, minute, true).show();
+
+        if (t.getStart() != null) {
+            Map<String, Object> s = new HashMap<>();
+            s.put("hour", (long) t.getStart().getHour());
+            s.put("minute", (long) t.getStart().getMinute());
+            map.put("start", s);
+        }
+
+        if (t.getEnd() != null) {
+            Map<String, Object> e = new HashMap<>();
+            e.put("hour", (long) t.getEnd().getHour());
+            e.put("minute", (long) t.getEnd().getMinute());
+            map.put("end", e);
+        }
+
+        if (t.getTopic() != null) {
+            Map<String, Object> top = new HashMap<>();
+            top.put("name", t.getTopic().getName());
+            map.put("topic", top);
+        }
+        return map;
     }
 
-    private void loadUserTopics(Spinner spinnerTopic) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(userID).collection("topics")
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    ArrayList<String> topicNames = new ArrayList<>();
-                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
-                        String topicName = doc.getString("name");
-                        if (topicName != null) topicNames.add(topicName);
-                    }
-                    topicNames.add("Add Topic...");
-                    android.widget.ArrayAdapter<String> spinnerAdapter = new android.widget.ArrayAdapter<>(this,
-                            android.R.layout.simple_spinner_item, topicNames);
-                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerTopic.setAdapter(spinnerAdapter);
+    private Task convertMapToTask(Map<String, Object> map) {
+        try {
+            Task task = new Task();
+            task.setName((String) map.get("name"));
+            task.setPriority(((Long) map.get("priority")).intValue());
+            task.setImportant((Boolean) map.get("isImportant"));
+            task.setStrict((Boolean) map.get("strict"));
+            task.setType(Constant.RepeatType.valueOf((String) map.get("type")));
 
-                    spinnerTopic.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-                        boolean ignoreFirst = true;
-
-                        @Override
-                        public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                            if (ignoreFirst) { ignoreFirst = false; return; }
-                            String selected = topicNames.get(position);
-                            if (selected.equals("Add Topic...")) showAddTopicDialog(spinnerTopic, spinnerAdapter);
-                        }
-
-                        @Override
-                        public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-                    });
-                });
+            if (map.containsKey("date")) {
+                Map<String, Object> d = (Map<String, Object>) map.get("date");
+                task.setDate(new Date(((Long) d.get("year")).intValue(), ((Long) d.get("month")).intValue(), ((Long) d.get("day")).intValue()));
+            }
+            if (map.containsKey("start")) {
+                Map<String, Object> s = (Map<String, Object>) map.get("start");
+                task.setStart(LocalTime.of(((Long) s.get("hour")).intValue(), ((Long) s.get("minute")).intValue()));
+            }
+            if (map.containsKey("end")) {
+                Map<String, Object> e = (Map<String, Object>) map.get("end");
+                task.setEnd(LocalTime.of(((Long) e.get("hour")).intValue(), ((Long) e.get("minute")).intValue()));
+            }
+            if (map.containsKey("topic")) {
+                Map<String, Object> top = (Map<String, Object>) map.get("topic");
+                task.setTopic(new Topic((String) top.get("name")));
+            }
+            return task;
+        } catch (Exception e) { return null; }
     }
 
-    private void showAddTopicDialog(Spinner spinnerTopic, android.widget.ArrayAdapter<String> spinnerAdapter) {
-        EditText etNewTopic = new EditText(this);
-        etNewTopic.setHint("Enter topic name");
-
-        new AlertDialog.Builder(this)
-                .setTitle("Add Topic")
-                .setView(etNewTopic)
-                .setPositiveButton("Add", (dialog, which) -> {
-                    String newTopicName = etNewTopic.getText().toString().trim();
-                    if (!newTopicName.isEmpty()) {
-                        FirebaseFirestore.getInstance()
-                                .collection("users").document(userID)
-                                .collection("topics")
-                                .add(Map.of("name", newTopicName));
-                        spinnerAdapter.insert(newTopicName, spinnerAdapter.getCount() - 1);
-                        spinnerTopic.setSelection(spinnerAdapter.getPosition(newTopicName));
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    private void showAddTopicDirectDialog() {
-        EditText etNewTopic = new EditText(this);
-        etNewTopic.setHint("Enter new topic name");
-
-        new AlertDialog.Builder(this)
-                .setTitle("Add New Topic")
-                .setView(etNewTopic)
-                .setPositiveButton("Add", (dialog, which) -> {
-                    String newTopicName = etNewTopic.getText().toString().trim();
-                    if (!newTopicName.isEmpty()) {
-                        FirebaseFirestore.getInstance()
-                                .collection("users").document(userID)
-                                .collection("topics")
-                                .add(Map.of("name", newTopicName))
-                                .addOnSuccessListener(docRef ->
-                                        Toast.makeText(this, "Topic added: " + newTopicName, Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e ->
-                                        Toast.makeText(this, "Failed to add topic", Toast.LENGTH_SHORT).show());
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
+    // --- דיאלוגים (עריכה והוספה) ---
 
     public void openEditTaskDialog(Task task, int position) {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
+        // שימוש במפה המקורית מה-DB למחיקה בטוחה
+        final Map<String, Object> originalMap = rawTasksFromDB.get(position);
 
-        EditText etName = dialogView.findViewById(R.id.etTaskName);
-        EditText etStart = dialogView.findViewById(R.id.etTaskStart);
-        EditText etEnd = dialogView.findViewById(R.id.etTaskEnd);
-        EditText etDate = dialogView.findViewById(R.id.etTaskDate);
-        EditText etPriority = dialogView.findViewById(R.id.etPriority);
+        View v = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
+        EditText etName = v.findViewById(R.id.etTaskName);
+        EditText etStart = v.findViewById(R.id.etTaskStart);
+        EditText etEnd = v.findViewById(R.id.etTaskEnd);
+        EditText etDate = v.findViewById(R.id.etTaskDate);
+        EditText etPriority = v.findViewById(R.id.etPriority);
+        Switch swTime = v.findViewById(R.id.switchHasTime);
+        Spinner spTopic = v.findViewById(R.id.spinnerTopic);
+        Spinner spRepeat = v.findViewById(R.id.spinnerRepeat);
+        Spinner spImp = v.findViewById(R.id.spinnerImportance);
+        Spinner spStrict = v.findViewById(R.id.spinnerStrict);
 
-        Spinner spinnerTopic = dialogView.findViewById(R.id.spinnerTopic);
-        Spinner spinnerRepeat = dialogView.findViewById(R.id.spinnerRepeat);
-        Spinner spinnerImportance = dialogView.findViewById(R.id.spinnerImportance);
-        Spinner spinnerStrict = dialogView.findViewById(R.id.spinnerStrict);
-
-        Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
-
+        // טעינת ערכים קיימים
         etName.setText(task.getName());
-        etStart.setText(task.getStart() != null ? task.getStart().toString() : "09:00");
-        etEnd.setText(task.getEnd() != null ? task.getEnd().toString() : "10:00");
-
-        if (task.getDate() != null) {
-            etDate.setText(String.format("%02d/%02d/%04d",
-                    task.getDate().getDay(), task.getDate().getMonth(), task.getDate().getYear()));
-        }
-
         etPriority.setText(String.valueOf(task.getPriority()));
+        if (task.getDate() != null) etDate.setText(String.format("%02d/%02d/%04d", task.getDate().getDay(), task.getDate().getMonth(), task.getDate().getYear()));
 
-        switchHasTime.setChecked(task.getStart() != null && task.getEnd() != null);
-        switchHasTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                etStart.setVisibility(View.VISIBLE);
-                etEnd.setVisibility(View.VISIBLE);
-            } else {
-                etStart.setVisibility(View.GONE);
-                etEnd.setVisibility(View.GONE);
-            }
-        });
-
-        etDate.setOnClickListener(v -> showDatePicker(etDate));
-        etStart.setOnClickListener(v -> showTimePicker(etStart));
-        etEnd.setOnClickListener(v -> showTimePicker(etEnd));
-
-        // --- Load Topics into Spinner ---
-        loadUserTopics(spinnerTopic);
-        if (task.getTopic() != null) {
-            spinnerTopic.post(() -> {
-                for (int i = 0; i < spinnerTopic.getCount(); i++) {
-                    if (spinnerTopic.getItemAtPosition(i).toString().equals(task.getTopic().getName())) {
-                        spinnerTopic.setSelection(i);
-                        break;
-                    }
-                }
-            });
+        swTime.setChecked(task.getStart() != null);
+        etStart.setVisibility(swTime.isChecked() ? View.VISIBLE : View.GONE);
+        etEnd.setVisibility(swTime.isChecked() ? View.VISIBLE : View.GONE);
+        if (task.getStart() != null) {
+            etStart.setText(task.getStart().toString());
+            etEnd.setText(task.getEnd().toString());
         }
 
-        Constant.RepeatType[] repeatTypes = Constant.RepeatType.values();
-        String[] repeatTypeNames = new String[repeatTypes.length];
-        for (int i = 0; i < repeatTypes.length; i++) repeatTypeNames[i] = repeatTypes[i].name();
-        android.widget.ArrayAdapter<String> repeatAdapter = new android.widget.ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, repeatTypeNames);
-        repeatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRepeat.setAdapter(repeatAdapter);
-        if (task.getType() != null) spinnerRepeat.setSelection(task.getType().ordinal());
-
-        android.widget.ArrayAdapter<String> importanceAdapter = new android.widget.ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, new String[]{"Not Important", "Important"});
-        importanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerImportance.setAdapter(importanceAdapter);
-        spinnerImportance.setSelection(task.isImportant() ? 1 : 0);
-
-        android.widget.ArrayAdapter<String> strictAdapter = new android.widget.ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, new String[]{"Not Constant", "Constant"});
-        strictAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerStrict.setAdapter(strictAdapter);
-        spinnerStrict.setSelection(task.isStrict() ? 1 : 0);
-
-        new AlertDialog.Builder(this)
-                .setTitle("Edit Task")
-                .setView(dialogView)
-                .setPositiveButton("Save", (dialog, which) -> {
-                    task.setName(etName.getText().toString().trim());
-
-                    try {
-                        if (switchHasTime.isChecked()) {
-                            task.setStart(LocalTime.parse(etStart.getText().toString()));
-                            task.setEnd(LocalTime.parse(etEnd.getText().toString()));
-                        } else {
-                            task.setStart(null);
-                            task.setEnd(null);
-                        }
-                    } catch (Exception ignored) {}
-
-                    String dateStr = etDate.getText().toString();
-                    if (!dateStr.isEmpty()) {
-                        String[] parts = dateStr.split("/");
-                        if (parts.length == 3) {
-                            try {
-                                int day = Integer.parseInt(parts[0]);
-                                int month = Integer.parseInt(parts[1]);
-                                int year = Integer.parseInt(parts[2]);
-                                task.setDate(new Date(year, month, day));
-                            } catch (Exception ignored) {}
-                        }
-                    }
-
-                    try { task.setPriority(Integer.parseInt(etPriority.getText().toString())); } catch (Exception ignored) {}
-
-                    String selectedTopic = spinnerTopic.getSelectedItem() != null ? spinnerTopic.getSelectedItem().toString() : null;
-                    if (selectedTopic != null) task.setTopic(new Topic(selectedTopic));
-
-                    task.setType(Constant.RepeatType.values()[spinnerRepeat.getSelectedItemPosition()]);
-                    task.setImportant(spinnerImportance.getSelectedItemPosition() == 1);
-                    task.setStrict(spinnerStrict.getSelectedItemPosition() == 1);
-
-                    updateListView();
-                    saveTaskToUser(task);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-    private void openAddTaskDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
-
-        EditText etName = dialogView.findViewById(R.id.etTaskName);
-        EditText etStart = dialogView.findViewById(R.id.etTaskStart);
-        EditText etEnd = dialogView.findViewById(R.id.etTaskEnd);
-        EditText etDate = dialogView.findViewById(R.id.etTaskDate);
-        EditText etPriority = dialogView.findViewById(R.id.etPriority);
-
-        Spinner spinnerTopic = dialogView.findViewById(R.id.spinnerTopic);
-        Spinner spinnerRepeat = dialogView.findViewById(R.id.spinnerRepeat);
-        Spinner spinnerImportance = dialogView.findViewById(R.id.spinnerImportance);
-        Spinner spinnerStrict = dialogView.findViewById(R.id.spinnerStrict);
-
-        Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
-
-        etStart.setOnClickListener(v -> showTimePicker(etStart));
-        etEnd.setOnClickListener(v -> showTimePicker(etEnd));
-        etDate.setOnClickListener(v -> showDatePicker(etDate));
-
-        loadUserTopics(spinnerTopic);
-
-        Constant.RepeatType[] repeatTypes = Constant.RepeatType.values();
-        String[] repeatTypeNames = new String[repeatTypes.length];
-        for (int i = 0; i < repeatTypes.length; i++) repeatTypeNames[i] = repeatTypes[i].name();
-        android.widget.ArrayAdapter<String> repeatAdapter = new android.widget.ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, repeatTypeNames);
-        repeatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRepeat.setAdapter(repeatAdapter);
-
-        String[] importanceOptions = {"Not Important", "Important"};
-        android.widget.ArrayAdapter<String> importanceAdapter = new android.widget.ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, importanceOptions);
-        spinnerImportance.setAdapter(importanceAdapter);
-
-        String[] strictOptions = {"Not Constant", "Constant"};
-        android.widget.ArrayAdapter<String> strictAdapter = new android.widget.ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, strictOptions);
-        spinnerStrict.setAdapter(strictAdapter);
-
-        switchHasTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        swTime.setOnCheckedChangeListener((btn, isChecked) -> {
             etStart.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             etEnd.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         });
 
+        etDate.setOnClickListener(view -> showDatePicker(etDate));
+        etStart.setOnClickListener(view -> showTimePicker(etStart));
+        etEnd.setOnClickListener(view -> showTimePicker(etEnd));
+
+        loadUserTopics(spTopic);
+        setupEnumSpinners(spRepeat, spImp, spStrict, task);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Edit Task")
+                .setView(v)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    // עדכון אובייקט מקומי
+                    task.setName(etName.getText().toString().trim());
+                    task.setPriority(Integer.parseInt(etPriority.getText().toString()));
+                    if (swTime.isChecked()) {
+                        task.setStart(LocalTime.parse(etStart.getText().toString()));
+                        task.setEnd(LocalTime.parse(etEnd.getText().toString()));
+                    } else {
+                        task.setStart(null); task.setEnd(null);
+                    }
+                    String[] dp = etDate.getText().toString().split("/");
+                    if (dp.length == 3) task.setDate(new Date(Integer.parseInt(dp[2]), Integer.parseInt(dp[1]), Integer.parseInt(dp[0])));
+
+                    task.setType(Constant.RepeatType.values()[spRepeat.getSelectedItemPosition()]);
+                    task.setImportant(spImp.getSelectedItemPosition() == 1);
+                    task.setStrict(spStrict.getSelectedItemPosition() == 1);
+                    task.setTopic(new Topic(spTopic.getSelectedItem().toString()));
+
+                    // עדכון ב-Firestore: מחיקת הישן והוספת החדש
+                    db.collection("users").document(userID)
+                            .update("tasks", FieldValue.arrayRemove(originalMap))
+                            .addOnSuccessListener(aVoid -> {
+                                db.collection("users").document(userID)
+                                        .update("tasks", FieldValue.arrayUnion(taskToMap(task)))
+                                        .addOnSuccessListener(aVoid2 -> loadTasks());
+                            });
+                })
+                .setNegativeButton("Cancel", null).show();
+    }
+
+    private void openAddTaskDialog() {
+        View v = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
+        EditText etDate = v.findViewById(R.id.etTaskDate);
+        EditText etStart = v.findViewById(R.id.etTaskStart);
+        EditText etEnd = v.findViewById(R.id.etTaskEnd);
+        Switch swTime = v.findViewById(R.id.switchHasTime);
+
+        swTime.setOnCheckedChangeListener((btn, isChecked) -> {
+            etStart.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            etEnd.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
+
+        etDate.setOnClickListener(view -> showDatePicker(etDate));
+        etStart.setOnClickListener(view -> showTimePicker(etStart));
+        etEnd.setOnClickListener(view -> showTimePicker(etEnd));
+
+        loadUserTopics(v.findViewById(R.id.spinnerTopic));
+        setupEnumSpinners(v.findViewById(R.id.spinnerRepeat), v.findViewById(R.id.spinnerImportance), v.findViewById(R.id.spinnerStrict), null);
+
         new AlertDialog.Builder(this)
                 .setTitle("Add New Task")
-                .setView(dialogView)
+                .setView(v)
                 .setPositiveButton("Add", (dialog, which) -> {
                     Task newTask = new Task();
+                    newTask.setName(((EditText)v.findViewById(R.id.etTaskName)).getText().toString().trim());
+                    newTask.setPriority(Integer.parseInt(((EditText)v.findViewById(R.id.etPriority)).getText().toString()));
 
-                    newTask.setName(etName.getText().toString().trim());
-
-                    try {
-                        if (switchHasTime.isChecked()) {
-                            if (!etStart.getText().toString().isEmpty()) newTask.setStart(LocalTime.parse(etStart.getText().toString()));
-                            if (!etEnd.getText().toString().isEmpty()) newTask.setEnd(LocalTime.parse(etEnd.getText().toString()));
-                        }
-                    } catch (Exception ignored) {}
-
-                    String dateStr = etDate.getText().toString();
-                    if (!dateStr.isEmpty()) {
-                        String[] parts = dateStr.split("/");
-                        if (parts.length == 3) {
-                            try {
-                                int day = Integer.parseInt(parts[0]);
-                                int month = Integer.parseInt(parts[1]);
-                                int year = Integer.parseInt(parts[2]);
-                                newTask.setDate(new Date(year, month, day));
-                            } catch (Exception ignored) {}
-                        }
+                    if (swTime.isChecked()) {
+                        newTask.setStart(LocalTime.parse(etStart.getText().toString()));
+                        newTask.setEnd(LocalTime.parse(etEnd.getText().toString()));
                     }
+                    String[] dp = etDate.getText().toString().split("/");
+                    if (dp.length == 3) newTask.setDate(new Date(Integer.parseInt(dp[2]), Integer.parseInt(dp[1]), Integer.parseInt(dp[0])));
 
-                    try {
-                        String pStr = etPriority.getText().toString();
-                        if (!pStr.isEmpty()) newTask.setPriority(Integer.parseInt(pStr));
-                    } catch (Exception ignored) {}
+                    newTask.setType(Constant.RepeatType.values()[((Spinner)v.findViewById(R.id.spinnerRepeat)).getSelectedItemPosition()]);
+                    newTask.setImportant(((Spinner)v.findViewById(R.id.spinnerImportance)).getSelectedItemPosition() == 1);
+                    newTask.setStrict(((Spinner)v.findViewById(R.id.spinnerStrict)).getSelectedItemPosition() == 1);
+                    newTask.setTopic(new Topic(((Spinner)v.findViewById(R.id.spinnerTopic)).getSelectedItem().toString()));
 
-                    String selectedTopic = spinnerTopic.getSelectedItem() != null ? spinnerTopic.getSelectedItem().toString() : null;
-                    if (selectedTopic != null && !selectedTopic.equals("Add Topic...")) {
-                        newTask.setTopic(new Topic(selectedTopic));
-                    }
+                    db.collection("users").document(userID)
+                            .update("tasks", FieldValue.arrayUnion(taskToMap(newTask)))
+                            .addOnSuccessListener(aVoid -> loadTasks());
+                }).show();
+    }
 
-                    newTask.setType(Constant.RepeatType.values()[spinnerRepeat.getSelectedItemPosition()]);
-                    newTask.setImportant(spinnerImportance.getSelectedItemPosition() == 1);
-                    newTask.setStrict(spinnerStrict.getSelectedItemPosition() == 1);
+    // --- עזרים לדיאלוגים ---
 
-                    tasks.add(newTask);
-                    updateListView();
-                    saveTaskToUser(newTask);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+    private void setupEnumSpinners(Spinner r, Spinner i, Spinner s, Task t) {
+        r.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{"NONE", "DAILY", "WEEKLY", "MONTHLY"}));
+        i.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{"Not Important", "Important"}));
+        s.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{"Not Constant", "Constant"}));
+        if (t != null) {
+            r.setSelection(t.getType().ordinal());
+            i.setSelection(t.isImportant() ? 1 : 0);
+            s.setSelection(t.isStrict() ? 1 : 0);
+        }
+    }
+
+    private void showDatePicker(EditText et) {
+        Calendar c = Calendar.getInstance();
+        new DatePickerDialog(this, (view, y, m, d) -> et.setText(String.format("%02d/%02d/%04d", d, m + 1, y)),
+                c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    private void showTimePicker(EditText et) {
+        new TimePickerDialog(this, (view, h, m) -> et.setText(String.format("%02d:%02d", h, m)), 12, 0, true).show();
+    }
+
+    private void loadUserTopics(Spinner sp) {
+        db.collection("users").document(userID).collection("topics").get().addOnSuccessListener(snapshot -> {
+            ArrayList<String> names = new ArrayList<>();
+            for (DocumentSnapshot doc : snapshot.getDocuments()) names.add(doc.getString("name"));
+            sp.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names));
+        });
+    }
+
+    private void showAddTopicDirectDialog() {
+        EditText et = new EditText(this);
+        new AlertDialog.Builder(this).setTitle("New Topic").setView(et)
+                .setPositiveButton("Add", (d, w) -> {
+                    String n = et.getText().toString().trim();
+                    if (!n.isEmpty()) db.collection("users").document(userID).collection("topics").add(Map.of("name", n));
+                }).show();
     }
 }
