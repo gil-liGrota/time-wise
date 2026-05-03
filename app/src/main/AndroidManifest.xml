@@ -16,73 +16,45 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Timewise"
         tools:targetApi="31">
+
         <activity
-            android:name=".LearningPlanActivity"
+            android:name=".notes.EditNoteActivity"
             android:exported="false" />
         <activity
-            android:name=".EditNoteActivity"
+            android:name=".notes.NotesActivity"
             android:exported="false" />
         <activity
-            android:name=".NotesActivity"
+            android:name=".followGoal.GoalsActivity"
             android:exported="false" />
         <activity
-            android:name=".GoalsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddGoalActivity"
+            android:name=".followGoal.AddGoalActivity"
             android:exported="false" />
 
         <receiver
-            android:name=".AlarmReceiver"
+            android:name=".followEfficiency.AlarmReceiver"
             android:exported="false" />
 
-        <activity android:name=".EfficiencyActivity" />
+        <activity android:name=".followEfficiency.EfficiencyActivity" />
         <activity
-            android:name=".GoalDetailsActivity"
+            android:name=".followGoal.GoalDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".CalendarActivity"
+            android:name=".calender.CalendarActivity"
             android:exported="false" />
         <activity
-            android:name=".SignInDetails"
+            android:name=".enterApp.School"
             android:exported="false" />
         <activity
-            android:name=".School"
+            android:name=".todo.Todos"
             android:exported="false" />
         <activity
-            android:name=".Notes"
+            android:name=".schoolSchedule.SchoolSchedule"
             android:exported="false" />
         <activity
-            android:name=".Todos"
+            android:name=".task.TasksScreen"
             android:exported="false" />
         <activity
-            android:name=".SchoolFriday"
-            android:exported="false" />
-        <activity
-            android:name=".SchoolThursday"
-            android:exported="false" />
-        <activity
-            android:name=".SchoolWed"
-            android:exported="false" />
-        <activity
-            android:name=".SchoolTue"
-            android:exported="false" />
-        <activity
-            android:name=".SchoolMon"
-            android:exported="false" />
-        <activity
-            android:name=".SchoolSun"
-            android:exported="false" /> <!-- <meta-data -->
-        <!-- android:name="com.google.android.actions" -->
-        <!-- android:resource="@xml/rounded_button" /> -->
-        <activity
-            android:name=".SchoolSchedule"
-            android:exported="false" />
-        <activity
-            android:name=".TasksScreem"
-            android:exported="false" />
-        <activity
-            android:name=".UserListDisplay"
+            android:name=".users.UserListDisplay"
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".UserListDisplay" -->
         <!-- android:exported="true"> -->
@@ -92,42 +64,13 @@
         <!-- </intent-filter> -->
         <!-- </activity> -->
         <activity
-            android:name=".HomeScreen"
+            android:name=".enterApp.HomeScreen"
             android:exported="false" />
         <activity
-            android:name=".SignInUserSaturday"
+            android:name=".enterApp.SignInUser"
             android:exported="false" />
         <activity
-            android:name=".SignInUserFriday"
-            android:exported="false" />
-        <activity
-            android:name=".SignInUserThursday"
-            android:exported="false" />
-        <activity
-            android:name=".SignInUserWednesday"
-            android:exported="false" />
-        <activity
-            android:name=".SignInUserTuesday"
-            android:exported="false" />
-        <activity
-            android:name=".SignInUserMonday"
-            android:exported="false" />
-        <activity
-            android:name=".SignInUserSunday"
-            android:exported="false" />
-        <activity
-            android:name=".SignInUser"
-            android:exported="false" />
-        <activity
-            android:name=".LogInUser"
-            android:exported="false" />
-        <activity
-            android:name=".AddNote"
-            android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".log_in" -->
-        <!-- android:exported="false" /> -->
-        <activity
-            android:name=".log_in"
+            android:name=".enterApp.log_in"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

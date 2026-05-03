@@ -1,0 +1,140 @@
+package com.example.time_wise.enterApp;
+
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.icu.util.Calendar;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.time_wise.Constant;
+import com.example.time_wise.R;
+import com.example.time_wise.calender.CalendarActivity;
+import com.example.time_wise.followEfficiency.AlarmReceiver;
+import com.example.time_wise.followEfficiency.EfficiencyActivity;
+import com.example.time_wise.followGoal.GoalsActivity;
+import com.example.time_wise.notes.NotesActivity;
+import com.example.time_wise.schoolSchedule.SchoolSchedule;
+import com.example.time_wise.task.TasksScreen;
+import com.example.time_wise.todo.Todos;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+public class HomeScreen extends AppCompatActivity {
+    private Intent intent;
+    private LinearLayout sideMenu;
+    private TextView btnMenu;
+    private String userID;
+    private String userName, password;
+    private FirebaseFirestore db;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.home_screen);
+        startDailyAlarm();
+        Intent lastIntent = getIntent();
+        userID = lastIntent.getStringExtra("userId");
+        Constant.USER_ID = userID;
+        userName = lastIntent.getStringExtra("username");
+        password = lastIntent.getStringExtra("password");
+        sideMenu = findViewById(R.id.sideMenu);
+        btnMenu = findViewById(R.id.btnMenu);
+
+        if(userID == null){
+            getUserIdByUsername(userName);
+        }
+
+        btnMenu.setOnClickListener(v -> {
+            if (sideMenu.getVisibility() == View.GONE) {
+                sideMenu.setVisibility(View.VISIBLE);
+            } else {
+                sideMenu.setVisibility(View.GONE);
+            }
+        });
+
+        setMenuClickListener(R.id.nav_home, Constant.Menu.Home);
+        setMenuClickListener(R.id.nav_activity, Constant.Menu.ACTIVITY);
+        setMenuClickListener(R.id.nav_school_schedule, Constant.Menu.SCHOOL_SCHEDULE);
+        setMenuClickListener(R.id.nav_follow_efficiency, Constant.Menu.FOLLOW_EFFICIENCY);
+        setMenuClickListener(R.id.nav_todo, Constant.Menu.TODO);
+        setMenuClickListener(R.id.nav_calendar, Constant.Menu.CALENDER);
+        setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
+        setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
+        setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
+
+    }
+
+    private void startDailyAlarm() {//TODO change to right hour
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 17);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (Calendar.getInstance().after(calendar)) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        android.app.AlarmManager alarmManager = (android.app.AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        if (alarmManager != null) {
+            alarmManager.setRepeating(android.app.AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    android.app.AlarmManager.INTERVAL_DAY,
+                    pendingIntent);
+        }
+    }
+
+    private void setMenuClickListener(int id, Constant.Menu menu) {
+        TextView item = findViewById(id);
+
+        item.setOnClickListener(v -> {
+            switch (menu){
+                case Home: intent = new Intent(HomeScreen.this, HomeScreen.class);break;
+                case ACTIVITY: intent = new Intent(HomeScreen.this, TasksScreen.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(HomeScreen.this, SchoolSchedule.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(HomeScreen.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(HomeScreen.this, Todos.class);break;
+                case CALENDER: intent = new Intent(HomeScreen.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(HomeScreen.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(HomeScreen.this, GoalsActivity.class);break;
+                case SIGN_OUT: intent = new Intent(HomeScreen.this, log_in.class);break;
+                default:
+                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    break;
+            }
+            intent.putExtra("userId", userID);
+            startActivity(intent);
+            sideMenu.setVisibility(View.GONE);
+        });
+    }
+
+    private void getUserIdByUsername(String username) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .whereEqualTo("userName", username)
+                .get()
+                .addOnSuccessListener(query -> {
+                    if (query.isEmpty()) {
+                        Toast.makeText(this, "Username not found", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    userID = query.getDocuments().get(0).getId();
+
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error connecting to database: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+}
