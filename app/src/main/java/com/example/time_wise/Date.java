@@ -7,11 +7,7 @@ public class Date implements java.io.Serializable{
     protected int month;
     protected int day;
 
-    public Date(){
-        this.year = 0;
-        this.month = 0;
-        this.day = 0;
-    }
+    public Date(){}
 
     /**
      * @param year - year
@@ -31,8 +27,4 @@ public class Date implements java.io.Serializable{
     public void setMonth(int month) { this.month = month; }
     public void setYear(int year) { this.year = year; }
 
-//    @Override
-//    public String toString() {
-//        return "year: " + this.year + ", month: " + this.month + ", day: " + this.day;
-//    }
 }

@@ -65,7 +65,6 @@ public class CalendarActivity extends AppCompatActivity {
         setMenuClickListener(R.id.nav_todo, Constant.Menu.TODO);
         setMenuClickListener(R.id.nav_calendar, Constant.Menu.CALENDER);
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
-        setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
         setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
 
@@ -150,7 +149,6 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
-    // העתקת הלוגיקה המדויקת מה-TasksScreem שלך
     public void openEditTaskDialog(Task task, int position) {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
 
@@ -161,17 +159,15 @@ public class CalendarActivity extends AppCompatActivity {
         EditText etPriority = dialogView.findViewById(R.id.etPriority);
         Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
 
-        // מילוי ערכים קיימים
         etName.setText(task.getName());
-        etStart.setText(task.getStart() != null ? task.getStart().toString() : "09:00");
-        etEnd.setText(task.getEnd() != null ? task.getEnd().toString() : "10:00");
+        etStart.setText(task.getStart() != null ? task.getStart().toString() : "");
+        etEnd.setText(task.getEnd() != null ? task.getEnd().toString() : "");
 
         if (task.getDate() != null) {
             etDate.setText(String.format("%02d/%02d/%04d", task.getDate().getDay(), task.getDate().getMonth(), task.getDate().getYear()));
         }
         etPriority.setText(String.valueOf(task.getPriority()));
 
-        // הגדרת ה-Switch
         switchHasTime.setChecked(task.getStart() != null);
         etStart.setVisibility(switchHasTime.isChecked() ? View.VISIBLE : View.GONE);
         etEnd.setVisibility(switchHasTime.isChecked() ? View.VISIBLE : View.GONE);
@@ -238,53 +234,15 @@ public class CalendarActivity extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home:
-                    intent = new Intent(CalendarActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
-                    break;
-
-                case ACTIVITY:
-                    intent = new Intent(CalendarActivity.this, TasksScreem.class);
-                    break;
-
-                case SCHOOL_SCHEDULE:
-                    intent = new Intent(CalendarActivity.this, SchoolSchedule.class);
-                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
-                    break;
-
-                case FOLLOW_EFFICIENCY:
-                    intent = new Intent(CalendarActivity.this, EfficiencyActivity.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
-                    break;
-
-                case TODO:
-                    intent = new Intent(CalendarActivity.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
-                    break;
-
-                case CALENDER:
-                    intent = new Intent(CalendarActivity.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
-                    break;
-
-                case NOTES:
-                    intent = new Intent(CalendarActivity.this, NotesActivity.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
-                    break;
-
-                case LERNING_PLAN:
-                    intent = new Intent(CalendarActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_LONG).show();
-                    break;
-
-                case FOLLOW_GOAL:
-                    intent = new Intent(CalendarActivity.this, GoalsActivity.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
-                    break;
-
-                case SIGN_OUT:
-                    intent = new Intent(CalendarActivity.this, log_in.class);
-                    break;
+                case Home: intent = new Intent(CalendarActivity.this, HomeScreen.class);break;
+                case ACTIVITY: intent = new Intent(CalendarActivity.this, TasksScreem.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(CalendarActivity.this, SchoolSchedule.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(CalendarActivity.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(CalendarActivity.this, Todos.class);break;
+                case CALENDER: intent = new Intent(CalendarActivity.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(CalendarActivity.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(CalendarActivity.this, GoalsActivity.class);break;
+                case SIGN_OUT: intent = new Intent(CalendarActivity.this, log_in.class);break;
                 default:
                     intent = new Intent(CalendarActivity.this, HomeScreen.class);
                     Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();

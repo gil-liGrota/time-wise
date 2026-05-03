@@ -30,7 +30,6 @@
         android:padding="12dp"
         android:inputType="textEmailAddress" />
 
-    <!-- Password input -->
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
@@ -41,7 +40,6 @@
         android:inputType="textPassword"
         android:layout_marginTop="16dp" />
 
-    <!-- Login button -->
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
@@ -52,12 +50,11 @@
         android:textColor="#FFFFFF"
         android:layout_marginTop="28dp" />
 
-    <!-- Sign In button -->
     <Button
         android:id="@+id/btnSignIn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Sign In"
+        android:text="Sign Up"
         android:textSize="18sp"
         android:backgroundTint="#FAB7D0"
         android:textColor="#FFFFFF"

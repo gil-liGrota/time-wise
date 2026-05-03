@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- שם משימה -->
         <EditText
             android:id="@+id/etTaskName"
             android:layout_width="match_parent"
@@ -18,7 +17,6 @@
             android:hint="Task Name"
             android:inputType="text" />
 
-        <!-- זמן התחלה -->
         <EditText
             android:id="@+id/etTaskStart"
             android:layout_width="match_parent"
@@ -27,7 +25,6 @@
             android:focusable="false"
             android:clickable="true" />
 
-        <!-- זמן סיום -->
         <EditText
             android:id="@+id/etTaskEnd"
             android:layout_width="match_parent"
@@ -36,14 +33,12 @@
             android:focusable="false"
             android:clickable="true" />
 
-        <!-- נושא -->
         <Spinner
             android:id="@+id/spinnerTopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:prompt="@string/select_topic_prompt" />
 
-        <!-- תאריך -->
         <EditText
             android:id="@+id/etTaskDate"
             android:layout_width="match_parent"
@@ -52,19 +47,16 @@
             android:focusable="false"
             android:clickable="true" />
 
-        <!-- סוג חזרה -->
         <Spinner
             android:id="@+id/spinnerRepeat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- חשיבות -->
         <Spinner
             android:id="@+id/spinnerImportance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- תיעדוף -->
         <EditText
             android:id="@+id/etPriority"
             android:layout_width="match_parent"
@@ -72,7 +64,6 @@
             android:hint="Priority (1-5)"
             android:inputType="number" />
 
-        <!-- סטריקט -->
         <Spinner
             android:id="@+id/spinnerStrict"
             android:layout_width="match_parent"

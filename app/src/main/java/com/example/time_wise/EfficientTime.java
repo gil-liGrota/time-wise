@@ -9,11 +9,7 @@ public class EfficientTime implements Serializable {
     protected LocalTime start;
     protected LocalTime end;
 
-    public EfficientTime(){
-        this.day = null;
-        this.start = null;
-        this.end = null;
-    }
+    public EfficientTime(){}
 
     /**
      * @param day - day

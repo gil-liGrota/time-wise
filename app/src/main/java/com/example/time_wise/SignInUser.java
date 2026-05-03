@@ -67,15 +67,11 @@ public class SignInUser extends AppCompatActivity {
                 .addOnSuccessListener(query -> {
 
                     if (!query.isEmpty()) {
-                        // שם המשתמש תפוס
                         userName.setError("This username is already taken");
                         Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show();
-
-                        // לא עוברים למסך הבא
                         return;
                     }
                     else {
-                        // שם המשתמש פנוי → בודקים שוב את שדות הטלפון והסיסמה ואז עוברים
                         goToNextScreen();
                     }
                 })

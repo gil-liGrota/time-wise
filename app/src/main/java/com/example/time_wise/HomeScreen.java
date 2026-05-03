@@ -39,7 +39,6 @@ public class HomeScreen extends AppCompatActivity {
             getUserIdByUsername(userName);
         }
 
-        // לחיצה על כפתור המבורגר לפתיחה/סגירה
         btnMenu.setOnClickListener(v -> {
             if (sideMenu.getVisibility() == View.GONE) {
                 sideMenu.setVisibility(View.VISIBLE);
@@ -55,7 +54,6 @@ public class HomeScreen extends AppCompatActivity {
         setMenuClickListener(R.id.nav_todo, Constant.Menu.TODO);
         setMenuClickListener(R.id.nav_calendar, Constant.Menu.CALENDER);
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
-        setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
         setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
 
@@ -67,19 +65,16 @@ public class HomeScreen extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        // אם השעה כבר אחרי אחת בצהריים, נקבע למחר
         if (Calendar.getInstance().after(calendar)) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
         Intent intent = new Intent(this, AlarmReceiver.class);
-        // דגל FLAG_IMMUTABLE חובה באנדרואיד חדש
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         android.app.AlarmManager alarmManager = (android.app.AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        // הגדרה שתחזור על עצמה כל יום
         if (alarmManager != null) {
             alarmManager.setRepeating(android.app.AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(),
@@ -93,47 +88,15 @@ public class HomeScreen extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
-                    break;
-
-                case ACTIVITY:
-                    intent = new Intent(HomeScreen.this, TasksScreem.class);
-                    break;
-
-                case SCHOOL_SCHEDULE:
-                    intent = new Intent(HomeScreen.this, SchoolSchedule.class);
-                    break;
-
-                case FOLLOW_EFFICIENCY:
-                    intent = new Intent(HomeScreen.this, EfficiencyActivity.class);
-                    break;
-
-                case TODO:
-                    intent = new Intent(HomeScreen.this, Todos.class);
-                    break;
-
-                case CALENDER:
-                    intent = new Intent(HomeScreen.this, CalendarActivity.class);
-                    break;
-
-                case NOTES:
-                    intent = new Intent(HomeScreen.this, NotesActivity.class);
-                    break;
-
-                case LERNING_PLAN:
-                    intent = new Intent(HomeScreen.this, LearningPlanActivity.class);
-                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_LONG).show();
-                    break;
-
-                case FOLLOW_GOAL:
-                    intent = new Intent(HomeScreen.this, GoalsActivity.class);
-                    break;
-
-                case SIGN_OUT:
-                    intent = new Intent(HomeScreen.this, log_in.class);
-                    break;
-
+                case Home: intent = new Intent(HomeScreen.this, HomeScreen.class);break;
+                case ACTIVITY: intent = new Intent(HomeScreen.this, TasksScreem.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(HomeScreen.this, SchoolSchedule.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(HomeScreen.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(HomeScreen.this, Todos.class);break;
+                case CALENDER: intent = new Intent(HomeScreen.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(HomeScreen.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(HomeScreen.this, GoalsActivity.class);break;
+                case SIGN_OUT: intent = new Intent(HomeScreen.this, log_in.class);break;
                 default:
                     intent = new Intent(HomeScreen.this, HomeScreen.class);
                     Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();
@@ -157,7 +120,6 @@ public class HomeScreen extends AppCompatActivity {
                         return;
                     }
 
-                    // משתמש קיים → מקבלים את ה-ID
                     userID = query.getDocuments().get(0).getId();
 
                 })
@@ -165,7 +127,5 @@ public class HomeScreen extends AppCompatActivity {
                     Toast.makeText(this, "Error connecting to database: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
-
 
 }

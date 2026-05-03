@@ -27,7 +27,6 @@ public class SchoolSchedule extends AppCompatActivity {
     private LinearLayout sideMenu;
     private TextView btnMenu;
     private String userID;
-    private String userName, password;
     private String currentDayName = "Sunday";
     private LessonAdapter adapter;
     private Map<String, SchoolDay> weekSchedule = new HashMap<>();
@@ -54,13 +53,9 @@ public class SchoolSchedule extends AppCompatActivity {
         Intent lastIntent = getIntent();
         userID = lastIntent.getStringExtra("userId");
         Constant.USER_ID = userID;
-        userName = lastIntent.getStringExtra("username");
-        password = lastIntent.getStringExtra("password");
 
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
-
-
 
         btnMenu.setOnClickListener(v -> {
             if (sideMenu.getVisibility() == View.GONE) {
@@ -77,7 +72,6 @@ public class SchoolSchedule extends AppCompatActivity {
         setMenuClickListener(R.id.nav_todo, Constant.Menu.TODO);
         setMenuClickListener(R.id.nav_calendar, Constant.Menu.CALENDER);
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
-        setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
         setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
 
@@ -98,7 +92,6 @@ public class SchoolSchedule extends AppCompatActivity {
                                 (List<Map<String, Object>>) documentSnapshot.get("schoolSchedule");
 
                         if (schoolScheduleMap != null) {
-                            // ניקוי המפה לפני טעינה חדשה
                             weekSchedule.clear();
 
                             for (Map<String, Object> dayMap : schoolScheduleMap) {
@@ -113,11 +106,9 @@ public class SchoolSchedule extends AppCompatActivity {
                                         lessonsListForThisDay.add(new Lesson(number, name));
                                     }
                                 }
-                                // שמירה למפה עם השם המדויק מה-DB
                                 weekSchedule.put(dayName, new SchoolDay(dayName, lessonsListForThisDay));
                             }
                         }
-                        // הצגת יום ראשון אחרי שהנתונים נטענו
                         showDay("Sunday");
                     }
                 });
@@ -160,53 +151,15 @@ public class SchoolSchedule extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home:
-                    intent = new Intent(SchoolSchedule.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case ACTIVITY:
-                    intent = new Intent(SchoolSchedule.this, TasksScreem.class);
-                    break;
-
-                case SCHOOL_SCHEDULE:
-                    intent = new Intent(SchoolSchedule.this, SchoolSchedule.class);
-                    break;
-
-                case FOLLOW_EFFICIENCY:
-                    intent = new Intent(SchoolSchedule.this, EfficiencyActivity.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case TODO:
-                    intent = new Intent(SchoolSchedule.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case CALENDER:
-                    intent = new Intent(SchoolSchedule.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case NOTES:
-                    intent = new Intent(SchoolSchedule.this, NotesActivity.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case LERNING_PLAN:
-                    intent = new Intent(SchoolSchedule.this, HomeScreen.class);
-                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case FOLLOW_GOAL:
-                    intent = new Intent(SchoolSchedule.this, GoalsActivity.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case SIGN_OUT:
-                    intent = new Intent(SchoolSchedule.this, log_in.class);
-                    break;
-
+                case Home: intent = new Intent(SchoolSchedule.this, HomeScreen.class);break;
+                case ACTIVITY: intent = new Intent(SchoolSchedule.this, TasksScreem.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(SchoolSchedule.this, SchoolSchedule.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(SchoolSchedule.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(SchoolSchedule.this, Todos.class);break;
+                case CALENDER: intent = new Intent(SchoolSchedule.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(SchoolSchedule.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(SchoolSchedule.this, GoalsActivity.class);break;
+                case SIGN_OUT: intent = new Intent(SchoolSchedule.this, log_in.class);break;
                 default:
                     Toast.makeText(this, "not working", Toast.LENGTH_SHORT).show();
                     return;

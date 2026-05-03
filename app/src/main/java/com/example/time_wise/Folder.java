@@ -6,7 +6,7 @@ public class Folder implements Serializable {
     private String id;
     private String name;
 
-    public Folder() {} // חובה בשביל Firebase
+    public Folder() {}
 
     public Folder(String id, String name) {
         this.id = id;

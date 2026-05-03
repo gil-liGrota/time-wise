@@ -80,7 +80,6 @@ public class TasksScreem extends AppCompatActivity {
         setMenuClickListener(R.id.nav_todo, Constant.Menu.TODO);
         setMenuClickListener(R.id.nav_calendar, Constant.Menu.CALENDER);
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
-        setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
         setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
 
@@ -92,53 +91,16 @@ public class TasksScreem extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
-                    break;
-
-                case ACTIVITY:
-                    intent = new Intent(TasksScreem.this, TasksScreem.class);
-                    break;
-
-                case SCHOOL_SCHEDULE:
-                    intent = new Intent(TasksScreem.this, SchoolSchedule.class);
-                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
-                    break;
-
-                case FOLLOW_EFFICIENCY:
-                    intent = new Intent(TasksScreem.this, EfficiencyActivity.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
-                    break;
-
-                case TODO:
-                    intent = new Intent(TasksScreem.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
-                    break;
-
-                case CALENDER:
-                    intent = new Intent(TasksScreem.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
-                    break;
-
-                case NOTES:
-                    intent = new Intent(TasksScreem.this, NotesActivity.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
-                    break;
-
-                case LERNING_PLAN:
-                    intent = new Intent(TasksScreem.this, HomeScreen.class);
-                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_LONG).show();
-                    break;
-
-                case FOLLOW_GOAL:
-                    intent = new Intent(TasksScreem.this, GoalsActivity.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
-                    break;
-
+                case Home: intent = new Intent(TasksScreem.this, HomeScreen.class);break;
+                case ACTIVITY: intent = new Intent(TasksScreem.this, TasksScreem.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(TasksScreem.this, SchoolSchedule.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(TasksScreem.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(TasksScreem.this, Todos.class);break;
+                case CALENDER: intent = new Intent(TasksScreem.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(TasksScreem.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(TasksScreem.this, GoalsActivity.class);break;
                 case SIGN_OUT:
-                    intent = new Intent(TasksScreem.this, log_in.class);
-                    break;
+                    intent = new Intent(TasksScreem.this, log_in.class);break;
 
                 default:
                     intent = new Intent(TasksScreem.this, HomeScreen.class);
@@ -364,10 +326,20 @@ public class TasksScreem extends AppCompatActivity {
 
         Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
 
-        // --- Fill current values ---
         etName.setText(task.getName());
-        etStart.setText(task.getStart() != null ? task.getStart().toString() : "09:00");
-        etEnd.setText(task.getEnd() != null ? task.getEnd().toString() : "10:00");
+
+        switchHasTime.setChecked(task.getStart() != null && task.getEnd() != null);
+        switchHasTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+        if(switchHasTime.isChecked()){
+            etStart.setVisibility(View.VISIBLE);
+            etEnd.setVisibility(View.VISIBLE);
+            etStart.setText(task.getStart() != null ? task.getStart().toString() : "");
+            etEnd.setText(task.getEnd() != null ? task.getEnd().toString() : "");
+        } else {
+            etStart.setVisibility(View.GONE);
+            etEnd.setVisibility(View.GONE);
+        }
 
         if (task.getDate() != null) {
             etDate.setText(String.format("%02d/%02d/%04d",
@@ -376,27 +348,14 @@ public class TasksScreem extends AppCompatActivity {
 
         etPriority.setText(String.valueOf(task.getPriority()));
 
-        // --- Include Time switch ---
-        switchHasTime.setChecked(task.getStart() != null && task.getEnd() != null);
-        switchHasTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                etStart.setVisibility(View.VISIBLE);
-                etEnd.setVisibility(View.VISIBLE);
-            } else {
-                etStart.setVisibility(View.GONE);
-                etEnd.setVisibility(View.GONE);
-            }
         });
 
-        // --- Date & Time pickers ---
         etDate.setOnClickListener(v -> showDatePicker(etDate));
         etStart.setOnClickListener(v -> showTimePicker(etStart));
         etEnd.setOnClickListener(v -> showTimePicker(etEnd));
 
-        // --- Load Topics into Spinner ---
         loadUserTopics(spinnerTopic);
         if (task.getTopic() != null) {
-            // נבחר את הנושא הנוכחי
             spinnerTopic.post(() -> {
                 for (int i = 0; i < spinnerTopic.getCount(); i++) {
                     if (spinnerTopic.getItemAtPosition(i).toString().equals(task.getTopic().getName())) {
@@ -407,7 +366,6 @@ public class TasksScreem extends AppCompatActivity {
             });
         }
 
-        // --- RepeatType Spinner ---
         Constant.RepeatType[] repeatTypes = Constant.RepeatType.values();
         String[] repeatTypeNames = new String[repeatTypes.length];
         for (int i = 0; i < repeatTypes.length; i++) repeatTypeNames[i] = repeatTypes[i].name();
@@ -417,21 +375,18 @@ public class TasksScreem extends AppCompatActivity {
         spinnerRepeat.setAdapter(repeatAdapter);
         if (task.getType() != null) spinnerRepeat.setSelection(task.getType().ordinal());
 
-        // --- Importance Spinner ---
         android.widget.ArrayAdapter<String> importanceAdapter = new android.widget.ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, new String[]{"Not Important", "Important"});
         importanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerImportance.setAdapter(importanceAdapter);
         spinnerImportance.setSelection(task.isImportant() ? 1 : 0);
 
-        // --- Strict Spinner ---
         android.widget.ArrayAdapter<String> strictAdapter = new android.widget.ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, new String[]{"Not Constant", "Constant"});
         strictAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStrict.setAdapter(strictAdapter);
         spinnerStrict.setSelection(task.isStrict() ? 1 : 0);
 
-        // --- Show dialog ---
         new AlertDialog.Builder(this)
                 .setTitle("Edit Task")
                 .setView(dialogView)
@@ -449,7 +404,6 @@ public class TasksScreem extends AppCompatActivity {
                         }
                     } catch (Exception ignored) {}
 
-                    // Date
                     String dateStr = etDate.getText().toString();
                     if (!dateStr.isEmpty()) {
                         String[] parts = dateStr.split("/");
@@ -463,19 +417,15 @@ public class TasksScreem extends AppCompatActivity {
                         }
                     }
 
-                    // Priority
                     try { task.setPriority(Integer.parseInt(etPriority.getText().toString())); } catch (Exception ignored) {}
 
-                    // Topic
                     String selectedTopic = spinnerTopic.getSelectedItem() != null ? spinnerTopic.getSelectedItem().toString() : null;
                     if (selectedTopic != null) task.setTopic(new Topic(selectedTopic));
 
-                    // Repeat, Importance, Strict
                     task.setType(Constant.RepeatType.values()[spinnerRepeat.getSelectedItemPosition()]);
                     task.setImportant(spinnerImportance.getSelectedItemPosition() == 1);
                     task.setStrict(spinnerStrict.getSelectedItemPosition() == 1);
 
-                    // Update ListView & Firestore
                     updateListView();
                     saveTaskToUser(task);
                 })
@@ -484,7 +434,6 @@ public class TasksScreem extends AppCompatActivity {
     }
 
 
-    // --- Save tasks to Firestore ---
     private void saveTaskToUser(Task task) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(userID)
@@ -493,7 +442,6 @@ public class TasksScreem extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show());
     }
 
-    // --- Date picker ---
     private void showDatePicker(EditText editText) {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         int year = calendar.get(java.util.Calendar.YEAR);

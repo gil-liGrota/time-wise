@@ -41,10 +41,7 @@ public class EfficiencyActivity extends AppCompatActivity {
         userID = getIntent().getStringExtra("userId");
         if (userID == null) userID = Constant.USER_ID;
 
-        tvScore = findViewById(R.id.tvScore);
-        sbRate = findViewById(R.id.sbRate);
-        btnSend = findViewById(R.id.btnSend);
-        lvHistory = findViewById(R.id.lvEfficiencyHistory);
+        initViews();
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, historyList);
         lvHistory.setAdapter(adapter);
@@ -67,12 +64,10 @@ public class EfficiencyActivity extends AppCompatActivity {
         setMenuClickListener(R.id.nav_todo, Constant.Menu.TODO);
         setMenuClickListener(R.id.nav_calendar, Constant.Menu.CALENDER);
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
-        setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
         setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
 
 
-        // עדכון הטקסט כשהמשתמש מזיז את הסליידר
         sbRate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -87,61 +82,29 @@ public class EfficiencyActivity extends AppCompatActivity {
         btnSend.setOnClickListener(v -> saveCurrentEfficiency());
     }
 
+    private void initViews() {
+        tvScore = findViewById(R.id.tvScore);
+        sbRate = findViewById(R.id.sbRate);
+        btnSend = findViewById(R.id.btnSend);
+        lvHistory = findViewById(R.id.lvEfficiencyHistory);
+
+    }
+
     private void setMenuClickListener(int id, Constant.Menu menu) {
         TextView item = findViewById(id);
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home:
-                    intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_LONG).show();
-                    break;
-
-                case ACTIVITY:
-                    intent = new Intent(EfficiencyActivity.this, TasksScreem.class);
-                    break;
-
-                case SCHOOL_SCHEDULE:
-                    intent = new Intent(EfficiencyActivity.this, SchoolSchedule.class);
-                    Toast.makeText(this, "School Schedule", Toast.LENGTH_LONG).show();
-                    break;
-
-                case FOLLOW_EFFICIENCY:
-                    intent = new Intent(EfficiencyActivity.this, EfficiencyActivity.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_LONG).show();
-                    break;
-
-                case TODO:
-                    intent = new Intent(EfficiencyActivity.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_LONG).show();
-                    break;
-
-                case CALENDER:
-                    intent = new Intent(EfficiencyActivity.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_LONG).show();
-                    break;
-
-                case NOTES:
-                    intent = new Intent(EfficiencyActivity.this, NotesActivity.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_LONG).show();
-                    break;
-
-                case LERNING_PLAN:
-                    intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
-                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_LONG).show();
-                    break;
-
-                case FOLLOW_GOAL:
-                    intent = new Intent(EfficiencyActivity.this, GoalsActivity.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_LONG).show();
-                    break;
-
-                case SIGN_OUT:
-                    intent = new Intent(EfficiencyActivity.this, log_in.class);
-                    break;
-
-                default:
-                    intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
+                case Home: intent = new Intent(EfficiencyActivity.this, HomeScreen.class);break;
+                case ACTIVITY: intent = new Intent(EfficiencyActivity.this, TasksScreem.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(EfficiencyActivity.this, SchoolSchedule.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(EfficiencyActivity.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(EfficiencyActivity.this, Todos.class);break;
+                case CALENDER: intent = new Intent(EfficiencyActivity.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(EfficiencyActivity.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(EfficiencyActivity.this, GoalsActivity.class);break;
+                case SIGN_OUT:intent = new Intent(EfficiencyActivity.this, log_in.class);break;
+                default: intent = new Intent(EfficiencyActivity.this, HomeScreen.class);
                     Toast.makeText(this, "not working", Toast.LENGTH_LONG).show();
                     break;
             }
@@ -176,13 +139,11 @@ public class EfficiencyActivity extends AppCompatActivity {
     private void saveCurrentEfficiency() {
         int score = sbRate.getProgress() + 1;
 
-        // יצירת תאריך נוכחי בעזרת ה-Calendar של Java
         Calendar cal = Calendar.getInstance();
         Date today = new Date(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
 
         DayEfficiency newEntry = new DayEfficiency(score, today);
 
-        // הוספה לרשימה המקומית ועדכון ה-DB
         historyList.add(newEntry);
 
         db.collection("users").document(userID)

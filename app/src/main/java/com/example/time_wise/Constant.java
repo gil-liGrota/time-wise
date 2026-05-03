@@ -17,7 +17,6 @@ public class Constant {
         TODO,
         CALENDER,
         NOTES,
-        LERNING_PLAN,
         FOLLOW_GOAL,
         SIGN_OUT
     }

@@ -36,17 +36,14 @@ public class Todos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.todos);
 
-        // 1. קבלת ה-ID מה-Intent (כמו ב-SchoolSchedule)
         userID = getIntent().getStringExtra("userId");
         Constant.USER_ID = userID;
 
-        // 2. אתחול רכיבי ממשק
         sideMenu = findViewById(R.id.sideMenu);
         btnMenu = findViewById(R.id.btnMenu);
         recyclerView = findViewById(R.id.todosRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // 3. לחיצה על כפתור המבורגר לפתיחה/סגירה
         btnMenu.setOnClickListener(v -> {
             if (sideMenu.getVisibility() == View.GONE) {
                 sideMenu.setVisibility(View.VISIBLE);
@@ -55,7 +52,6 @@ public class Todos extends AppCompatActivity {
             }
         });
 
-        // 4. חיבור ישיר של כפתורי התפריט (בדיוק כמו ב-SchoolSchedule)
         setMenuClickListener(R.id.nav_home, Constant.Menu.Home);
         setMenuClickListener(R.id.nav_activity, Constant.Menu.ACTIVITY);
         setMenuClickListener(R.id.nav_school_schedule, Constant.Menu.SCHOOL_SCHEDULE);
@@ -63,12 +59,10 @@ public class Todos extends AppCompatActivity {
         setMenuClickListener(R.id.nav_todo, Constant.Menu.TODO);
         setMenuClickListener(R.id.nav_calendar, Constant.Menu.CALENDER);
         setMenuClickListener(R.id.nav_notes, Constant.Menu.NOTES);
-        setMenuClickListener(R.id.nav_learning_plan, Constant.Menu.LERNING_PLAN);
         setMenuClickListener(R.id.nav_follow_goal, Constant.Menu.FOLLOW_GOAL);
         setMenuClickListener(R.id.nav_sign_out, Constant.Menu.SIGN_OUT);
 
 
-        // 5. אתחול רשימה ו-Adapter
         todos = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
@@ -78,7 +72,6 @@ public class Todos extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapter);
 
-        // 6. טעינת נתונים מה-Firestore
         loadFromFirestore();
     }
 
@@ -87,54 +80,15 @@ public class Todos extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home:
-                    intent = new Intent(Todos.this, HomeScreen.class);
-                    Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case ACTIVITY:
-                    intent = new Intent(Todos.this, TasksScreem.class);
-                    break;
-
-                case SCHOOL_SCHEDULE:
-                    // אם אנחנו כבר במסך מערכת שעות, לא עושים כלום
-                    intent = new Intent(Todos.this, SchoolSchedule.class);
-                    break;
-
-                case FOLLOW_EFFICIENCY:
-                    intent = new Intent(Todos.this, EfficiencyActivity.class);
-                    Toast.makeText(this, "Follow Efficiency", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case TODO:
-                    intent = new Intent(Todos.this, Todos.class);
-                    Toast.makeText(this, "To-Do", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case CALENDER:
-                    intent = new Intent(Todos.this, CalendarActivity.class);
-                    Toast.makeText(this, "Calendar", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case NOTES:
-                    intent = new Intent(Todos.this, NotesActivity.class);
-                    Toast.makeText(this, "Notes", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case LERNING_PLAN:
-                    intent = new Intent(Todos.this, HomeScreen.class);
-                    Toast.makeText(this, "Learning Plan", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case FOLLOW_GOAL:
-                    intent = new Intent(Todos.this, GoalsActivity.class);
-                    Toast.makeText(this, "Follow Goal", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case SIGN_OUT:
-                    intent = new Intent(Todos.this, log_in.class);
-                    break;
-
+                case Home: intent = new Intent(Todos.this, HomeScreen.class);break;
+                case ACTIVITY: intent = new Intent(Todos.this, TasksScreem.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(Todos.this, SchoolSchedule.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(Todos.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(Todos.this, Todos.class);break;
+                case CALENDER: intent = new Intent(Todos.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(Todos.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(Todos.this, GoalsActivity.class);break;
+                case SIGN_OUT: intent = new Intent(Todos.this, log_in.class);break;
                 default:
                     Toast.makeText(this, "not working", Toast.LENGTH_SHORT).show();
                     return;

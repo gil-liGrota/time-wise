@@ -31,12 +31,10 @@ import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import okhttp3.OkHttpClient;
 
 public class EditNoteActivity extends AppCompatActivity {
     private TextView tvSummaryResult;
     private LinearLayout llSummaryArea;
-    private final String GEMINI_API_KEY = "AIzaSyCGWLFye5bE7xmQV77Yr0XjgCX8czgi9JY";
     private EditText etNoteTitle, etNoteContent;
     private Button btnSave, btnSummarize;
     private FirebaseFirestore db;
@@ -78,7 +76,6 @@ public class EditNoteActivity extends AppCompatActivity {
 
         btnSave.setOnClickListener(v -> saveNote());
 
-        // הוספת אפשרות חזרה אחורה ב-Action Bar אם קיים
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -127,7 +124,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        finish(); // יציאה מהפתק בלי לשמור
+        finish();
         return true;
     }
 
@@ -142,7 +139,6 @@ public class EditNoteActivity extends AppCompatActivity {
             return;
         }
 
-        // 1. נכין את נתוני הפתק החדש
         String noteId = (existingNote != null) ? existingNote.getId() : UUID.randomUUID().toString();
         Map<String, Object> newNoteData = new HashMap<>();
         newNoteData.put("id", noteId);
@@ -150,42 +146,31 @@ public class EditNoteActivity extends AppCompatActivity {
         newNoteData.put("content", content);
         newNoteData.put("folderId", folderId);
 
-        // 2. במקום למחוק ולהוסיף, אנחנו נעדכן את המערך בצורה חכמה
         db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 List<Map<String, Object>> notes = (List<Map<String, Object>>) documentSnapshot.get("notes");
                 if (notes == null) notes = new ArrayList<>();
 
-                // אם זה פתק קיים - נחפש אותו ונעדכן. אם לא - נוסיף חדש.
                 boolean updated = false;
                 for (int i = 0; i < notes.size(); i++) {
                     if (notes.get(i).get("id").equals(noteId)) {
-                        notes.set(i, newNoteData); // מעדכן את הקיים
+                        notes.set(i, newNoteData);
                         updated = true;
                         break;
                     }
                 }
 
                 if (!updated) {
-                    notes.add(newNoteData); // מוסיף חדש
+                    notes.add(newNoteData);
                 }
 
-                // 3. שומרים את כל הרשימה המעודכנת חזרה ל-Firestore
                 db.collection("users").document(userId)
                         .update("notes", notes)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(this, "Saved successfully!", Toast.LENGTH_SHORT).show();
-                            finish(); // סוגר את המסך וחוזר אחורה
+                            finish();
                         });
             }
         });
-    }
-    private void uploadNote(Map<String, Object> noteData) {
-        db.collection("users").document(userId)
-                .update("notes", FieldValue.arrayUnion(noteData))
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Note saved!", Toast.LENGTH_SHORT).show();
-                    finish();
-                });
     }
 }
