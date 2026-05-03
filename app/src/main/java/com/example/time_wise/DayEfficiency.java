@@ -2,7 +2,7 @@ package com.example.time_wise;
 
 public class DayEfficiency {
     protected int midDay;
-    protected Date date; // שימוש במחלקה שלך
+    protected Date date;
 
     public DayEfficiency() {}
 

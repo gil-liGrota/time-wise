@@ -105,7 +105,7 @@ public class User {
         sb.append("Tasks: ").append(tasks != null ? tasks.toString() : "[]").append("\n");
         sb.append("Efficiency History: ").append(efficiencyHistory != null ? efficiencyHistory.toString() : "[]").append("\n");
         sb.append("Todos: ").append(todos != null ? todos.toString() : "[]").append("\n");
-        sb.append("School Schedule: ").append(schoolSchedule != null ? schoolSchedule.toString() : "[]").append("\n"); // <-- הוספה
+        sb.append("School Schedule: ").append(schoolSchedule != null ? schoolSchedule.toString() : "[]").append("\n");
 
         return sb.toString();
     }

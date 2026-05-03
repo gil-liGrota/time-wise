@@ -43,7 +43,6 @@ public class UserListDisplay extends AppCompatActivity {
                         String userName = d.getString("userName");
                         String password = d.getString("password");
 
-                        // המרה ידנית של רשימות
                         ArrayList<EfficientTime> efficiency = parseEfficientTimeList(d.get("efficiency"));
                         ArrayList<EfficientTime> unefficiency = parseEfficientTimeList(d.get("unefficiency"));
                         ArrayList<EfficientTime> sleep = parseEfficientTimeList(d.get("sleep"));
@@ -71,7 +70,6 @@ public class UserListDisplay extends AppCompatActivity {
                 if (item instanceof Map<?, ?>) {
                     Map<?, ?> map = (Map<?, ?>) item;
                     try {
-                        // קריאת היום מה-DB (אם קיים)
                         DayOfWeek day = null;
                         if(map.get("day") != null) {
                             day = DayOfWeek.valueOf(map.get("day").toString());

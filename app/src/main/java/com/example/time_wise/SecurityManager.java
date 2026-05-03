@@ -23,7 +23,7 @@ public class SecurityManager {
 
     public void saveUserId(String userId) {
         editor.putString(KEY_USER_ID, userId);
-        editor.apply(); // שמירה אסינכרונית ברקע
+        editor.apply();
     }
 
     public String getUserId() {

@@ -1,8 +1,11 @@
 package com.example.time_wise;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -102,7 +105,6 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
-    // פונקציית המרה שתואמת לפורמט של Firebase ו-LocalTime
     private Task convertMapToTask(Map<String, Object> map) {
         try {
             Task task = new Task();
@@ -147,6 +149,47 @@ public class CalendarActivity extends AppCompatActivity {
         } else {
             taskAdapter.notifyDataSetChanged();
         }
+
+        ArrayAdapter<Task> adapter = new ArrayAdapter<Task>(this, android.R.layout.simple_list_item_1, filteredTasks) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+
+                Task task = getItem(position);
+
+                if (task != null && textView != null) {
+                    textView.setText(task.getName());
+
+                    if(task.isStrict()){
+                        textView.setTextColor(Color.parseColor("#EF4444")); //RED
+                    } else {
+                        switch (task.getPriority()) {
+                            case 5:
+                                textView.setTextColor(Color.parseColor("#F97316"));
+                                break;
+                            case 4:
+                                textView.setTextColor(Color.parseColor("#F59E0B"));
+                                break;
+                            case 3:
+                                textView.setTextColor(Color.parseColor("#EAB308"));
+                                break;
+                            case 2:
+                                textView.setTextColor(Color.parseColor("#84CC16"));
+                                break;
+                            case 1:
+                                textView.setTextColor(Color.parseColor("#22C55E")); //GREEN
+                                break;
+                            default:
+                                textView.setTextColor(Color.BLACK);
+                        }
+                    }
+                }
+                return view;
+            }
+        };
+
+        lvTasks.setAdapter(adapter);
     }
 
     public void openEditTaskDialog(Task task, int position) {

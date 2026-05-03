@@ -121,7 +121,6 @@ public class EfficiencyActivity extends AppCompatActivity {
                 if (data != null) {
                     historyList.clear();
                     for (Map<String, Object> map : data) {
-                        // שיחזור אובייקט ה-Date מתוך ה-Map של Firebase
                         Map<String, Object> dateMap = (Map<String, Object>) map.get("date");
                         Date dateObj = new Date(
                                 ((Long) dateMap.get("year")).intValue(),
@@ -151,7 +150,7 @@ public class EfficiencyActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Efficiency saved!", Toast.LENGTH_SHORT).show();
                     adapter.notifyDataSetChanged();
-                    btnSend.setEnabled(false); // מניעת שליחה כפולה באותו יום
+                    btnSend.setEnabled(false);
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error saving", Toast.LENGTH_SHORT).show());
     }

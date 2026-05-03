@@ -22,7 +22,6 @@ public class Goal implements Serializable {
         this.isCompleted = false;
     }
 
-    // Getters & Setters
     public String getId() { return id; }
     public String getTitle() { return title; }
     public String getNote() { return note; }
