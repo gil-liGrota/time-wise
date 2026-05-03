@@ -322,9 +322,12 @@ public class LearningPlanActivity extends AppCompatActivity {
         taskMap.put("start", "16:00");
         taskMap.put("end", "17:00");
 
+
         //FIXME the path is worng, im to tired to fix this shit
-        FirebaseFirestore.getInstance().collection("users").document(userID)
-                .collection("tasks").add(taskMap)
+        FirebaseFirestore.getInstance().collection("users")
+                                        .document(userID)
+                .update("tasks", taskMap)
+//                                        .collection("tasks").add(taskMap)
                 .addOnSuccessListener(ref -> Log.d("TimeWise", "Task saved with correct fields: " + title))
                 .addOnFailureListener(e -> Log.e("TimeWise", "Error saving task", e));
     }

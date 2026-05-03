@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Timewise"
         tools:targetApi="31">
         <activity
+            android:name=".PlanReviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".LearningPlanActivity"
             android:exported="false" />
         <activity

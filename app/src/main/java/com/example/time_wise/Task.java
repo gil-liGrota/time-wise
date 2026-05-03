@@ -2,9 +2,10 @@ package com.example.time_wise;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public class Task {
+public class Task implements Serializable {
     protected String name;
     protected Topic topic;
     protected Date date;
@@ -15,16 +16,17 @@ public class Task {
     protected boolean strict;
 
     public Task(){
-        this.name = "";
-        this.topic = null;
-        this.date = null;
-        this.type = null;
-        this.start = null;
-        this.end = null;
-        this.isImportant = false;
-        this.priority = 0;
-        this.strict = false;
+//        this.name = "";
+//        this.topic = null;
+//        this.date = null;
+//        this.type = null;
+//        this.start = null;
+//        this.end = null;
+//        this.isImportant = false;
+//        this.priority = 0;
+//        this.strict = false;
     }
+
 
     /**
      * @param name - name of task
