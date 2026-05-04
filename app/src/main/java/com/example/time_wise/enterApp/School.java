@@ -107,6 +107,10 @@ public class School extends AppCompatActivity {
         }
 
         editHours[0].requestFocus();
+
+        if(btnNext.getText().toString() == "Finish"){
+            saveDataToFirebase();
+        }
     }
 
     private void saveDataToFirebase() {
@@ -125,11 +129,12 @@ public class School extends AppCompatActivity {
                 .add(user)
                 .addOnSuccessListener(doc -> {
                     securityManager.saveUserId(doc.getId());
-
                     Intent intent = new Intent(School.this, HomeScreen.class);
                     intent.putExtra("userId", doc.getId());
                     startActivity(intent);
                     finish();
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(School.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 }
