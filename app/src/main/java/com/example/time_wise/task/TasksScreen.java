@@ -52,7 +52,7 @@ public class TasksScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.tasks_screen);
+        setContentView(R.layout.activity_tasks);
 
         lvActivity = findViewById(R.id.activityList);
         tasks = new ArrayList<>();

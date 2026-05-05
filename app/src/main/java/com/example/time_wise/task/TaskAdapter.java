@@ -49,7 +49,7 @@ public class TaskAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.task_list_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_task_list, parent, false);
         }
 
         TextView tvTaskName = convertView.findViewById(R.id.tvTaskName);

@@ -37,7 +37,7 @@ public class School extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_school);
+        setContentView(R.layout.activity_school_log_in);
 
         securityManager = new SecurityManager(this);
 

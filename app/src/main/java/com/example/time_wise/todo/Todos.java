@@ -40,7 +40,7 @@ public class Todos extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.todos);
+        setContentView(R.layout.activity_todos);
 
         userID = getIntent().getStringExtra("userId");
         Constant.USER_ID = userID;

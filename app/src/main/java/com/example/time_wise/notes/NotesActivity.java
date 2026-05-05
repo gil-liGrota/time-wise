@@ -73,7 +73,7 @@ public class NotesActivity extends AppCompatActivity {
         if (folderName != null) {
             tvHeader.setText(folderName);
         }
-        adapter = new ArrayAdapter<>(this, R.layout.note_item, R.id.tvItemText, displayList);
+        adapter = new ArrayAdapter<>(this, R.layout.item_note, R.id.tvItemText, displayList);
         lvNotesAndFolders.setAdapter(adapter);
 
         findViewById(R.id.fabAddFolder).setOnClickListener(v -> showAddFolderDialog());

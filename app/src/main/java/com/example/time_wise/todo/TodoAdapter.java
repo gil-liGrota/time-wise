@@ -44,10 +44,10 @@ public class TodoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (viewType == TYPE_ADD) {
-            View v = inflater.inflate(R.layout.todo_add, parent, false);
+            View v = inflater.inflate(R.layout.item_todo_add, parent, false);
             return new AddViewHolder(v);
         } else {
-            View v = inflater.inflate(R.layout.todo_item, parent, false);
+            View v = inflater.inflate(R.layout.item_todo, parent, false);
             return new TodoViewHolder(v);
         }
     }

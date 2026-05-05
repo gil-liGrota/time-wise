@@ -2,7 +2,6 @@ package com.example.time_wise.schoolSchedule;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -26,7 +25,6 @@ import com.example.time_wise.todo.Todos;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +42,7 @@ public class SchoolSchedule extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.school_schedule);
+        setContentView(R.layout.activity_school_schedule);
 
         btnSave = findViewById(R.id.btnSaveSchedule);
         btnSave.setOnClickListener(v -> saveScheduleToFirebase());

@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.time_wise.R;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 public class SignInUser extends AppCompatActivity {
 
@@ -24,7 +22,7 @@ public class SignInUser extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.sign_in_user);
+        setContentView(R.layout.activity_sign_in_details);
 
         userName = findViewById(R.id.etUsername);
         phoneNum = findViewById(R.id.etPhone);
