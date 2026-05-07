@@ -20,13 +20,13 @@ import com.example.time_wise.Date;
 import com.example.time_wise.R;
 import com.example.time_wise.calender.CalendarActivity;
 import com.example.time_wise.followGoal.GoalsActivity;
-import com.example.time_wise.enterApp.log_in;
+import com.example.time_wise.enterApp.LogInActivity;
 
-import com.example.time_wise.enterApp.HomeScreen;
+import com.example.time_wise.enterApp.HomeActivity;
 import com.example.time_wise.followEfficiency.EfficiencyActivity;
 import com.example.time_wise.notes.NotesActivity;
-import com.example.time_wise.schoolSchedule.SchoolSchedule;
-import com.example.time_wise.todo.Todos;
+import com.example.time_wise.schoolSchedule.SchoolScheduleActivity;
+import com.example.time_wise.todo.TodosActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,7 +35,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class TasksScreen extends AppCompatActivity {
+public class TasksActivity extends AppCompatActivity {
 
     private ListView lvActivity;
     private ArrayList<Task> tasks;
@@ -102,17 +102,17 @@ public class TasksScreen extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home: intent = new Intent(TasksScreen.this, HomeScreen.class);break;
-                case ACTIVITY: intent = new Intent(TasksScreen.this, TasksScreen.class);break;
-                case SCHOOL_SCHEDULE: intent = new Intent(TasksScreen.this, SchoolSchedule.class);break;
-                case FOLLOW_EFFICIENCY: intent = new Intent(TasksScreen.this, EfficiencyActivity.class);break;
-                case TODO: intent = new Intent(TasksScreen.this, Todos.class);break;
-                case CALENDER: intent = new Intent(TasksScreen.this, CalendarActivity.class);break;
-                case NOTES: intent = new Intent(TasksScreen.this, NotesActivity.class);break;
-                case FOLLOW_GOAL: intent = new Intent(TasksScreen.this, GoalsActivity.class);break;
-                case SIGN_OUT: intent = new Intent(TasksScreen.this, log_in.class);break;
+                case Home: intent = new Intent(TasksActivity.this, HomeActivity.class);break;
+                case ACTIVITY: intent = new Intent(TasksActivity.this, TasksActivity.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(TasksActivity.this, SchoolScheduleActivity.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(TasksActivity.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(TasksActivity.this, TodosActivity.class);break;
+                case CALENDER: intent = new Intent(TasksActivity.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(TasksActivity.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(TasksActivity.this, GoalsActivity.class);break;
+                case SIGN_OUT: intent = new Intent(TasksActivity.this, LogInActivity.class);break;
                 default:
-                    intent = new Intent(TasksScreen.this, HomeScreen.class);
+                    intent = new Intent(TasksActivity.this, HomeActivity.class);
                     break;
             }
             intent.putExtra("userId", userID);

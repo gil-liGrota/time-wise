@@ -60,8 +60,8 @@ public class TaskAdapter extends BaseAdapter {
         tvTaskName.setText(task.getName());
 
         btnEdit.setOnClickListener(v -> {
-            if (context instanceof TasksScreen) {
-                ((TasksScreen) context).openEditTaskDialog(task, position);
+            if (context instanceof TasksActivity) {
+                ((TasksActivity) context).openEditTaskDialog(task, position);
             } else if (context instanceof CalendarActivity) {
                 ((CalendarActivity) context).openEditTaskDialog(task, position);
             }

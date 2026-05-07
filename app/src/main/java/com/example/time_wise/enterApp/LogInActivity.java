@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.time_wise.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class log_in extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity {
 
     private Button logIn, signIn;
     private TextView user, pass;
@@ -57,7 +57,7 @@ public class log_in extends AppCompatActivity {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(log_in.this, SignInUser.class);
+                Intent intent = new Intent(LogInActivity.this, SignInUserActivity.class);
                 startActivity(intent);
             }
         });
@@ -90,7 +90,7 @@ public class log_in extends AppCompatActivity {
 
                     securityManager.saveUserId(docId);
 
-                    Intent intent = new Intent(log_in.this, HomeScreen.class);
+                    Intent intent = new Intent(LogInActivity.this, HomeActivity.class);
                     intent.putExtra("userId", docId);
                     startActivity(intent);
                     finish();

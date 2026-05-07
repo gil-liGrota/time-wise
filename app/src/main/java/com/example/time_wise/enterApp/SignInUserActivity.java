@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.time_wise.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class SignInUser extends AppCompatActivity {
+public class SignInUserActivity extends AppCompatActivity {
 
     private EditText userName, phoneNum, password;
     private Button next;
@@ -79,7 +79,7 @@ public class SignInUser extends AppCompatActivity {
 
 
     private void goToNextScreen() {
-        Intent intent = new Intent(SignInUser.this, School.class);
+        Intent intent = new Intent(SignInUserActivity.this, LogInSchoolActivity.class);
 
         String user = userName.getText().toString();
         String phone = phoneNum.getText().toString();

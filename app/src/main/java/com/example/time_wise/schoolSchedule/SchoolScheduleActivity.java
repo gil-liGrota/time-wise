@@ -15,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.time_wise.Constant;
 import com.example.time_wise.R;
 import com.example.time_wise.calender.CalendarActivity;
-import com.example.time_wise.enterApp.HomeScreen;
-import com.example.time_wise.enterApp.log_in;
+import com.example.time_wise.enterApp.HomeActivity;
+import com.example.time_wise.enterApp.LogInActivity;
 import com.example.time_wise.followEfficiency.EfficiencyActivity;
 import com.example.time_wise.followGoal.GoalsActivity;
 import com.example.time_wise.notes.NotesActivity;
-import com.example.time_wise.task.TasksScreen;
-import com.example.time_wise.todo.Todos;
+import com.example.time_wise.task.TasksActivity;
+import com.example.time_wise.todo.TodosActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SchoolSchedule extends AppCompatActivity {
+public class SchoolScheduleActivity extends AppCompatActivity {
     private Button btnSave;
     private Intent intent;
     private LinearLayout sideMenu;
@@ -157,15 +157,15 @@ public class SchoolSchedule extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home: intent = new Intent(SchoolSchedule.this, HomeScreen.class);break;
-                case ACTIVITY: intent = new Intent(SchoolSchedule.this, TasksScreen.class);break;
-                case SCHOOL_SCHEDULE: intent = new Intent(SchoolSchedule.this, SchoolSchedule.class);break;
-                case FOLLOW_EFFICIENCY: intent = new Intent(SchoolSchedule.this, EfficiencyActivity.class);break;
-                case TODO: intent = new Intent(SchoolSchedule.this, Todos.class);break;
-                case CALENDER: intent = new Intent(SchoolSchedule.this, CalendarActivity.class);break;
-                case NOTES: intent = new Intent(SchoolSchedule.this, NotesActivity.class);break;
-                case FOLLOW_GOAL: intent = new Intent(SchoolSchedule.this, GoalsActivity.class);break;
-                case SIGN_OUT: intent = new Intent(SchoolSchedule.this, log_in.class);break;
+                case Home: intent = new Intent(SchoolScheduleActivity.this, HomeActivity.class);break;
+                case ACTIVITY: intent = new Intent(SchoolScheduleActivity.this, TasksActivity.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(SchoolScheduleActivity.this, SchoolScheduleActivity.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(SchoolScheduleActivity.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(SchoolScheduleActivity.this, TodosActivity.class);break;
+                case CALENDER: intent = new Intent(SchoolScheduleActivity.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(SchoolScheduleActivity.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(SchoolScheduleActivity.this, GoalsActivity.class);break;
+                case SIGN_OUT: intent = new Intent(SchoolScheduleActivity.this, LogInActivity.class);break;
                 default:
                     Toast.makeText(this, "not working", Toast.LENGTH_SHORT).show();
                     return;

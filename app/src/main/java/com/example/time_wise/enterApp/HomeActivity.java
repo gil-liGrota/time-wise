@@ -19,12 +19,12 @@ import com.example.time_wise.followEfficiency.AlarmReceiver;
 import com.example.time_wise.followEfficiency.EfficiencyActivity;
 import com.example.time_wise.followGoal.GoalsActivity;
 import com.example.time_wise.notes.NotesActivity;
-import com.example.time_wise.schoolSchedule.SchoolSchedule;
-import com.example.time_wise.task.TasksScreen;
-import com.example.time_wise.todo.Todos;
+import com.example.time_wise.schoolSchedule.SchoolScheduleActivity;
+import com.example.time_wise.task.TasksActivity;
+import com.example.time_wise.todo.TodosActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class HomeScreen extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
     private Intent intent;
     private LinearLayout sideMenu;
     private TextView btnMenu;
@@ -155,17 +155,17 @@ public class HomeScreen extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home: intent = new Intent(HomeScreen.this, HomeScreen.class);break;
-                case ACTIVITY: intent = new Intent(HomeScreen.this, TasksScreen.class);break;
-                case SCHOOL_SCHEDULE: intent = new Intent(HomeScreen.this, SchoolSchedule.class);break;
-                case FOLLOW_EFFICIENCY: intent = new Intent(HomeScreen.this, EfficiencyActivity.class);break;
-                case TODO: intent = new Intent(HomeScreen.this, Todos.class);break;
-                case CALENDER: intent = new Intent(HomeScreen.this, CalendarActivity.class);break;
-                case NOTES: intent = new Intent(HomeScreen.this, NotesActivity.class);break;
-                case FOLLOW_GOAL: intent = new Intent(HomeScreen.this, GoalsActivity.class);break;
-                case SIGN_OUT: intent = new Intent(HomeScreen.this, log_in.class);break;
+                case Home: intent = new Intent(HomeActivity.this, HomeActivity.class);break;
+                case ACTIVITY: intent = new Intent(HomeActivity.this, TasksActivity.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(HomeActivity.this, SchoolScheduleActivity.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(HomeActivity.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(HomeActivity.this, TodosActivity.class);break;
+                case CALENDER: intent = new Intent(HomeActivity.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(HomeActivity.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(HomeActivity.this, GoalsActivity.class);break;
+                case SIGN_OUT: intent = new Intent(HomeActivity.this, LogInActivity.class);break;
                 default:
-                    intent = new Intent(HomeScreen.this, HomeScreen.class);
+                    intent = new Intent(HomeActivity.this, HomeActivity.class);
                     break;
             }
             intent.putExtra("userId", userID);

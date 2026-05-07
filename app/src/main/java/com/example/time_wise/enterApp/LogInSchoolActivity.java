@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class School extends AppCompatActivity {
+public class LogInSchoolActivity extends AppCompatActivity {
 
     private EditText[] editHours = new EditText[11];
     private TextView txtDayTitle;
@@ -107,10 +107,6 @@ public class School extends AppCompatActivity {
         }
 
         editHours[0].requestFocus();
-
-        if(btnNext.getText().toString() == "Finish"){
-            saveDataToFirebase();
-        }
     }
 
     private void saveDataToFirebase() {
@@ -123,18 +119,18 @@ public class School extends AppCompatActivity {
         String encryptedPassword = securityManager.hashPassword(rawPassword);
 
         User user = new User(phone, username, encryptedPassword, new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>(), schoolDays, new ArrayList<>(), 00, 00);
+                new ArrayList<>(), allWeekSchedule, new ArrayList<>(), 17, 00);
 
         FirebaseFirestore.getInstance().collection("users")
                 .add(user)
                 .addOnSuccessListener(doc -> {
                     securityManager.saveUserId(doc.getId());
-                    Intent intent = new Intent(School.this, HomeScreen.class);
+                    Intent intent = new Intent(LogInSchoolActivity.this, HomeActivity.class);
                     intent.putExtra("userId", doc.getId());
                     startActivity(intent);
                     finish();
                 }).addOnFailureListener(e -> {
-                    Toast.makeText(School.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(LogInSchoolActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 }

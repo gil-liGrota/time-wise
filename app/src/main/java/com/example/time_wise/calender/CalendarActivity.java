@@ -19,16 +19,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.time_wise.Constant;
 import com.example.time_wise.Date;
 import com.example.time_wise.R;
-import com.example.time_wise.enterApp.HomeScreen;
-import com.example.time_wise.enterApp.log_in;
+import com.example.time_wise.enterApp.HomeActivity;
+import com.example.time_wise.enterApp.LogInActivity;
 import com.example.time_wise.followEfficiency.EfficiencyActivity;
 import com.example.time_wise.followGoal.GoalsActivity;
 import com.example.time_wise.notes.NotesActivity;
-import com.example.time_wise.schoolSchedule.SchoolSchedule;
+import com.example.time_wise.schoolSchedule.SchoolScheduleActivity;
 import com.example.time_wise.task.Task;
 import com.example.time_wise.task.TaskAdapter;
-import com.example.time_wise.task.TasksScreen;
-import com.example.time_wise.todo.Todos;
+import com.example.time_wise.task.TasksActivity;
+import com.example.time_wise.todo.TodosActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalTime;
@@ -286,17 +286,17 @@ public class CalendarActivity extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home: intent = new Intent(CalendarActivity.this, HomeScreen.class);break;
-                case ACTIVITY: intent = new Intent(CalendarActivity.this, TasksScreen.class);break;
-                case SCHOOL_SCHEDULE: intent = new Intent(CalendarActivity.this, SchoolSchedule.class);break;
+                case Home: intent = new Intent(CalendarActivity.this, HomeActivity.class);break;
+                case ACTIVITY: intent = new Intent(CalendarActivity.this, TasksActivity.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(CalendarActivity.this, SchoolScheduleActivity.class);break;
                 case FOLLOW_EFFICIENCY: intent = new Intent(CalendarActivity.this, EfficiencyActivity.class);break;
-                case TODO: intent = new Intent(CalendarActivity.this, Todos.class);break;
+                case TODO: intent = new Intent(CalendarActivity.this, TodosActivity.class);break;
                 case CALENDER: intent = new Intent(CalendarActivity.this, CalendarActivity.class);break;
                 case NOTES: intent = new Intent(CalendarActivity.this, NotesActivity.class);break;
                 case FOLLOW_GOAL: intent = new Intent(CalendarActivity.this, GoalsActivity.class);break;
-                case SIGN_OUT: intent = new Intent(CalendarActivity.this, log_in.class);break;
+                case SIGN_OUT: intent = new Intent(CalendarActivity.this, LogInActivity.class);break;
                 default:
-                    intent = new Intent(CalendarActivity.this, HomeScreen.class);
+                    intent = new Intent(CalendarActivity.this, HomeActivity.class);
                     break;
             }
             intent.putExtra("userId", userID);

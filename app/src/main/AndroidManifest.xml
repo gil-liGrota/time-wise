@@ -42,16 +42,16 @@
             android:name=".calender.CalendarActivity"
             android:exported="false" />
         <activity
-            android:name=".enterApp.School"
+            android:name=".enterApp.LogInSchoolActivity"
             android:exported="false" />
         <activity
-            android:name=".todo.Todos"
+            android:name=".todo.TodosActivity"
             android:exported="false" />
         <activity
-            android:name=".schoolSchedule.SchoolSchedule"
+            android:name=".schoolSchedule.SchoolScheduleActivity"
             android:exported="false" />
         <activity
-            android:name=".task.TasksScreen"
+            android:name=".task.TasksActivity"
             android:exported="false" />
         <activity
             android:name=".users.UserListDisplay"
@@ -64,13 +64,13 @@
         <!-- </intent-filter> -->
         <!-- </activity> -->
         <activity
-            android:name=".enterApp.HomeScreen"
+            android:name=".enterApp.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".enterApp.SignInUser"
+            android:name=".enterApp.SignInUserActivity"
             android:exported="false" />
         <activity
-            android:name=".enterApp.log_in"
+            android:name=".enterApp.LogInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

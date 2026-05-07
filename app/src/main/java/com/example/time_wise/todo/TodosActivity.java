@@ -14,19 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.time_wise.Constant;
 import com.example.time_wise.R;
 import com.example.time_wise.calender.CalendarActivity;
-import com.example.time_wise.enterApp.HomeScreen;
-import com.example.time_wise.enterApp.log_in;
+import com.example.time_wise.enterApp.HomeActivity;
+import com.example.time_wise.enterApp.LogInActivity;
 import com.example.time_wise.followEfficiency.EfficiencyActivity;
 import com.example.time_wise.followGoal.GoalsActivity;
 import com.example.time_wise.notes.NotesActivity;
-import com.example.time_wise.schoolSchedule.SchoolSchedule;
-import com.example.time_wise.task.TasksScreen;
+import com.example.time_wise.schoolSchedule.SchoolScheduleActivity;
+import com.example.time_wise.task.TasksActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Todos extends AppCompatActivity {
+public class TodosActivity extends AppCompatActivity {
 
     public String userID;
     private Intent intent;
@@ -86,15 +86,15 @@ public class Todos extends AppCompatActivity {
 
         item.setOnClickListener(v -> {
             switch (menu){
-                case Home: intent = new Intent(Todos.this, HomeScreen.class);break;
-                case ACTIVITY: intent = new Intent(Todos.this, TasksScreen.class);break;
-                case SCHOOL_SCHEDULE: intent = new Intent(Todos.this, SchoolSchedule.class);break;
-                case FOLLOW_EFFICIENCY: intent = new Intent(Todos.this, EfficiencyActivity.class);break;
-                case TODO: intent = new Intent(Todos.this, Todos.class);break;
-                case CALENDER: intent = new Intent(Todos.this, CalendarActivity.class);break;
-                case NOTES: intent = new Intent(Todos.this, NotesActivity.class);break;
-                case FOLLOW_GOAL: intent = new Intent(Todos.this, GoalsActivity.class);break;
-                case SIGN_OUT: intent = new Intent(Todos.this, log_in.class);break;
+                case Home: intent = new Intent(TodosActivity.this, HomeActivity.class);break;
+                case ACTIVITY: intent = new Intent(TodosActivity.this, TasksActivity.class);break;
+                case SCHOOL_SCHEDULE: intent = new Intent(TodosActivity.this, SchoolScheduleActivity.class);break;
+                case FOLLOW_EFFICIENCY: intent = new Intent(TodosActivity.this, EfficiencyActivity.class);break;
+                case TODO: intent = new Intent(TodosActivity.this, TodosActivity.class);break;
+                case CALENDER: intent = new Intent(TodosActivity.this, CalendarActivity.class);break;
+                case NOTES: intent = new Intent(TodosActivity.this, NotesActivity.class);break;
+                case FOLLOW_GOAL: intent = new Intent(TodosActivity.this, GoalsActivity.class);break;
+                case SIGN_OUT: intent = new Intent(TodosActivity.this, LogInActivity.class);break;
                 default:
                     return;
             }
