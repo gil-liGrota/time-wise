@@ -1,9 +1,12 @@
 package com.example.time_wise.enterApp;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -41,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         startDailyAlarm();
         Intent lastIntent = getIntent();
         userID = lastIntent.getStringExtra("userId");
@@ -97,7 +101,11 @@ public class HomeActivity extends AppCompatActivity {
 
                         tvPhoneDisplay.setText("phone number: " + phone);
                         tvUsernameDisplay.setText("username: " + name);
-                        tvNotificationTime.setText(hour + ":" + min);
+                        if(min == 0){
+                            tvNotificationTime.setText(hour + ":00");
+                        }else{
+                            tvNotificationTime.setText(hour + ":" + min);
+                        }
                     }
                 });
 
@@ -127,6 +135,16 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void startDailyAlarm() {//TODO change to right hour
+        AlarmManager alarmManager1 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!alarmManager1.canScheduleExactAlarms()) {
+                intent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                startActivity(intent);
+                return;
+            }
+        }
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, min);
@@ -143,10 +161,15 @@ public class HomeActivity extends AppCompatActivity {
         android.app.AlarmManager alarmManager = (android.app.AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         if (alarmManager != null) {
-            alarmManager.setRepeating(android.app.AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(),
-                    android.app.AlarmManager.INTERVAL_DAY,
-                    pendingIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(),
+                        pendingIntent);
+            } else {
+                alarmManager.setExact(android.app.AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(),
+                        pendingIntent);
+            }
         }
     }
 

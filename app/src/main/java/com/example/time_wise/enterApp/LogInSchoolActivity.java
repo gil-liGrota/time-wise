@@ -114,7 +114,6 @@ public class LogInSchoolActivity extends AppCompatActivity {
         String username = lastIntent.getStringExtra("username");
         String phone = lastIntent.getStringExtra("phoneNum");
         String rawPassword = lastIntent.getStringExtra("password");
-        ArrayList<SchoolDay> schoolDays = (ArrayList<SchoolDay>) lastIntent.getSerializableExtra("school");
 
         String encryptedPassword = securityManager.hashPassword(rawPassword);
 
