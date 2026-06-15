@@ -195,6 +195,8 @@ public class TasksActivity extends AppCompatActivity {
         Spinner spinnerImportance = dialogView.findViewById(R.id.spinnerImportance);
         Spinner spinnerStrict = dialogView.findViewById(R.id.spinnerStrict);
 
+
+
         Switch switchHasTime = dialogView.findViewById(R.id.switchHasTime);
 
         etStart.setOnClickListener(v -> showTimePicker(etStart));
